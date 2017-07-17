@@ -16,16 +16,6 @@ class EntryAddForm extends Component {
     const { entireContainer, entryForm, stopwatch } = styles
     return (
       <View style={entireContainer}>
-        {/* <Picker
-          style={pickerStyle}
-          selectedValue={this.props.goal}
-          onValueChange={(value, itemIndex) => this.props.EntryUpdate({prop: 'goal', value})}
-        >
-          <Picker.Item label='Study product management (100 hours)' value='Study product management (100 hours)' />
-          <Picker.Item label='Build V1 of Capsule (100 hours)' value='Build V1 of Capsule (100 hours)' />
-          <Picker.Item label='Study Web development (100 hours)' value='Study Web development (100 hours)' />
-        </Picker>
-        */}
         <EntryForm style={entryForm} {...this.props} />
         <Stopwatch style={stopwatch} {...this.props} />
       </View>
@@ -36,15 +26,14 @@ class EntryAddForm extends Component {
 const styles = {
   entireContainer: {
     flex: 1,
-    flexDirection: 'column',
-    alignSelf: 'stretch',
+    flexDirection: 'column'
   },
   entryForm: {
     height: 200,
     flex: 1
   },
   stopwatch: {
-    flex: 3
+    flex: 1
   }
 }
 const mapStateToProps = (state) => {

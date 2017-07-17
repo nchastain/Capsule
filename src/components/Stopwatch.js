@@ -60,11 +60,11 @@ class Stopwatch extends React.Component {
       <View style={stopwatch}>
         {this.state.secondsElapsed === 0
         ? <View style={counterContainer}>
-            <TouchableOpacity onPress={this.handleTouchClock.bind(this)} style={[timeContainer, disabledBtn]}>
+            <View onPress={this.handleTouchClock.bind(this)} style={[timeContainer, disabledBtn]}>
               <Text style={[stopwatchTimer, disabledText]}>
                 {formattedSeconds(this.state.secondsElapsed)}
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
         : <View style={counterContainer}>
             <TouchableOpacity onPress={this.handleTouchClock.bind(this)} style={timeContainer}>
@@ -92,11 +92,11 @@ class Stopwatch extends React.Component {
                 <Text style={{color: 'green', fontSize: 20, fontWeight: 'bold'}}>start</Text>
               </TouchableOpacity>
               : <TouchableOpacity onPress={this.handleStop.bind(this)} style={[btn, stopBtn]}>
-                  <Text style={{color: 'red', fontSize: 20, fontWeight: 'bold'}}>stop</Text>
+                  <Text style={{color: 'red', fontSize: 20, fontWeight: 'bold'}}>pause</Text>
                 </TouchableOpacity>
-            : <TouchableOpacity style={[btn, startBtn, disabledBtn]}>
+            : <View style={[btn, startBtn, disabledBtn]}>
                 <Text style={{color: '#eee', fontSize: 20, fontWeight: 'bold'}}>start</Text>
-              </TouchableOpacity>
+              </View>
             }
           </View>
         </View>
@@ -124,7 +124,8 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    backgroundColor: '#eee'
+    backgroundColor: '#eee',
+    marginBottom: 50
   },
   stopwatchTimer: {
     fontSize: 35,
@@ -166,8 +167,8 @@ const styles = {
     borderWidth: 1,
     borderRadius: 125,
     backgroundColor: 'white',
-    height: 250,
-    width: 250,
+    height: 225,
+    width: 225,
     alignItems: 'center',
     justifyContent:'center',
   },
@@ -175,9 +176,8 @@ const styles = {
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignSelf: 'stretch',
-    flex: 1,
     backgroundColor: 'orange',
+    height: 75
   },
   btn: {
     backgroundColor: 'orange',
@@ -202,6 +202,7 @@ const styles = {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#eee',
+    alignSelf: 'center'
   },
   resetBtn: {
     backgroundColor: 'white',

@@ -34,10 +34,11 @@ export const EntryClear = () => {
 }
 
 export const EntriesFetch = () => {
-  const { currentUser } = firebase.auth()
+  // const { currentUser } = firebase.auth()
 
   return (dispatch) => {
-    firebase.database().ref(`/users/${currentUser.uid}/entries`)
+    // firebase.database().ref(`/users/${currentUser.uid}/entries`)
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)
       .on('value', snapshot => {
         dispatch({ type: ENTRIES_FETCH_SUCCESS, payload: snapshot.val() })
       })

@@ -3,13 +3,14 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { ListView } from 'react-native'
-import { EntriesFetch } from '../actions'
+import { EntriesFetch, ProjectsFetch, loginUser } from '../actions'
 import ListItem from './ListItem'
 
 class EntryList extends Component {
   componentWillMount () {
+    this.props.loginUser({email: 'Test@test.com', password: 'password'})
     this.props.EntriesFetch()
-
+    this.props.ProjectsFetch()
     this.createDataSource(this.props)
   }
 
@@ -45,12 +46,11 @@ const mapStateToProps = state => {
     return { ...val, uid }
   })
 
-  // const sortedEntries = entries.sort(function (a, b) {
-  //   debugger;
-  //   return moment.unix(new Date(a.date)).isBefore(moment.unix(new Date(b.date))) ? -1 : 1
-  // })
+  const projects = _.map(state.projects, (val, uid) => {
+    return { ...val, uid }
+  })
 
-  return { entries }
+  return { entries, projects }
 }
 
-export default connect(mapStateToProps, { EntriesFetch })(EntryList)
+export default connect(mapStateToProps, { EntriesFetch, ProjectsFetch, loginUser })(EntryList)

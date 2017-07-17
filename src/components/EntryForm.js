@@ -1,46 +1,46 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Modal } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, Modal } from 'react-native'
 import { connect } from 'react-redux'
-import { EntryUpdate, EntryClear } from '../actions'
+import { EntryUpdate, EntryClear, ProjectsFetch } from '../actions'
 import { Input, ModalMessage } from './common'
 
 class EntryForm extends Component {
-  constructor() {
+  constructor () {
     super()
     this.state = { showModal: false }
+  }
+
+  componentWillMount () {
+    this.props.ProjectsFetch()
   }
 
   componentWillUnmount () {
     this.props.EntryClear()
   }
 
-  buildGoalList () {
+  buildGoalItem (project, idx) {
     const { goalItemStyle, goalTextStyle, goalItemContainer } = styles
     return (
-      <View style={{ justifyContent: 'flex-start', flex: 1, padding: 10 }}>
-        <Text style={{color: 'orange', padding: 10, textAlign: 'center', fontWeight: 'bold'}}>Select a goal from the list below</Text>
-        <View style={goalItemContainer}>
-          <TouchableOpacity style={goalItemStyle} onPress={() => this.setState({ showModal: !this.state.showModal }, function () {
-              this.props.EntryUpdate({ prop: 'goal', value: 'Build V1 of Capsule for 100 hours' })
-            })}>
-            <Text style={goalTextStyle}>Build V1 of Capsule for 100 hours</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={goalItemContainer}>
-          <TouchableOpacity style={goalItemStyle} onPress={() => this.setState({ showModal: !this.state.showModal }, function () {
-            this.props.EntryUpdate({ prop: 'goal', value: 'Study Web development for 100 hours' })
+      <View style={goalItemContainer} key={idx}>
+        <TouchableOpacity style={goalItemStyle} onPress={() => this.setState({ showModal: !this.state.showModal }, function () {
+            this.props.EntryUpdate({ prop: 'goal', value: project.title })
           })}>
-            <Text style={goalTextStyle}>Study Web development for 100 hours</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={goalItemContainer}>
-          <TouchableOpacity style={goalItemStyle} onPress={() => this.setState({ showModal: !this.state.showModal }, function () {
-            this.props.EntryUpdate({ prop: 'goal', value: 'Study product management for 100 hours' })
-          })}>
-            <Text style={goalTextStyle}>Study product management for 100 hours</Text>
-          </TouchableOpacity>
-        </View>
+          <Text style={goalTextStyle}>{project.title}</Text>
+        </TouchableOpacity>
       </View>
+    )
+  }
+
+  buildGoalList () {
+    const projects = this.props.projects
+    console.log(projects, 'ng;')
+    if (!projects) return
+    return (
+      <ScrollView contentContainerStyle={{ justifyContent: 'flex-start', alignItems: 'center', padding: 10 }}>
+        <Text style={{color: 'orange', padding: 10, textAlign: 'center', fontWeight: 'bold'}}>Select a project from the list below</Text>
+        {projects.map((project, idx) => this.buildGoalItem(project, idx))}
+      </ScrollView>
     )
   }
 
@@ -55,18 +55,18 @@ class EntryForm extends Component {
             </Text>
           : <View style={{padding: 10, marginBottom: 5, backgroundColor: 'orange', borderRadius: 10}}>
               <Text style={selectGoalStyle}>
-                Click here to select a goal
+                Click here to select a project
               </Text>
             </View>
           }
         </TouchableOpacity>
         <Modal
-          visible={this.state.showModal}
+          visible={this.state.showModal && Boolean(this.props.projects)}
           animationType={'slide'}
           transparent
         >
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)'}}>
-            <View style={{ flex: 1, alignSelf: 'stretch', marginLeft: 40, marginRight: 40, marginTop: 40, marginBottom: 40, backgroundColor: '#eee', justifyContent: 'center', borderRadius: 10 }}>
+          <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)'}}>
+            <View style={{ flex: 1, marginLeft: 40, marginRight: 40, marginTop: 40, marginBottom: 40, backgroundColor: '#eee', justifyContent: 'flex-start', borderRadius: 10 }}>
               {this.buildGoalList()}
             </View>
           </View>
@@ -87,7 +87,7 @@ const styles = {
   },
   goalItemContainer: {
     padding: 10,
-    flex: 1
+    height: 150
   },
   goalTextStyle: {
     color: '#555',
@@ -101,8 +101,7 @@ const styles = {
     borderRadius: 10,
     backgroundColor: 'white',
     padding: 10,
-    flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   },
   containerStyle: {
     marginTop: 75,
@@ -138,8 +137,13 @@ const styles = {
 
 const mapStateToProps = (state) => {
   const { goal, description } = state.entryForm
+  
+  const projects = _.map(state.projects, (val, uid) => {
+    return { ...val, uid }
+  })
+
   const { goals } = state
-  return { goal, description, goals }
+  return { goal, description, goals, projects }
 }
 
-export default connect(mapStateToProps, { EntryUpdate, EntryClear })(EntryForm)
+export default connect(mapStateToProps, { EntryUpdate, ProjectsFetch, EntryClear })(EntryForm)
