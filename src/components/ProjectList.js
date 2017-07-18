@@ -23,14 +23,15 @@ class ProjectList extends React.Component {
   }
 
   renderRow (project) {
-    const {containerStyle, goalContainerStyle, rowStyle, goalStyle, descriptionStyle, timeStyle, dateStyle, buttonStyle} = styles
+    const {containerStyle, hourRecordStyle, goalContainerStyle, rowStyle, goalStyle, descriptionStyle, timeStyle, dateStyle, buttonStyle} = styles
+    const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
     return (
       <TouchableOpacity style={rowStyle}>
         <View style={containerStyle}>
           <View style={goalContainerStyle}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={goalStyle}>{project.title}</Text>
-              <Text>{project.hoursLogged}/{project.hoursGoal} hours</Text>
+              <View style={styles.hourRecordContainer}><Text style={hourRecordStyle}>{formattedHoursLogged}/{project.hoursGoal} hours</Text></View>
             </View>
           </View>
         </View>
@@ -39,7 +40,6 @@ class ProjectList extends React.Component {
   }
 
   render () {
-    console.log(this.props.projects)
     return (
       <View style={styles.container}>
         <ListView enableEmptySections dataSource={this.dataSource} renderRow={this.renderRow} />
@@ -62,6 +62,17 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  hourRecordStyle: {
+    fontSize: 14,
+    color: 'orange',
+    fontWeight: 'bold'
+  },
+  hourRecordContainer: {
+    padding: 5,
+    borderRadius: 5,
+    borderColor: 'orange',
+    borderWidth: 1,
+  },
   goalContainerStyle: {
     flexDirection: 'column',
     paddingLeft: 10,
@@ -82,9 +93,7 @@ const styles = {
     fontSize: 18,
     color: 'white',
     overflow: 'hidden',
-    // backgroundColor: '#555',
     fontWeight: 'bold',
-    // width: 80,
   },
   dateStyle: {
     fontSize: 12,

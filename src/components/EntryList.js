@@ -23,7 +23,9 @@ class EntryList extends Component {
       rowHasChanged: (r1, r2) => r1 !== r2
     })
 
-    this.dataSource = ds.cloneWithRows(entries.reverse())
+    let sortedEntries = entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+    this.dataSource = ds.cloneWithRows(sortedEntries)
   }
 
   renderRow (entry) {
@@ -36,6 +38,7 @@ class EntryList extends Component {
         enableEmptySections
         dataSource={this.dataSource}
         renderRow={this.renderRow}
+        style={{marginBottom: 45}}
       />
     )
   }

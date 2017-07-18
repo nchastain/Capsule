@@ -20,3 +20,5 @@ export const secondsToString = (seconds, longForm) => {
 const numberEnding = (number) => {
   return number > 1 ? 's' : ''
 }
+
+export const getProjectByID = (ID, projects) => projects.filter(obj => obj.uid === ID)[0]

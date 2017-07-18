@@ -3,7 +3,8 @@ import { Actions } from 'react-native-router-flux'
 import {
   PROJECT_ADD,
   PROJECTS_FETCH_SUCCESS,
-  PROJECT_CLEAR
+  PROJECT_CLEAR,
+  PROJECT_UPDATE_PROGRESS
 } from './types'
 
 export const ProjectAdd = ({ title }) => {
@@ -17,6 +18,16 @@ export const ProjectAdd = ({ title }) => {
         dispatch({ type: PROJECT_ADD })
         Actions.ProjectList({ type: 'reset' })
       })
+  }
+}
+
+export const ProjectUpdateProgress = (id, seconds) => {
+  return (dispatch) => {
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}/hoursLogged`)
+    .transaction((data) => data + seconds / 3600)
+    .then(() => {
+      dispatch({ type: PROJECT_UPDATE_PROGRESS })
+    })
   }
 }
 
@@ -37,28 +48,3 @@ export const ProjectClear = () => {
     dispatch({ type: PROJECT_CLEAR })
   }
 }
-
-// export const EntrySave = ({ goal, description, time, uid }) => {
-//   const { currentUser } = firebase.auth()
-
-//   return (dispatch) => {
-//     firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
-//       .set({ goal, description, time })
-//       .then(() => {
-//         dispatch({ type: ENTRY_SAVE_SUCCESS })
-//         Actions.EntryList({ type: 'reset' })
-//       })
-//   }
-// }
-
-// export const EntryDelete = ({ uid }) => {
-//   const { currentUser } = firebase.auth()
-
-//   return () => {
-//     firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
-//       .remove()
-//       .then(() => {
-//         Actions.EntryList({ type: 'reset' })
-//       })
-//   }
-// }

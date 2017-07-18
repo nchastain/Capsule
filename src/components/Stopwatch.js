@@ -3,7 +3,7 @@ import moment from 'moment'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Button } from './common/Button'
 import { connect } from 'react-redux'
-import { EntryUpdate, EntryAdd } from '../actions'
+import { EntryUpdate, EntryAdd, ProjectUpdateProgress } from '../actions'
 
 class Stopwatch extends React.Component {
   constructor (props) {
@@ -47,10 +47,11 @@ class Stopwatch extends React.Component {
   }
 
   handleSave () {
-    const { goal, description } = this.props
+    const { project, description, projectID } = this.props
     const date = new Date().toString()
     this.setState({saved: this.state.secondsElapsed}, function () {
-      this.props.EntryAdd({ goal, description, date, time: this.state.saved })
+      this.props.EntryAdd({ description, date, seconds: this.state.saved, projectID })
+      this.props.ProjectUpdateProgress(projectID, this.state.saved)
     })
   }
 
@@ -86,7 +87,7 @@ class Stopwatch extends React.Component {
             }
           </View>
           <View style={startStopContainer}>
-            {this.props.goal
+            {this.props.projectID
             ? this.state.stopped || this.incrementer === this.state.lastClearedIncrementer
               ? <TouchableOpacity onPress={this.handleStart.bind(this)} style={[btn, startBtn]}>
                 <Text style={{color: 'green', fontSize: 20, fontWeight: 'bold'}}>start</Text>
@@ -213,10 +214,10 @@ const styles = {
 }
 
 const mapStateToProps = (state) => {
-  const { goal, description, time } = state.entryForm
-  return { goal, description, time }
+  const { project, description, time, projectID } = state.entryForm
+  return { project, description, time, projectID }
 }
 
 export default connect(mapStateToProps, {
-  EntryUpdate, EntryAdd
+  EntryUpdate, EntryAdd, ProjectUpdateProgress
 })(Stopwatch)

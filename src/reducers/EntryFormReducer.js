@@ -6,9 +6,9 @@ import {
 } from '../actions/types'
 
 const INITIAL_STATE = {
-  goal: '',
   description: '',
   time: 0,
+  projectID: '',
   date: ''
 }
 

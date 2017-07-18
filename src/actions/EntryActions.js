@@ -15,11 +15,11 @@ export const EntryUpdate = ({ prop, value }) => {
   }
 }
 
-export const EntryAdd = ({ goal, description, date, time }) => {
+export const EntryAdd = ({ description, date, seconds, projectID }) => {
   const { currentUser } = firebase.auth()
   return (dispatch) => {
     firebase.database().ref(`/users/${currentUser.uid}/entries`)
-      .push({ goal, description, date, time })
+      .push({ description, date, seconds, projectID })
       .then(() => {
         dispatch({ type: ENTRY_ADD })
         Actions.EntryList({ type: 'reset' })
@@ -45,12 +45,12 @@ export const EntriesFetch = () => {
   }
 }
 
-export const EntrySave = ({ goal, description, time, uid }) => {
+export const EntrySave = ({ description, seconds, uid, projectID }) => {
   const { currentUser } = firebase.auth()
 
   return (dispatch) => {
     firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
-      .set({ goal, description, time })
+      .set({ description, seconds, projectID })
       .then(() => {
         dispatch({ type: ENTRY_SAVE_SUCCESS })
         Actions.EntryList({ type: 'reset' })

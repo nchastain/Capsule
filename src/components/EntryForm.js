@@ -19,42 +19,49 @@ class EntryForm extends Component {
     this.props.EntryClear()
   }
 
-  buildGoalItem (project, idx) {
-    const { goalItemStyle, goalTextStyle, goalItemContainer } = styles
+  buildProjectItem (project, idx) {
+    const { ProjectItemStyle, ProjectTextStyle, ProjectItemContainer } = styles
     return (
-      <View style={goalItemContainer} key={idx}>
-        <TouchableOpacity style={goalItemStyle} onPress={() => this.setState({ showModal: !this.state.showModal }, function () {
-            this.props.EntryUpdate({ prop: 'goal', value: project.title })
+      <View style={ProjectItemContainer} key={idx}>
+        <TouchableOpacity
+          style={ProjectItemStyle}
+          onPress={() => this.setState({ showModal: !this.state.showModal }, function () {
+            this.props.EntryUpdate({ prop: 'projectID', value: project.uid })
           })}>
-          <Text style={goalTextStyle}>{project.title}</Text>
+          <Text style={ProjectTextStyle}>{project.title}</Text>
         </TouchableOpacity>
       </View>
     )
   }
 
-  buildGoalList () {
+  buildProjectList () {
     const projects = this.props.projects
-    console.log(projects, 'ng;')
     if (!projects) return
     return (
       <ScrollView contentContainerStyle={{ justifyContent: 'flex-start', alignItems: 'center', padding: 10 }}>
+        <TouchableOpacity
+          style={{height: 25, alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'flex-end'}}
+          onPress={() => this.setState({ showModal: !this.state.showModal })}>
+            <Text style={{fontSize: 10, fontWeight: 'bold', color: '#555'}}>CLOSE</Text>
+        </TouchableOpacity>
         <Text style={{color: 'orange', padding: 10, textAlign: 'center', fontWeight: 'bold'}}>Select a project from the list below</Text>
-        {projects.map((project, idx) => this.buildGoalItem(project, idx))}
+        {projects.map((project, idx) => this.buildProjectItem(project, idx))}
       </ScrollView>
     )
   }
 
   render () {
-    const { containerStyle, buttonStyle, selectGoalStyle } = styles
+    const { containerStyle, buttonStyle, selectProjectStyle } = styles
+    let selectedProject = this.props.projects.filter(obj => obj.uid === this.props.projectID)[0]
     return (
       <View style={containerStyle}>
         <TouchableOpacity style={buttonStyle} onPress={() => this.setState({ showModal: !this.state.showModal })}>
-          {this.props.goal
+          {this.props.projectID
           ? <Text style={{color: 'orange', fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>
-              {this.props.goal}
+              {selectedProject.title}
             </Text>
           : <View style={{padding: 10, marginBottom: 5, backgroundColor: 'orange', borderRadius: 10}}>
-              <Text style={selectGoalStyle}>
+              <Text style={selectProjectStyle}>
                 Click here to select a project
               </Text>
             </View>
@@ -67,7 +74,7 @@ class EntryForm extends Component {
         >
           <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)'}}>
             <View style={{ flex: 1, marginLeft: 40, marginRight: 40, marginTop: 40, marginBottom: 40, backgroundColor: '#eee', justifyContent: 'flex-start', borderRadius: 10 }}>
-              {this.buildGoalList()}
+              {this.buildProjectList()}
             </View>
           </View>
         </Modal>
@@ -85,23 +92,25 @@ const styles = {
   buttonStyle: {
     backgroundColor: 'white'
   },
-  goalItemContainer: {
+  ProjectItemContainer: {
     padding: 10,
-    height: 150
+    alignSelf: 'stretch'
   },
-  goalTextStyle: {
+  ProjectTextStyle: {
     color: '#555',
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    alignSelf: 'stretch'
   },
-  goalItemStyle: {
+  ProjectItemStyle: {
     borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: 'white',
-    padding: 10,
-    justifyContent: 'flex-start'
+    padding: 12,
+    justifyContent: 'flex-start',
+    alignSelf: 'stretch'
   },
   containerStyle: {
     marginTop: 75,
@@ -111,7 +120,7 @@ const styles = {
     borderColor: '#eee',
     borderBottomWidth: 3
   },
-  selectGoalStyle: {
+  selectProjectStyle: {
     alignSelf: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -136,14 +145,13 @@ const styles = {
 }
 
 const mapStateToProps = (state) => {
-  const { goal, description } = state.entryForm
+  const { project, description, projectID } = state.entryForm
   
   const projects = _.map(state.projects, (val, uid) => {
     return { ...val, uid }
   })
 
-  const { goals } = state
-  return { goal, description, goals, projects }
+  return { project, description, projects, projectID }
 }
 
 export default connect(mapStateToProps, { EntryUpdate, ProjectsFetch, EntryClear })(EntryForm)

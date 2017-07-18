@@ -5,7 +5,7 @@ import Communications from 'react-native-communications'
 import EntryForm from './EntryForm'
 import Stopwatch from './Stopwatch'
 import { Text, View } from 'react-native'
-import { EntryUpdate, EntrySave, EntryDelete } from '../actions'
+import { EntryUpdate, EntrySave, EntryDelete, ProjectUpdateProgress } from '../actions'
 import { Card, CardSection, Button, Confirm, Input } from './common'
 import { secondsToString } from '../utilities'
 
@@ -20,9 +20,9 @@ class EntryEdit extends Component {
 
   onButtonPress() {
     const { uid } = this.props.entry
-    const { goal, description, time } = this.props
+    const { project, description, time } = this.props
     this.props.EntrySave({ 
-      goal: goal || this.props.entry.goal,
+      project: project || this.props.entry.project,
       description: description || this.props.entry.description,
       time: time || this.props.entry.time,
       uid
@@ -30,9 +30,10 @@ class EntryEdit extends Component {
   }
 
   onAccept() {
-    const { uid } = this.props.entry
+    const { uid, projectID, seconds } = this.props.entry
 
     this.props.EntryDelete({ uid })
+    this.props.ProjectUpdateProgress(projectID, seconds * -1)
   }
 
   onDecline() {
@@ -63,10 +64,10 @@ class EntryEdit extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { goal, description, time } = state.entryForm
-  return { goal, description, time }
+  const { project, description, time } = state.entryForm
+  return { project, description, time }
 }
 
 export default connect(mapStateToProps, {
-  EntryUpdate, EntrySave, EntryDelete
+  EntryUpdate, EntrySave, EntryDelete, ProjectUpdateProgress
 })(EntryEdit)

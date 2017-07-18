@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Picker } from 'react-native'
+import { View } from 'react-native'
 import { EntryUpdate, EntryAdd } from '../actions'
 import EntryForm from './EntryForm'
 import Stopwatch from './Stopwatch'
 
 class EntryAddForm extends Component {
   onButtonPress () {
-    const { goal, description, time } = this.props
+    const { project, description, time } = this.props
 
-    this.props.EntryAdd({ goal, description, time })
+    this.props.EntryAdd({ project, description, time })
   }
 
   render () {
@@ -37,9 +37,9 @@ const styles = {
   }
 }
 const mapStateToProps = (state) => {
-  const { goal, description, time } = state.entryForm
+  const { project, description, time } = state.entryForm
 
-  return { goal, description, time }
+  return { project, description, time }
 }
 
 export default connect(mapStateToProps, {

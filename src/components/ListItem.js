@@ -1,9 +1,10 @@
-import React,
-{ Component } from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Text, TouchableOpacity, View } from 'react-native'
 import moment from 'moment'
 import { Actions } from 'react-native-router-flux'
-import { secondsToString } from '../utilities'
+import { secondsToString, getProjectByID } from '../utilities'
+import _ from 'lodash'
 
 class ListItem extends Component {
   onRowPress () {
@@ -17,15 +18,17 @@ class ListItem extends Component {
   }
 
   render () {
-    const { goal, time } = this.props.entry
+    const { projectID, seconds } = this.props.entry
     const date = moment(new Date(this.props.entry.date)).format('MM/DD/YYYY')
-    const {containerStyle, goalContainerStyle, goalStyle, descriptionStyle, timeStyle, dateStyle, buttonStyle} = styles
+    const selectedProject = getProjectByID(projectID, this.props.projects)
+    const {containerStyle, projectContainerStyle, projectStyle, timeStyle, dateStyle, buttonStyle} = styles
+    if (!selectedProject) return null
     return (
       <TouchableOpacity onPress={this.onRowPress.bind(this)}>
         <View style={containerStyle}>
-          <View style={buttonStyle}><Text style={timeStyle}>{secondsToString(time)}</Text></View>
-          <View style={goalContainerStyle}>
-            <View><Text style={goalStyle}>{goal}</Text></View>
+          <View style={buttonStyle}><Text style={timeStyle}>{secondsToString(seconds)}</Text></View>
+          <View style={projectContainerStyle}>
+            <View><Text style={projectStyle}>{selectedProject.title}</Text></View>
             <View>{this.showDescription()}<Text style={dateStyle}>{date}</Text></View>
           </View>
         </View>
@@ -46,14 +49,14 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center'
   },
-  goalContainerStyle: {
+  projectContainerStyle: {
     flexDirection: 'column',
     paddingLeft: 10,
     flex: 1,
     height: 80,
     justifyContent: 'center'
   },
-  goalStyle: {
+  projectStyle: {
     fontSize: 16,
     color: '#555',
     fontWeight: '600',
@@ -86,4 +89,13 @@ const styles = {
   }
 }
 
-export default ListItem
+const mapStateToProps = state => {
+
+  const projects = _.map(state.projects, (val, uid) => {
+    return { ...val, uid }
+  })
+
+  return { projects }
+}
+
+export default connect(mapStateToProps)(ListItem)
