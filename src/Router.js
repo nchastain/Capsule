@@ -7,13 +7,13 @@ import EntryAddForm from './components/EntryAddForm'
 import EntryEdit from './components/EntryEdit'
 import ProjectList from './components/ProjectList'
 import ProjectAddForm from './components/ProjectAddForm'
+import ProjectDetails from './components/ProjectDetails'
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 
 // Example Imports
 import ScarletScreen from './components/ScarletScreen'
 import GrayScreen from './components/GrayScreen'
 import BlueScreen from './components/BlueScreen'
-import MaizeScreen from './components/MaizeScreen'
 import GoldScreen from './components/GoldScreen'
 import BlackScreen from './components/BlackScreen'
 
@@ -21,7 +21,7 @@ import BlackScreen from './components/BlackScreen'
 const TabIcon = ({ selected, title }) => {
   return (
     <View>
-      <Text style={{color: selected ? 'orange' : 'darkgrey', fontWeight: 'bold' }}>{title}</Text>
+      <Text style={{ color: selected ? 'orange' : 'darkgrey', fontWeight: 'bold' }}>{title}</Text>
     </View>
   )
 }
@@ -42,17 +42,16 @@ const RouterComponent = () => {
           <Scene key='progress' title='Progress' icon={TabIcon}>
             <Scene key='EntryList' component={EntryList} sceneStyle={{marginTop: 60}} title='Progress' initial onRight={() => Actions.EntryAdd()} rightTitle='+ Add'/>
             <Scene key='blue' component={BlueScreen} title='Blue' />
-            <Scene key='maize' component={MaizeScreen} title='Maize' />
             <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' />
             <Scene key='EntryEdit' component={EntryEdit} title='Edit Entry' />
           </Scene>
 
-                    {/* Tab and its scenes */}
+          {/* Tab and its scenes */}
           <Scene key='projects' title='Projects' icon={TabIcon}>
-            <Scene key='ProjectList' component={ProjectList} title='Projects' onRight={() => Actions.ProjectAdd()} rightTitle='+ Add' />
+            <Scene key='ProjectList' component={ProjectList} title='Projects' onRight={() => Actions.ProjectAdd()} initial rightTitle='+ Add' />
             <Scene key='ProjectAdd' component={ProjectAddForm} title='Add a Project' />
+            <Scene key='ProjectDetails' component={ProjectDetails} title='Project Details' />
           </Scene>
-
 
         {/* End of Tab Container */}
         </Scene>

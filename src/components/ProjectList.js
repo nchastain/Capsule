@@ -2,7 +2,8 @@ import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, ListView } from 'react-native'
-import { ProjectsFetch } from '../actions'
+import { ProjectsFetch, ProjectSelect } from '../actions'
+import { Actions } from 'react-native-router-flux'
 
 class ProjectList extends React.Component {
   componentWillMount () {
@@ -18,15 +19,20 @@ class ProjectList extends React.Component {
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
-
     this.dataSource = ds.cloneWithRows(projects.sort((a, b) => b.time - a.time))
   }
 
+  handleSelect (project) {
+    this.props.ProjectSelect(project)
+  }
+
   renderRow (project) {
-    const {containerStyle, hourRecordStyle, goalContainerStyle, rowStyle, goalStyle, descriptionStyle, timeStyle, dateStyle, buttonStyle} = styles
+    console.log(this.handleSelect)
+    const {containerStyle, hourRecordStyle, goalContainerStyle, rowStyle, goalStyle} = styles
     const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
     return (
-      <TouchableOpacity style={rowStyle}>
+      <TouchableOpacity style={rowStyle} onPress={() => this.handleSelect(project)}
+      >
         <View style={containerStyle}>
           <View style={goalContainerStyle}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -42,7 +48,7 @@ class ProjectList extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-        <ListView enableEmptySections dataSource={this.dataSource} renderRow={this.renderRow} />
+        <ListView enableEmptySections dataSource={this.dataSource} renderRow={this.renderRow.bind(this)} />
       </View>
     )
   }
@@ -124,4 +130,4 @@ const mapStateToProps = state => {
   return { projects }
 }
 
-export default connect(mapStateToProps, { ProjectsFetch })(ProjectList)
+export default connect(mapStateToProps, { ProjectsFetch, ProjectSelect })(ProjectList)

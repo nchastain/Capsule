@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { ListView } from 'react-native'
+import { ListView, View } from 'react-native'
 import { EntriesFetch, ProjectsFetch, loginUser } from '../actions'
 import ListItem from './ListItem'
 
@@ -38,7 +38,7 @@ class EntryList extends Component {
         enableEmptySections
         dataSource={this.dataSource}
         renderRow={this.renderRow}
-        style={{marginBottom: 45}}
+        style={{ marginTop: 10, marginBottom: 50, backgroundColor: 'white' }}
       />
     )
   }

@@ -4,20 +4,28 @@ import {
   PROJECT_ADD,
   PROJECTS_FETCH_SUCCESS,
   PROJECT_CLEAR,
-  PROJECT_UPDATE_PROGRESS
+  PROJECT_UPDATE_PROGRESS,
+  PROJECT_SELECT
 } from './types'
 
-export const ProjectAdd = ({ title }) => {
+export const ProjectAdd = ({ title, hoursGoal }) => {
   // const { currentUser } = firebase.auth()
   let currentDate = new Date()
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries`)
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects`)
-      .push({ title, time: currentDate.getTime(), hoursGoal: 100, hoursLogged: 0 })
+      .push({ title, time: currentDate.getTime(), hoursGoal, hoursLogged: 0 })
       .then(() => {
         dispatch({ type: PROJECT_ADD })
         Actions.ProjectList({ type: 'reset' })
       })
+  }
+}
+
+export const ProjectSelect = (project) => {
+  return (dispatch) => {
+    dispatch({ type: PROJECT_SELECT, payload: project })
+    Actions.ProjectDetails({ title: project.title })
   }
 }
 

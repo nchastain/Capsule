@@ -1,5 +1,5 @@
 import React from 'React'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TextInput } from 'react-native'
 import { ProjectAdd, ProjectClear } from '../actions'
 import { connect } from 'react-redux'
 import { Input } from './common'
@@ -7,7 +7,7 @@ import { Input } from './common'
 class ProjectAddForm extends React.Component {
   constructor () {
     super()
-    this.state = {project: ''}
+    this.state = {project: '', hoursGoal: '100'}
   }
 
   componentWillUmmount() {
@@ -15,10 +15,11 @@ class ProjectAddForm extends React.Component {
   }
 
   onButtonPress () {
-    this.props.ProjectAdd({title: this.state.project})
+    this.props.ProjectAdd({title: this.state.project, hoursGoal: this.state.hoursGoal})
   }
 
   render () {
+    console.log(this.state.hoursGoal)
     return (
       <View style={styles.container}>
         <Input
@@ -26,6 +27,15 @@ class ProjectAddForm extends React.Component {
           value={this.state.project}
           onChangeText={value => this.setState({project: value})}
         />
+        <View style={{flexDirection: 'row', padding: 20, borderRadius: 5, margin: 20, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{flex: 5, padding: 0, color: '#555' }}>This goal will be complete after</Text>
+          <TextInput
+            style={{flex: 1, padding: 0, textAlign: 'right', backgroundColor: 'white', color: 'orange'}}
+            value={this.state.hoursGoal}
+            onChangeText={value => this.setState({hoursGoal: parseInt(value)})}
+          />
+          <Text style={{flex: 1, padding: 0, textAlign: 'right'}}>hours</Text>
+        </View>
         <Text
           style={styles.welcome}
           onPress={() => this.onButtonPress()}

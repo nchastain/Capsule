@@ -1,6 +1,7 @@
 import {
   PROJECT_CLEAR,
-  PROJECT_UPDATE_PROGRESS
+  PROJECT_UPDATE_PROGRESS,
+  PROJECT_SELECT
 } from '../actions/types'
 
 const INITIAL_STATE = {
@@ -13,6 +14,8 @@ export default (state = INITIAL_STATE, action) => {
       return INITIAL_STATE
     case PROJECT_UPDATE_PROGRESS:
       return state
+    case PROJECT_SELECT:
+      return action.payload
     default:
       return state
   }
