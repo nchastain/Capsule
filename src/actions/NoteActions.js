@@ -5,14 +5,14 @@ import {
   NOTES_FETCH_SUCCESS
 } from './types'
 
-export const NoteAdd = ({ text, date, tags }) => {
+export const NoteAdd = ({ text, date, tagIDs }) => {
   // const { currentUser } = firebase.auth()
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/notes`)
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/notes`)
-      .push({ text, date, tags })
+      .push({ text, date, tagIDs })
       .then(() => {
-        dispatch({ type: NOTE_ADD, payload: { text, date, tags } })
+        dispatch({ type: NOTE_ADD, payload: { text, date, tagIDs } })
         Actions.Today()
       })
   }

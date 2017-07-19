@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { ListView, View } from 'react-native'
-import { EntriesFetch, ProjectsFetch, NotesFetch, loginUser } from '../actions'
+import { EntriesFetch, TagsFetch, ProjectsFetch, NotesFetch, loginUser } from '../actions'
 import ListItem from './ListItem'
 
 class EntryList extends Component {
@@ -12,6 +12,7 @@ class EntryList extends Component {
     this.props.EntriesFetch()
     this.props.ProjectsFetch()
     this.props.NotesFetch()
+    this.props.TagsFetch()
     this.createDataSource(this.props)
   }
 
@@ -57,4 +58,4 @@ const mapStateToProps = state => {
   return { entries, projects }
 }
 
-export default connect(mapStateToProps, { EntriesFetch, ProjectsFetch, NotesFetch, loginUser })(EntryList)
+export default connect(mapStateToProps, { EntriesFetch, TagsFetch, ProjectsFetch, NotesFetch, loginUser })(EntryList)

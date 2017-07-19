@@ -36,6 +36,11 @@ class Day extends React.Component {
     })
   }
 
+  findTagByID (id) {
+    let tagObj = this.props.tags ? Object.values(this.props.tags).filter(tagObj => tagObj.id === id)[0] : {text: ''}
+    return tagObj
+  }
+
   handleHashtagLookup (tag) {
     this.props.TagSelect(tag)
   }
@@ -48,9 +53,9 @@ class Day extends React.Component {
           <View style={{ flex: 1 }}>
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
             <View style={{ width: 100, flexDirection: 'column', justifyContent: 'center' }}>
-              {note.tags.map((tag, idx) => (
-                <TouchableOpacity key={idx} style={{marginBottom: 10, marginTop: 10}} onPress={() => that.handleHashtagLookup(tag)}>
-                  <Text style={{ color: 'orange', fontWeight: 'bold', fontSize: 16 }}>{tag}</Text>
+              {note.tagIDs.map((tagID, idx) => (
+                <TouchableOpacity key={idx} style={{marginBottom: 10, marginTop: 10}} onPress={() => that.handleHashtagLookup(that.findTagByID(tagID))}>
+                  <Text style={{ color: 'orange', fontWeight: 'bold', fontSize: 16 }}>#{that.findTagByID(tagID).text}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -144,8 +149,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => {
-  const { entries, projects, project, notes } = state
-  return { entries, projects, project, notes }
+  const { entries, projects, project, notes, tags } = state
+  return { entries, projects, project, notes, tags }
 }
 
 export default connect(mapStateToProps, { NotesFetch, TagSelect })(Day)

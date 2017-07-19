@@ -1,6 +1,6 @@
 import React from 'React'
 import { View, Text, Keyboard, StyleSheet, TextInput, TouchableWithoutFeedback } from 'react-native'
-import { NoteAdd } from '../actions'
+import { NoteAdd, AddTag } from '../actions'
 import { connect } from 'react-redux'
 
 class NoteAddForm extends React.Component {
@@ -10,11 +10,33 @@ class NoteAddForm extends React.Component {
   }
 
   onButtonPress () {
+    let that = this
+
+    // Tag logic
+    const potentialTags = this.state.text.match(/(\B#\w\w+\w+)/g)
+    const formattedPotentialTags = potentialTags.map(tag => tag.replace('#', ''))
+    const existingTagObjs = this.props.tags ? Object.values(this.props.tags) : []
+    const existingTags = existingTagObjs.map(tagObj => tagObj.text)
+    const AddTagIfNew = function (potentialTag) {
+      if (existingTags.length === 0 || existingTags.indexOf(potentialTag) === -1) {
+        that.props.AddTag(potentialTag)
+      }
+    }
+    formattedPotentialTags.forEach(AddTagIfNew)
+    let tagIDArr = []
+    that = this
+    const addTagID = function (potentialTag) {
+      let existingTag = Object.values(that.props.tags).filter(obj => obj.text === potentialTag)[0]
+      let tagID = existingTag.id
+      tagIDArr.push(tagID)
+    }
+    formattedPotentialTags.forEach(addTagID)
+
     this.props.NoteAdd(
       {
         text: this.state.text.replace(/\r?\n|\r/, ''),
         date: new Date().getTime(),
-        tags: this.state.text.match(/(\B#\w\w+\w+)/g)
+        tagIDs: tagIDArr
       }
     )
   }
@@ -64,4 +86,9 @@ const styles = StyleSheet.create({
   },
 })
 
-export default connect(null, { NoteAdd })(NoteAddForm)
+const mapStateToProps = state => {
+  const { tags } = state
+  return { tags }
+}
+
+export default connect(mapStateToProps, { NoteAdd, AddTag })(NoteAddForm)

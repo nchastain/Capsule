@@ -11,16 +11,15 @@ import moment from 'moment'
 class TagDetails extends React.Component {
   render () {
     const notesArr = Object.values(this.props.notes) || []
-    console.log(notesArr)
-    const notesForTag = notesArr.filter(note => (
-      note.tags.indexOf(this.props.tag) !== -1
-    ))
+    const notesForTag = notesArr.filter(note => {
+      return note.tagIDs.indexOf(this.props.tag.id) !== -1
+    })
     return (
       <View style={styles.container}>
         {notesForTag.map((note, idx) => (
           <View key={idx} style={{flexDirection: 'row', padding: 0, alignItems: 'center', justifyContent: 'center'}}>
             <Text style={{width: 75, color: 'orange', marginRight: 5}}>{moment(new Date(note.date)).format('MM/DD/YYYY')}</Text>
-            <Text style={styles.welcome}>{note.text}</Text>
+            <Text style={styles.welcome}>{note.text.replace(/(\B#\w\w+\w+)/g, '')}</Text>
           </View>
         ))}
       </View>
