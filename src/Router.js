@@ -8,6 +8,7 @@ import EntryEdit from './components/EntryEdit'
 import ProjectList from './components/ProjectList'
 import ProjectAddForm from './components/ProjectAddForm'
 import ProjectDetails from './components/ProjectDetails'
+import Day from './components/Day'
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 
 // Example Imports
@@ -51,6 +52,11 @@ const RouterComponent = () => {
             <Scene key='ProjectList' component={ProjectList} title='Projects' onRight={() => Actions.ProjectAdd()} initial rightTitle='+ Add' />
             <Scene key='ProjectAdd' component={ProjectAddForm} title='Add a Project' />
             <Scene key='ProjectDetails' component={ProjectDetails} title='Project Details' />
+          </Scene>
+
+          {/* Tab and its scenes */}
+          <Scene key='days' title='Days' icon={TabIcon}>
+            <Scene key='Today' component={Day} title='Today' onRight={() => Actions.EntryAdd()} initial rightTitle='+ Add' />
           </Scene>
 
         {/* End of Tab Container */}

@@ -10,7 +10,7 @@ class ProjectAddForm extends React.Component {
     this.state = {project: '', hoursGoal: '100'}
   }
 
-  componentWillUmmount() {
+  componentWillUnmount() {
     this.props.ProjectClear()
   }
 

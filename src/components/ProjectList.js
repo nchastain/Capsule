@@ -27,7 +27,6 @@ class ProjectList extends React.Component {
   }
 
   renderRow (project) {
-    console.log(this.handleSelect)
     const {containerStyle, hourRecordStyle, goalContainerStyle, rowStyle, goalStyle} = styles
     const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
     return (
@@ -56,7 +55,7 @@ class ProjectList extends React.Component {
 
 const styles = {
   rowStyle: {
-    height: 65,
+    height: 65
   },
   containerStyle: {
     flex: 1,
@@ -66,7 +65,7 @@ const styles = {
     borderColor: '#eee',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   hourRecordStyle: {
     fontSize: 14,
