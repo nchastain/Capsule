@@ -3,14 +3,20 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { secondsToString } from '../utilities'
+import { NotesFetch, TagSelect } from '../actions'
 
 class Day extends React.Component {
+
+  componentWillMount () {
+    this.props.NotesFetch()
+  }
 
   buildDayEntries (dayEntries) {
     const that = this
@@ -18,7 +24,7 @@ class Day extends React.Component {
       let entryProject = that.props.projects[entry.projectID]
       return (
         <View style={styles.dayEntry} key={idx} >
-          <View style={{ flex: 1 }}>
+          <View>
             <Text>{entryProject.title}</Text>
             {entry.description ? <Text>{entry.description}</Text> : null}
           </View>
@@ -30,16 +36,63 @@ class Day extends React.Component {
     })
   }
 
+  handleHashtagLookup (tag) {
+    this.props.TagSelect(tag)
+  }
+
+  buildDayNotes (dayNotes) {
+    const that = this
+    return dayNotes.map(function (note, idx) {
+      return (
+        <View style={styles.dayEntry} key={idx} >
+          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ width: 100, flexDirection: 'column', justifyContent: 'center' }}>
+              {note.tags.map((tag, idx) => (
+                <TouchableOpacity key={idx} style={{marginBottom: 10, marginTop: 10}} onPress={() => that.handleHashtagLookup(tag)}>
+                  <Text style={{ color: 'orange', fontWeight: 'bold', fontSize: 16 }}>{tag}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <Text style={{ flex: 1 }}>{note.text.replace(/(\B#\w\w+\w+)/g, '')}</Text>
+          </View>
+          </View>
+        </View>
+      )
+    })
+  }
+
+  addProgress () {
+    Actions.EntryAdd()
+  }
+
+  addNote () {
+    Actions.NoteAdd()
+  }
+
   render () {
-    const entriesArr = Object.values(this.props.entries)
+    const entriesArr = this.props.entries ? Object.values(this.props.entries) : []
+    const notesArr = this.props.notes ? Object.values(this.props.notes) : []
     const isFromToday = (date) => moment(new Date(date)).get('date') === moment(new Date()).get('date')
     const dayEntries = entriesArr.filter(entry => isFromToday(entry.date))
+    const dayNotes = notesArr.filter(note => isFromToday(note.date))
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={{alignSelf: 'stretch', marginTop: 65, marginBottom: 50}}>
-          {this.buildDayEntries(dayEntries)}
+      <View style={{marginTop: 62, marginBottom: 50}}>
+        <View style={styles.topBar}>
+          <TouchableOpacity style={styles.topBarButton} onPress={this.addNote.bind(this)}>
+            <Text style={{fontSize: 14, fontWeight: 'bold', color: '#555'}}>+ Add note</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.topBarButton} onPress={this.addProgress.bind(this)}>
+            <Text style={{fontSize: 14, fontWeight: 'bold', color: '#555'}}>+ Add progress</Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={{alignSelf: 'stretch'}}>
+            {this.buildDayEntries(dayEntries)}
+            {this.buildDayNotes(dayNotes)}
+          </View>
+        </ScrollView>
+      </View>
     )
   }
 }
@@ -49,8 +102,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 0,
     alignSelf: 'stretch',
-    // backgroundColor: '#666666',
-    // padding: 10
+  },
+  topBar: {
+    padding: 10,
+    alignItems: 'center',
+    backgroundColor: 'lightgray',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  topBarButton: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: 'white',
+    flex: 1,
+    alignItems: 'center',
+    margin: 10,
   },
   entryDurationContainer: {
     flex: 1,
@@ -66,21 +132,20 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     borderBottomWidth: 1,
     borderColor: 'lightgray',
-    // margin: 5,
-    padding: 20,
+    padding: 10,
+    paddingLeft: 20,
     flexDirection: 'row'
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
-    // margin: 10,
     color: '#ffffff'
   }
 })
 
 const mapStateToProps = state => {
-  const { entries, projects, project } = state
-  return { entries, projects, project }
+  const { entries, projects, project, notes } = state
+  return { entries, projects, project, notes }
 }
 
-export default connect(mapStateToProps)(Day)
+export default connect(mapStateToProps, { NotesFetch, TagSelect })(Day)

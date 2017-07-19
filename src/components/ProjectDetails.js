@@ -12,7 +12,7 @@ class ProjectDetails extends React.Component {
   }
 
   render () {
-    const entriesArr = Object.values(this.props.entries)
+    const entriesArr = Object.values(this.props.entries) || []
     const projectEntries = entriesArr.filter(entry => entry.projectID === this.props.project.uid)
     const createReadableDate = (date) => moment(new Date(date)).format('MM/DD/YYYY')
     return (

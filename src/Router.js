@@ -7,14 +7,15 @@ import EntryAddForm from './components/EntryAddForm'
 import EntryEdit from './components/EntryEdit'
 import ProjectList from './components/ProjectList'
 import ProjectAddForm from './components/ProjectAddForm'
+import NoteAddForm from './components/NoteAddForm'
 import ProjectDetails from './components/ProjectDetails'
 import Day from './components/Day'
 import FontAwesome, { Icons } from 'react-native-fontawesome';
+import TagDetails from './components/TagDetails'
 
 // Example Imports
 import ScarletScreen from './components/ScarletScreen'
 import GrayScreen from './components/GrayScreen'
-import BlueScreen from './components/BlueScreen'
 import GoldScreen from './components/GoldScreen'
 import BlackScreen from './components/BlackScreen'
 
@@ -40,9 +41,8 @@ const RouterComponent = () => {
         <Scene key='tabbar' tabs tabBarStyle={{ backgroundColor: '#eee', borderColor: 'lightgrey', borderTopWidth: 1 }}>
 
           {/* Tab and its scenes */}
-          <Scene key='progress' title='Progress' icon={TabIcon}>
-            <Scene key='EntryList' component={EntryList} sceneStyle={{marginTop: 60}} title='Progress' initial onRight={() => Actions.EntryAdd()} rightTitle='+ Add'/>
-            <Scene key='blue' component={BlueScreen} title='Blue' />
+          <Scene key='progress' title='Entries' icon={TabIcon}>
+            <Scene key='EntryList' component={EntryList} sceneStyle={{marginTop: 60}} title='Entries' initial onRight={() => Actions.EntryAdd()} rightTitle='+ Add'/>
             <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' />
             <Scene key='EntryEdit' component={EntryEdit} title='Edit Entry' />
           </Scene>
@@ -56,7 +56,10 @@ const RouterComponent = () => {
 
           {/* Tab and its scenes */}
           <Scene key='days' title='Days' icon={TabIcon}>
-            <Scene key='Today' component={Day} title='Today' onRight={() => Actions.EntryAdd()} initial rightTitle='+ Add' />
+            <Scene key='Today' component={Day} title='Today' initial />
+            <Scene key='TagDetails' component={TagDetails} title='Tag Details' />
+            <Scene key='NoteAdd' component={NoteAddForm} title='Add a Note' />
+            <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' />
           </Scene>
 
         {/* End of Tab Container */}

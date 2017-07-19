@@ -48,7 +48,7 @@ class Stopwatch extends React.Component {
 
   handleSave () {
     const { project, description, projectID } = this.props
-    const date = new Date().toString()
+    const date = new Date().getTime()
     this.setState({saved: this.state.secondsElapsed}, function () {
       this.props.EntryAdd({ description, date, seconds: this.state.saved, projectID })
       this.props.ProjectUpdateProgress(projectID, this.state.saved)
