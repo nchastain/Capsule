@@ -30,15 +30,25 @@ class TagList extends React.Component {
     this.props.TagSelect(tag)
   }
 
+  getNotesForTag (tag) {
+    const notesArr = this.props.notes ? Object.values(this.props.notes) : []
+    const notesForTag = notesArr.filter(note => {
+      return note.tagIDs.indexOf(tag.id) !== -1
+    })
+    return notesForTag
+  }
+
   renderRow (tag) {
-    const {containerStyle, hourRecordStyle, goalContainerStyle, rowStyle, goalStyle} = styles
+    const {containerStyle, goalContainerStyle, rowStyle, goalStyle} = styles
+    let numNotes = this.getNotesForTag(tag).length
     return (
       <TouchableOpacity style={rowStyle} onPress={() => this.handleSelect(tag)}
       >
         <View style={containerStyle}>
           <View style={goalContainerStyle}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={goalStyle}>#{tag.text}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <View style={{marginRight: 5}}><Text style={goalStyle}>#{tag.text}</Text></View>
+              <Text style={{color: 'orange'}}>({numNotes})</Text>
             </View>
           </View>
         </View>
@@ -124,8 +134,8 @@ const styles = {
 }
 
 const mapStateToProps = state => {
-  const { tags } = state
-  return { tags }
+  const { tags, notes } = state
+  return { tags, notes }
 }
 
 export default connect(mapStateToProps, { TagsFetch, TagSelect })(TagList)
