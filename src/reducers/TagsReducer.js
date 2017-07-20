@@ -1,5 +1,6 @@
 import {
-  TAGS_FETCH_SUCCESS
+  TAGS_FETCH_SUCCESS,
+  TAG_ADD
 } from '../actions/types'
 
 export default (state = {text: 'Example', id: 896}, action) => {

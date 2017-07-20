@@ -6,6 +6,7 @@ import EntryList from './components/EntryList'
 import EntryAddForm from './components/EntryAddForm'
 import EntryEdit from './components/EntryEdit'
 import ProjectList from './components/ProjectList'
+import TagList from './components/TagList'
 import ProjectAddForm from './components/ProjectAddForm'
 import NoteAddForm from './components/NoteAddForm'
 import ProjectDetails from './components/ProjectDetails'
@@ -60,6 +61,11 @@ const RouterComponent = () => {
             <Scene key='TagDetails' component={TagDetails} title='Tag Details' />
             <Scene key='NoteAdd' component={NoteAddForm} title='Add a Note' />
             <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' />
+          </Scene>
+
+          <Scene key='tags' title='Tags' icon={TabIcon}>
+            <Scene key='TagList' component={TagList} title='Tags' initial />
+            <Scene key='TagDetails' component={TagDetails} title='Tag Details' />
           </Scene>
 
         {/* End of Tab Container */}

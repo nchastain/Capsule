@@ -1,6 +1,7 @@
 import { Actions } from 'react-native-router-flux'
 import {
   TAG_SELECT,
+  TAG_ADD,
   TAGS_FETCH_SUCCESS
 } from './types'
 import firebase from 'firebase'
@@ -14,9 +15,10 @@ export const TagSelect = (tag) => {
 }
 
 export const AddTag = (newTag) => {
+  const newTagObj = { text: newTag, id: uuid.v4() }
   return (dispatch) => {
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/tags`)
-      .push({ text: newTag, id: uuid.v4() })
+      .push({...newTagObj})
   }
 }
 
