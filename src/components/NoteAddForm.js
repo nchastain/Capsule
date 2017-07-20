@@ -57,7 +57,7 @@ class NoteAddForm extends React.Component {
     const AddTagIfNew = function (potentialTag) {
       if (existingTags.length === 0 || existingTags.indexOf(potentialTag) === -1) {
         that.props.AddTag(potentialTag)
-        this.setState({newTags: true})
+        that.setState({newTags: true})
       }
     }
     formattedPotentialTags.forEach(AddTagIfNew)

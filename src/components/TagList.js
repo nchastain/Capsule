@@ -31,7 +31,7 @@ class TagList extends React.Component {
   }
 
   getNotesForTag (tag) {
-    const notesArr = this.props.notes ? Object.values(this.props.notes) : []
+    const notesArr = Object.values(this.props.notes)
     const notesForTag = notesArr.filter(note => {
       return note.tagIDs.indexOf(tag.id) !== -1
     })
@@ -40,7 +40,8 @@ class TagList extends React.Component {
 
   renderRow (tag) {
     const {containerStyle, goalContainerStyle, rowStyle, goalStyle} = styles
-    let numNotes = this.getNotesForTag(tag).length
+    console.log(tag)
+    let numNotes = this.props.notes ? this.getNotesForTag(tag).length : 0
     return (
       <TouchableOpacity style={rowStyle} onPress={() => this.handleSelect(tag)}
       >
