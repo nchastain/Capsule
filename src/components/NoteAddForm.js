@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 class NoteAddForm extends React.Component {
   constructor () {
     super()
-    this.state = {text: '', ran: false}
+    this.state = {text: '', ran: false, newTags: false}
   }
 
   componentWillReceiveProps (nextProps) {
@@ -57,9 +57,21 @@ class NoteAddForm extends React.Component {
     const AddTagIfNew = function (potentialTag) {
       if (existingTags.length === 0 || existingTags.indexOf(potentialTag) === -1) {
         that.props.AddTag(potentialTag)
+        this.setState({newTags: true})
       }
     }
     formattedPotentialTags.forEach(AddTagIfNew)
+    if (!this.state.newTags && !this.state.ran) {
+      let tagIDArr = this.createTagIDArr(formattedPotentialTags)
+      this.props.NoteAdd(
+        {
+          text: this.state.text.replace(/\r?\n|\r/, ''),
+          date: new Date().getTime(),
+          tagIDs: tagIDArr || []
+        }
+      )
+      this.setState({ran: true})
+    }
   }
 
   render () {
