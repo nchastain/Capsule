@@ -27,19 +27,17 @@ class ProjectList extends React.Component {
   }
 
   renderRow (project) {
-    const {containerStyle, hourRecordStyle, goalContainerStyle, rowStyle, goalStyle} = styles
     const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
     return (
-      <TouchableOpacity style={rowStyle} onPress={() => this.handleSelect(project)}
-      >
-        <View style={containerStyle}>
-          <View style={goalContainerStyle}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={goalStyle}>{project.title}</Text>
-              <View style={styles.hourRecordContainer}><Text style={hourRecordStyle}>{formattedHoursLogged}/{project.hoursGoal} hours</Text></View>
-            </View>
-          </View>
+      <TouchableOpacity style={styles.rowStyle} onPress={() => this.handleSelect(project)}>
+        <View style={styles.buttonStyle}><Text style={styles.timeStyle}>{formattedHoursLogged}/{project.hoursGoal}</Text></View>
+        <View style={styles.projectStyle}>
+          <Text style={styles.projectTitleStyle}>
+            {project.title}
+          </Text>
+          <Text style={styles.projectInfoStyle}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>
         </View>
+        <View style={{marginRight: 10}}><Text style={{color: 'lightgray', fontSize: 18}}>></Text></View>
       </TouchableOpacity>
     )
   }
@@ -55,7 +53,12 @@ class ProjectList extends React.Component {
 
 const styles = {
   rowStyle: {
-    height: 65
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: 'lightgray',
+    padding: 10,
   },
   containerStyle: {
     flex: 1,
@@ -65,10 +68,10 @@ const styles = {
     borderColor: '#eee',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   hourRecordStyle: {
-    fontSize: 14,
+    fontSize: 18,
     color: '#a083c4',
     fontWeight: 'bold'
   },
@@ -79,23 +82,32 @@ const styles = {
     flexDirection: 'column',
     paddingLeft: 10,
     flex: 1,
-    height: 80,
     justifyContent: 'center'
   },
-  goalStyle: {
+  projectTitleStyle: {
     fontSize: 16,
     color: '#555',
     fontWeight: '600',
+  },
+  projectStyle: {
+    marginLeft: 15,
+    flex: 1,
+    flexDirection: 'column',
+  },
+  projectInfoStyle: {
+    color: '#a083c4',
+    fontSize: 14
   },
   descriptionStyle: {
     fontSize: 12,
     color: '#555',
   },
   timeStyle: {
-    fontSize: 18,
+    fontSize: 14,
     color: 'white',
     overflow: 'hidden',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   dateStyle: {
     fontSize: 12,

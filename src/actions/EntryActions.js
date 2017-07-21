@@ -16,13 +16,14 @@ export const EntryUpdate = ({ prop, value }) => {
 }
 
 export const EntryAdd = ({ description, date, seconds, projectID }) => {
-  const { currentUser } = firebase.auth()
+  // const { currentUser } = firebase.auth()
   return (dispatch) => {
-    firebase.database().ref(`/users/${currentUser.uid}/entries`)
+    // firebase.database().ref(`/users/${currentUser.uid}/entries`)
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`) 
       .push({ description, date, seconds, projectID })
       .then(() => {
         dispatch({ type: ENTRY_ADD })
-        Actions.EntryList({ type: 'reset' })
+        Actions.Today({ type: 'reset' })
       })
   }
 }
@@ -46,26 +47,28 @@ export const EntriesFetch = () => {
 }
 
 export const EntrySave = ({ description, seconds, uid, projectID }) => {
-  const { currentUser } = firebase.auth()
+  // const { currentUser } = firebase.auth()
 
   return (dispatch) => {
-    firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
+    // firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)  
       .set({ description, seconds, projectID })
       .then(() => {
         dispatch({ type: ENTRY_SAVE_SUCCESS })
-        Actions.EntryList({ type: 'reset' })
+        Actions.Today({ type: 'reset' })
       })
   }
 }
 
 export const EntryDelete = ({ uid }) => {
-  const { currentUser } = firebase.auth()
+  // const { currentUser } = firebase.auth()
 
   return () => {
-    firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
+    // firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)  
       .remove()
       .then(() => {
-        Actions.EntryList({ type: 'reset' })
+        Actions.Today({ type: 'reset' })
       })
   }
 }

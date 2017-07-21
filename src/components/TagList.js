@@ -20,6 +20,7 @@ class TagList extends React.Component {
       rowHasChanged: (r1, r2) => r1 !== r2
     })
     this.dataSource = ds.cloneWithRows(Object.values(tags).sort(function (a, b) {
+      if (!a.text || !b.text) return -1
       if (a.text.toLowerCase() < b.text.toLowerCase()) return -1
       if (a.text.toLowerCase() > b.text.toLowerCase()) return 1
       return 0

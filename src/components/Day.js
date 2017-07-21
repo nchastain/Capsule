@@ -10,12 +10,15 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { secondsToString } from '../utilities'
-import { NotesFetch, TagSelect } from '../actions'
+import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect } from '../actions'
 
 class Day extends React.Component {
 
   componentWillMount () {
     this.props.NotesFetch()
+    this.props.EntriesFetch()
+    this.props.ProjectsFetch()
+    this.props.TagsFetch()
   }
 
   buildDayEntries (dayEntries) {
@@ -23,13 +26,27 @@ class Day extends React.Component {
     return dayEntries.map(function (entry, idx) {
       let entryProject = that.props.projects[entry.projectID]
       return (
-        <View style={styles.dayEntry} key={idx} >
-          <View style={styles.entryDurationContainer}>
-            <Text style={styles.entryDuration}>{secondsToString(entry.seconds)}</Text>
+        <View key={idx} style={{
+          // alignSelf: 'stretch',
+          flexDirection: 'row',
+          flex: 1,
+          alignItems: 'center',
+          backgroundColor: 'white',
+          marginBottom: 5,
+          marginTop: 5,
+          padding: 30,
+          paddingLeft: 0,
+          shadowOffset: { width: 4, height: 4 },
+          shadowColor: '#555',
+          shadowOpacity: 0.3,
+          borderRadius: 5,
+          }}>
+          <View style={{width: 60, alignItems: 'flex-start', marginLeft: 15}}>
+            <Text style={{color: '#a083c4', fontWeight: 'bold'}}>{secondsToString(entry.seconds)}</Text>
           </View>
-          <View style={{ flex: 1 }}>
-            <Text>{entryProject.title}</Text>
-            {entry.description ? <Text>{entry.description}</Text> : null}
+          <View>
+            <Text style={{fontSize: 16, color: '#555', fontWeight: 'bold'}}>{entryProject.title}</Text>
+            {entry.description ? <Text style={{color: '#555'}}>{entry.description}</Text> : null}
           </View>
         </View>
       )
@@ -52,7 +69,19 @@ class Day extends React.Component {
         <View style={styles.dayEntry} key={idx} >
           <View style={{ flex: 1, alignSelf: 'stretch' }}>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ marginRight: 0, alignItems: 'flex-start', alignSelf: 'stretch', flex: 1, justifyContent: 'center'}}><TouchableOpacity style={{justifyContent: 'center'}}><Text style={{color: '#a083c4', fontSize: 30, fontWeight: 'bold'}}>Hi</Text></TouchableOpacity></View>
+              <View style={{
+                marginRight: 0,
+                alignItems: 'flex-start',
+                alignSelf: 'stretch',
+                flex: 1,
+                justifyContent: 'center',
+              }}>
+                <TouchableOpacity style={{justifyContent: 'center'}}>
+                  <Text style={{color: '#a083c4', fontSize: 30, fontWeight: 'bold'}}>
+                    Hi
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <Text style={{ flex: 5, fontSize: 12 }}>{note.text.replace(/(\B#\w\w+\w+)/g, '')}</Text>
             </View>
           </View>
@@ -60,7 +89,6 @@ class Day extends React.Component {
       )
     })
   }
-
 
   // {note.tagIDs && note.tagIDs.length > 0 && <View style={{ width: 100 }}>
   //               {note.tagIDs.map((tagID, idx) => (
@@ -79,10 +107,11 @@ class Day extends React.Component {
   }
 
   render () {
-    const entriesArr = this.props.entries ? Object.values(this.props.entries) : []
+    const entriesArr = Object.values(this.props.entries)
     const notesArr = this.props.notes ? Object.values(this.props.notes) : []
     const isFromToday = (date) => moment(new Date(date)).get('date') === moment(new Date()).get('date')
     const dayEntries = entriesArr.filter(entry => isFromToday(entry.date))
+    console.log(entriesArr)
     const dayNotes = notesArr.filter(note => isFromToday(note.date))
     return (
       <View style={{flex: 1, backgroundColor: '#a083c4'}}>
@@ -95,10 +124,8 @@ class Day extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView contentContainerStyle={styles.container}>
-          <View style={{flex: 1}}>
-            {this.buildDayEntries(dayEntries)}
-            {this.buildDayNotes(dayNotes)}
-          </View>
+          {this.buildDayEntries(dayEntries)}
+          {this.buildDayNotes(dayNotes)}
         </ScrollView>
       </View>
     )
@@ -110,9 +137,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 10,
     alignSelf: 'stretch',
-    flex: 1,
     backgroundColor: '#a083c4',
-    marginBottom: 50,
+    paddingBottom: 60,
   },
   topBar: {
     paddingBottom: 5,
@@ -152,8 +178,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'stretch',
     justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderColor: 'lightgray',
     padding: 10,
     paddingTop: 30,
     paddingBottom: 30,
@@ -174,4 +198,4 @@ const mapStateToProps = state => {
   return { entries, projects, project, notes, tags }
 }
 
-export default connect(mapStateToProps, { NotesFetch, TagSelect })(Day)
+export default connect(mapStateToProps, { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect })(Day)

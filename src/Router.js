@@ -2,7 +2,6 @@ import React from 'react'
 import { Scene, Router, Actions } from 'react-native-router-flux'
 import { Text, View } from 'react-native'
 import LoginForm from './components/LoginForm'
-import EntryList from './components/EntryList'
 import EntryAddForm from './components/EntryAddForm'
 import EntryEdit from './components/EntryEdit'
 import ProjectList from './components/ProjectList'
@@ -42,13 +41,6 @@ const RouterComponent = () => {
         <Scene key='tabbar' tabs tabBarStyle={{ backgroundColor: '#eee', borderColor: 'lightgrey', borderTopWidth: 1 }}>
 
           {/* Tab and its scenes */}
-          <Scene key='progress' title='Entries' icon={TabIcon}>
-            <Scene key='EntryList' component={EntryList} sceneStyle={{marginTop: 60, paddingBottom: 50}} title='Entries' initial onRight={() => Actions.EntryAdd()} rightTitle='Add +' />
-            <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' />
-            <Scene key='EntryEdit' component={EntryEdit} title='Edit Entry' leftTitle='<' />
-          </Scene>
-
-          {/* Tab and its scenes */}
           <Scene key='projects' title='Projects' icon={TabIcon}>
             <Scene key='ProjectList' component={ProjectList} title='Projects' onRight={() => Actions.ProjectAdd()} initial rightTitle='Add +' />
             <Scene key='ProjectAdd' component={ProjectAddForm} title='Add a Project' />
@@ -60,7 +52,7 @@ const RouterComponent = () => {
             <Scene key='Today' component={Day} title='Today' initial />
             <Scene key='TagDetailsDay' component={TagDetails} title='Tag Details' />
             <Scene key='NoteAddForm' component={NoteAddForm} title='Add a Note' />
-            <Scene key='EntryAddDay' component={EntryAddForm} title='Add New Entry' />
+            <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' />
           </Scene>
 
           <Scene key='tags' title='Tags' icon={TabIcon}>
@@ -86,7 +78,7 @@ const styles = {
   },
   navBarTitle: {
     color: '#555',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   barButtonTextStyle: {
     color:'#a083c4',
