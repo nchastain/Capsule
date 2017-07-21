@@ -51,16 +51,16 @@ class Day extends React.Component {
       return (
         <View style={styles.dayEntry} key={idx} >
           <View style={{ flex: 1 }}>
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ width: 100, flexDirection: 'column', justifyContent: 'center' }}>
-              {note.tagIDs.map((tagID, idx) => (
-                <TouchableOpacity key={idx} style={{marginBottom: 10, marginTop: 10}} onPress={() => that.handleHashtagLookup(that.findTagByID(tagID))}>
-                  <Text style={{ color: '#a083c4', fontWeight: 'bold', fontSize: 16 }}>#{that.findTagByID(tagID).text}</Text>
-                </TouchableOpacity>
-              ))}
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+              {note.tagIDs && note.tagIDs.length > 0 && <View style={{ width: 100, flexDirection: 'column', justifyContent: 'center' }}>
+                {note.tagIDs.map((tagID, idx) => (
+                  <TouchableOpacity key={idx} style={{marginBottom: 10, marginTop: 10}} onPress={() => that.handleHashtagLookup(that.findTagByID(tagID))}>
+                    <Text style={{ color: '#a083c4', fontWeight: 'bold', fontSize: 16 }}>#{that.findTagByID(tagID).text}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>}
+              <Text style={{ flex: 1 }}>{note.text.replace(/(\B#\w\w+\w+)/g, '')}</Text>
             </View>
-            <Text style={{ flex: 1 }}>{note.text.replace(/(\B#\w\w+\w+)/g, '')}</Text>
-          </View>
           </View>
         </View>
       )
@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 0,
     alignSelf: 'stretch',
-    paddingBottom: 65,
-    paddingTop: 0,
+    marginBottom: 65,
+    marginTop: 10,
     backgroundColor: '#eee',
   },
   topBar: {

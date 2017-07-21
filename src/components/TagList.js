@@ -33,7 +33,7 @@ class TagList extends React.Component {
   getNotesForTag (tag) {
     const notesArr = Object.values(this.props.notes)
     const notesForTag = notesArr.filter(note => {
-      return note.tagIDs.indexOf(tag.id) !== -1
+      return note.tagIDs && note.tagIDs.indexOf(tag.id) !== -1
     })
     return notesForTag
   }

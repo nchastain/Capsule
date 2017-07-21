@@ -110,7 +110,7 @@ const styles = {
     borderBottomColor: '#a083c4'
   },
   navBarTitle: {
-      color:'#a083c4',
+      color: '#555',
       fontWeight: 'bold'
   },
   barButtonTextStyle:{
@@ -124,5 +124,6 @@ const styles = {
   },
   rightButtonTextStyle: {
     color: '#a083c4',
+    fontWeight: 'bold'
   },
 }

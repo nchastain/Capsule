@@ -12,7 +12,7 @@ class TagDetails extends React.Component {
   render () {
     const notesArr = Object.values(this.props.notes) || []
     const notesForTag = notesArr.filter(note => {
-      return note.tagIDs.indexOf(this.props.tag.id) !== -1
+      return note.tagIDs && note.tagIDs.indexOf(this.props.tag.id) !== -1
     })
     return (
       <View style={styles.container}>

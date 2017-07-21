@@ -31,8 +31,8 @@ class NoteAddForm extends React.Component {
       date: new Date().getTime(),
       tagIDs: allTagIDs
     }
-    this.props.NoteAdd(noteObj)
     newTagObjs.forEach(this.props.AddTag)
+    this.props.NoteAdd(noteObj)
   }
 
   render () {
