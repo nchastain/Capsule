@@ -11,14 +11,7 @@ import ProjectAddForm from './components/ProjectAddForm'
 import NoteAddForm from './components/NoteAddForm'
 import ProjectDetails from './components/ProjectDetails'
 import Day from './components/Day'
-import FontAwesome, { Icons } from 'react-native-fontawesome';
 import TagDetails from './components/TagDetails'
-
-// Example Imports
-import ScarletScreen from './components/ScarletScreen'
-import GrayScreen from './components/GrayScreen'
-import GoldScreen from './components/GoldScreen'
-import BlackScreen from './components/BlackScreen'
 
 // Simple component to render something in place of icon
 const TabIcon = ({ selected, title }) => {
@@ -87,37 +80,19 @@ const RouterComponent = () => {
 export default RouterComponent
 
 const styles = {
-  // navBar: {
-  //   backgroundColor:'#a083c4',
-  // },
-  // navBarTitle: {
-  //   color:'#FFFFFF'
-  // },
-  // leftButtonTextStyle: {
-  //   color: '#FFFFFF'
-  // },
-  // rightButtonTextStyle: {
-  //   color: '#FFFFFF'
-  // },
-  // barButtonTextStyle: {
-  //     color: '#FFFFFF'
-  // },
-  // barButtonIconStyle: {
-  //     tintColor:'#FFFFFF'
-  // },
   navBar: {
     backgroundColor:'#e2daed',
     borderBottomColor: '#a083c4'
   },
   navBarTitle: {
-      color: '#555',
-      fontWeight: 'bold'
+    color: '#555',
+    fontWeight: 'bold'
   },
-  barButtonTextStyle:{
-      color:'#a083c4',
+  barButtonTextStyle: {
+    color:'#a083c4',
   },
-  barButtonIconStyle:{
-      tintColor:'#a083c4'
+  barButtonIconStyle: {
+    tintColor:'#a083c4'
   },
   backButtonTextStyle: {
     color: '#a083c4'

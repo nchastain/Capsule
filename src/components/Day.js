@@ -52,8 +52,8 @@ class Day extends React.Component {
         <View style={styles.dayEntry} key={idx} >
           <View style={{ flex: 1, alignSelf: 'stretch' }}>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ marginRight: 5, alignItems: 'flex-start', flex: 1}}><TouchableOpacity style={{justifyContent: 'center', padding: 12, borderRadius: 5, backgroundColor: '#a083c4'}}><Text style={{color: 'white', fontWeight: 'bold'}}>Hi</Text></TouchableOpacity></View>
-              <Text style={{ flex: 4 }}>{note.text.replace(/(\B#\w\w+\w+)/g, '')}</Text>
+              <View style={{ marginRight: 0, alignItems: 'flex-start', alignSelf: 'stretch', flex: 1, justifyContent: 'center'}}><TouchableOpacity style={{justifyContent: 'center'}}><Text style={{color: '#a083c4', fontSize: 30, fontWeight: 'bold'}}>Hi</Text></TouchableOpacity></View>
+              <Text style={{ flex: 5, fontSize: 12 }}>{note.text.replace(/(\B#\w\w+\w+)/g, '')}</Text>
             </View>
           </View>
         </View>
@@ -154,9 +154,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomWidth: 1,
     borderColor: 'lightgray',
-    padding: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
+    padding: 10,
+    paddingTop: 30,
+    paddingBottom: 30,
     flexDirection: 'column',
     shadowOffset: { width: 4,  height: 4,  },
     shadowColor: '#555',
