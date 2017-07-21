@@ -24,14 +24,21 @@ import BlackScreen from './components/BlackScreen'
 const TabIcon = ({ selected, title }) => {
   return (
     <View>
-      <Text style={{ color: selected ? 'orange' : 'darkgrey', fontWeight: 'bold' }}>{title}</Text>
+      <Text style={{ color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold' }}>{title}</Text>
     </View>
   )
 }
 
 const RouterComponent = () => {
   return (
-    <Router>
+    <Router
+      navigationBarStyle={styles.navBar}
+      titleStyle={styles.navBarTitle}
+      barButtonTextStyle={styles.barButtonTextStyle}
+      barButtonIconStyle={styles.barButtonIconStyle}
+      backButtonTextStyle={styles.backButtonTextStyle}
+      rightButtonTextStyle={styles.rightButtonTextStyle}
+      >
       {/* <Scene key='auth'>
         <Scene key='login' sceneStyle={{marginTop: 60}} component={LoginForm} title='Please Login' />
       </Scene> */}
@@ -43,14 +50,14 @@ const RouterComponent = () => {
 
           {/* Tab and its scenes */}
           <Scene key='progress' title='Entries' icon={TabIcon}>
-            <Scene key='EntryList' component={EntryList} sceneStyle={{marginTop: 60}} title='Entries' initial onRight={() => Actions.EntryAdd()} rightTitle='+ Add'/>
+            <Scene key='EntryList' component={EntryList} sceneStyle={{marginTop: 60, paddingBottom: 50}} title='Entries' initial onRight={() => Actions.EntryAdd()} rightTitle='Add +' />
             <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' />
-            <Scene key='EntryEdit' component={EntryEdit} title='Edit Entry' />
+            <Scene key='EntryEdit' component={EntryEdit} title='Edit Entry' leftTitle='<' />
           </Scene>
 
           {/* Tab and its scenes */}
           <Scene key='projects' title='Projects' icon={TabIcon}>
-            <Scene key='ProjectList' component={ProjectList} title='Projects' onRight={() => Actions.ProjectAdd()} initial rightTitle='+ Add' />
+            <Scene key='ProjectList' component={ProjectList} title='Projects' onRight={() => Actions.ProjectAdd()} initial rightTitle='Add +' />
             <Scene key='ProjectAdd' component={ProjectAddForm} title='Add a Project' />
             <Scene key='ProjectDetails' component={ProjectDetails} title='Project Details' />
           </Scene>
@@ -58,9 +65,9 @@ const RouterComponent = () => {
           {/* Tab and its scenes */}
           <Scene key='days' title='Days' icon={TabIcon}>
             <Scene key='Today' component={Day} title='Today' initial />
-            <Scene key='TagDetails' component={TagDetails} title='Tag Details' />
-            <Scene key='NoteAdd' component={NoteAddForm} title='Add a Note' />
-            <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' />
+            <Scene key='TagDetailsDay' component={TagDetails} title='Tag Details' />
+            <Scene key='NoteAddForm' component={NoteAddForm} title='Add a Note' />
+            <Scene key='EntryAddDay' component={EntryAddForm} title='Add New Entry' />
           </Scene>
 
           <Scene key='tags' title='Tags' icon={TabIcon}>
@@ -79,19 +86,43 @@ const RouterComponent = () => {
 
 export default RouterComponent
 
-
-/* <Scene key='main'>
-          <Scene
-            onRight={() => Actions.EntryAdd()}
-            rightTitle='+ Add'
-            key='EntryList'
-            component={EntryList}
-            sceneStyle={{marginTop: 60}}
-            title='Progress Log'
-            initial
-          />
-          <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' />
-          <Scene key='EntryEdit' component={EntryEdit} title='Edit Entry' />
-        </Scene>
-      </Scene>
-    </Router> */
+const styles = {
+  // navBar: {
+  //   backgroundColor:'#a083c4',
+  // },
+  // navBarTitle: {
+  //   color:'#FFFFFF'
+  // },
+  // leftButtonTextStyle: {
+  //   color: '#FFFFFF'
+  // },
+  // rightButtonTextStyle: {
+  //   color: '#FFFFFF'
+  // },
+  // barButtonTextStyle: {
+  //     color: '#FFFFFF'
+  // },
+  // barButtonIconStyle: {
+  //     tintColor:'#FFFFFF'
+  // },
+  navBar: {
+    backgroundColor:'#e2daed',
+    borderBottomColor: '#a083c4'
+  },
+  navBarTitle: {
+      color:'#a083c4',
+      fontWeight: 'bold'
+  },
+  barButtonTextStyle:{
+      color:'#a083c4',
+  },
+  barButtonIconStyle:{
+      tintColor:'#a083c4'
+  },
+  backButtonTextStyle: {
+    color: '#a083c4'
+  },
+  rightButtonTextStyle: {
+    color: '#a083c4',
+  },
+}

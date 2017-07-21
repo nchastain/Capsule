@@ -40,7 +40,6 @@ class TagList extends React.Component {
 
   renderRow (tag) {
     const {containerStyle, goalContainerStyle, rowStyle, goalStyle} = styles
-    console.log(tag)
     let numNotes = this.props.notes ? this.getNotesForTag(tag).length : 0
     return (
       <TouchableOpacity style={rowStyle} onPress={() => this.handleSelect(tag)}
@@ -48,8 +47,13 @@ class TagList extends React.Component {
         <View style={containerStyle}>
           <View style={goalContainerStyle}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-              <View style={{marginRight: 5}}><Text style={goalStyle}>#{tag.text}</Text></View>
-              <Text style={{color: 'orange'}}>({numNotes})</Text>
+              <View style={{flexDirection: 'row', width: 250, alignItems: 'center'}}>
+                <View style={{marginRight: 5}}><Text style={goalStyle}>#{tag.text}</Text></View>
+                <Text style={{color: '#a083c4', fontWeight: 'bold'}}>({numNotes})</Text>
+              </View>
+              <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
+                <Text style={{color: 'lightgray', fontWeight: 'bold', fontSize: 20}}>></Text>
+              </View>
             </View>
           </View>
         </View>
@@ -82,13 +86,13 @@ const styles = {
   },
   hourRecordStyle: {
     fontSize: 14,
-    color: 'orange',
+    color: '#a083c4',
     fontWeight: 'bold'
   },
   hourRecordContainer: {
     padding: 5,
     borderRadius: 5,
-    borderColor: 'orange',
+    borderColor: '#a083c4',
     borderWidth: 1,
   },
   goalContainerStyle: {
@@ -115,12 +119,12 @@ const styles = {
   },
   dateStyle: {
     fontSize: 12,
-    color: 'orange',
+    color: '#a083c4',
   },
   buttonStyle: {
     borderColor: '#eee',
     borderWidth: 3,
-    backgroundColor: 'orange',
+    backgroundColor: '#a083c4',
     borderRadius: 40,
     height: 80,
     width: 80,

@@ -44,7 +44,7 @@ class EntryForm extends Component {
           onPress={() => this.setState({ showModal: !this.state.showModal })}>
             <Text style={{fontSize: 10, fontWeight: 'bold', color: '#555'}}>CLOSE</Text>
         </TouchableOpacity>
-        <Text style={{color: 'orange', padding: 10, textAlign: 'center', fontWeight: 'bold'}}>Select a project from the list below</Text>
+        <Text style={{color: '#a083c4', padding: 10, textAlign: 'center', fontWeight: 'bold'}}>Select a project from the list below</Text>
         {projects.map((project, idx) => this.buildProjectItem(project, idx))}
       </ScrollView>
     )
@@ -57,10 +57,10 @@ class EntryForm extends Component {
       <View style={containerStyle}>
         <TouchableOpacity style={buttonStyle} onPress={() => this.setState({ showModal: !this.state.showModal })}>
           {this.props.projectID
-          ? <Text style={{color: 'orange', fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>
+          ? <Text style={{color: '#a083c4', fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>
               {selectedProject.title}
             </Text>
-          : <View style={{padding: 10, marginBottom: 5, backgroundColor: 'orange', borderRadius: 10}}>
+          : <View style={{padding: 10, marginBottom: 5, backgroundColor: '#a083c4', borderRadius: 10}}>
               <Text style={selectProjectStyle}>
                 Click here to select a project
               </Text>

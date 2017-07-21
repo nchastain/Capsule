@@ -69,14 +69,11 @@ const styles = {
   },
   hourRecordStyle: {
     fontSize: 14,
-    color: 'orange',
+    color: '#a083c4',
     fontWeight: 'bold'
   },
   hourRecordContainer: {
-    padding: 5,
-    borderRadius: 5,
-    borderColor: 'orange',
-    borderWidth: 1,
+    padding: 5
   },
   goalContainerStyle: {
     flexDirection: 'column',
@@ -102,12 +99,12 @@ const styles = {
   },
   dateStyle: {
     fontSize: 12,
-    color: 'orange',
+    color: '#a083c4',
   },
   buttonStyle: {
     borderColor: '#eee',
     borderWidth: 3,
-    backgroundColor: 'orange',
+    backgroundColor: '#a083c4',
     borderRadius: 40,
     height: 80,
     width: 80,

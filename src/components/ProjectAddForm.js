@@ -30,7 +30,7 @@ class ProjectAddForm extends React.Component {
         <View style={{flexDirection: 'row', padding: 20, borderRadius: 5, margin: 20, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
           <Text style={{flex: 5, padding: 0, color: '#555' }}>This goal will be complete after</Text>
           <TextInput
-            style={{flex: 1, padding: 0, textAlign: 'right', backgroundColor: 'white', color: 'orange'}}
+            style={{flex: 1, padding: 0, textAlign: 'right', backgroundColor: 'white', color: '#a083c4'}}
             value={this.state.hoursGoal}
             onChangeText={value => this.setState({hoursGoal: parseInt(value)})}
           />

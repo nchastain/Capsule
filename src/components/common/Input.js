@@ -34,7 +34,7 @@ const styles = {
     padding: 5,
     paddingLeft: 0,
     paddingRight: 0,
-    color: 'orange',
+    color: '#a083c4',
     width: 90,
     textAlign: 'left'
   },

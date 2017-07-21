@@ -75,12 +75,12 @@ const styles = {
   },
   dateStyle: {
     fontSize: 12,
-    color: 'orange',
+    color: '#a083c4',
   },
   buttonStyle: {
     borderColor: '#eee',
     borderWidth: 3,
-    backgroundColor: 'orange',
+    backgroundColor: '#a083c4',
     borderRadius: 40,
     height: 80,
     width: 80,

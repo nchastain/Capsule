@@ -40,7 +40,7 @@ class EntryList extends Component {
         enableEmptySections
         dataSource={this.dataSource}
         renderRow={this.renderRow}
-        style={{ marginTop: 10, marginBottom: 50, backgroundColor: 'white' }}
+        style={{ paddingTop: 10, paddingBottom: 10, backgroundColor: 'white' }}
       />
     )
   }

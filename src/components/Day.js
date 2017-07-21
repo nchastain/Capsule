@@ -24,12 +24,12 @@ class Day extends React.Component {
       let entryProject = that.props.projects[entry.projectID]
       return (
         <View style={styles.dayEntry} key={idx} >
-          <View>
-            <Text>{entryProject.title}</Text>
-            {entry.description ? <Text>{entry.description}</Text> : null}
-          </View>
           <View style={styles.entryDurationContainer}>
             <Text style={styles.entryDuration}>{secondsToString(entry.seconds)}</Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text>{entryProject.title}</Text>
+            {entry.description ? <Text>{entry.description}</Text> : null}
           </View>
         </View>
       )
@@ -55,7 +55,7 @@ class Day extends React.Component {
             <View style={{ width: 100, flexDirection: 'column', justifyContent: 'center' }}>
               {note.tagIDs.map((tagID, idx) => (
                 <TouchableOpacity key={idx} style={{marginBottom: 10, marginTop: 10}} onPress={() => that.handleHashtagLookup(that.findTagByID(tagID))}>
-                  <Text style={{ color: 'orange', fontWeight: 'bold', fontSize: 16 }}>#{that.findTagByID(tagID).text}</Text>
+                  <Text style={{ color: '#a083c4', fontWeight: 'bold', fontSize: 16 }}>#{that.findTagByID(tagID).text}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -72,7 +72,7 @@ class Day extends React.Component {
   }
 
   addNote () {
-    Actions.NoteAdd()
+    Actions.NoteAddForm()
   }
 
   render () {
@@ -85,10 +85,10 @@ class Day extends React.Component {
       <View style={{marginTop: 62, marginBottom: 50}}>
         <View style={styles.topBar}>
           <TouchableOpacity style={styles.topBarButton} onPress={this.addNote.bind(this)}>
-            <Text style={{fontSize: 14, fontWeight: 'bold', color: '#555'}}>+ Add note</Text>
+            <Text style={{fontSize: 14, fontWeight: 'bold', color: 'white'}}>+ Add note</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.topBarButton} onPress={this.addProgress.bind(this)}>
-            <Text style={{fontSize: 14, fontWeight: 'bold', color: '#555'}}>+ Add progress</Text>
+            <Text style={{fontSize: 14, fontWeight: 'bold', color: 'white'}}>+ Add progress</Text>
           </TouchableOpacity>
         </View>
         <ScrollView contentContainerStyle={styles.container}>
@@ -107,38 +107,43 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 0,
     alignSelf: 'stretch',
+    paddingBottom: 65,
+    paddingTop: 0,
+    backgroundColor: '#eee',
   },
   topBar: {
     padding: 10,
     alignItems: 'center',
-    backgroundColor: 'lightgray',
+    backgroundColor: '#eee',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   topBarButton: {
     padding: 10,
     borderRadius: 5,
-    backgroundColor: 'white',
+    backgroundColor: '#a083c4',
     flex: 1,
     alignItems: 'center',
-    margin: 10,
+    margin: 5,
   },
   entryDurationContainer: {
-    flex: 1,
-    alignItems: 'flex-end',
+    width: 100,
+    alignItems: 'flex-start',
     justifyContent: 'center',
     alignSelf: 'stretch',
   },
   entryDuration: {
-    color: 'orange'
+    color: '#a083c4',
+    fontWeight: 'bold'
   },
   dayEntry: {
     backgroundColor: 'white',
     alignSelf: 'stretch',
+    height: 80,
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderColor: 'lightgray',
-    padding: 10,
-    paddingLeft: 20,
+    padding: 20,
     flexDirection: 'row'
   },
   welcome: {

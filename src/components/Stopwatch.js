@@ -82,7 +82,7 @@ class Stopwatch extends React.Component {
                 <Text style={{ color: '#eee', fontWeight: 'bold', fontSize: 20}}>reset</Text>
               </View>
             : <TouchableOpacity onPress={this.handleReset.bind(this)} style={[btn, resetBtn]}>
-                <Text style={{color: '#555', fontWeight: 'bold', fontSize: 20}}>reset</Text>
+                <Text style={{color: 'lightblue', fontWeight: 'bold', fontSize: 20}}>reset</Text>
               </TouchableOpacity>
             }
           </View>
@@ -130,7 +130,7 @@ const styles = {
   },
   stopwatchTimer: {
     fontSize: 35,
-    color: 'orange',
+    color: '#555',
     fontWeight: 'bold'
   },
   counterContainer: {
@@ -177,11 +177,11 @@ const styles = {
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: 'orange',
+    backgroundColor: '#a083c4',
     height: 75
   },
   btn: {
-    backgroundColor: 'orange',
+    backgroundColor: '#a083c4',
     borderRadius: 50,
     width: 100,
     height: 100,

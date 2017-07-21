@@ -5,7 +5,6 @@ import {
   TAGS_FETCH_SUCCESS
 } from './types'
 import firebase from 'firebase'
-import uuid from 'react-native-uuid'
 
 export const TagSelect = (tag) => {
   return (dispatch) => {
@@ -14,11 +13,10 @@ export const TagSelect = (tag) => {
   }
 }
 
-export const AddTag = (newTag) => {
-  const newTagObj = { text: newTag, id: uuid.v4() }
+export const AddTag = (newTagObj) => {
   return (dispatch) => {
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/tags`)
-      .push({...newTagObj})
+      .push(newTagObj)
   }
 }
 

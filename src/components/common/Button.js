@@ -24,7 +24,7 @@ const styles = {
   },
   buttonStyle: {
     alignSelf: 'stretch',
-    backgroundColor: 'orange',
+    backgroundColor: '#a083c4',
     borderRadius: 5,
     marginLeft: 5,
     marginRight: 5

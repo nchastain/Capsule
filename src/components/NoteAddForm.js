@@ -2,6 +2,8 @@ import React from 'React'
 import { View, Text, Keyboard, StyleSheet, TextInput, TouchableWithoutFeedback } from 'react-native'
 import { NoteAdd, AddTag, TagsFetch } from '../actions'
 import { connect } from 'react-redux'
+import ParsedText from 'react-native-parsed-text'
+import uuid from 'react-native-uuid'
 
 class NoteAddForm extends React.Component {
   constructor () {
@@ -9,87 +11,76 @@ class NoteAddForm extends React.Component {
     this.state = {text: '', ran: false, newTags: false}
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.tags !== this.props.tags && !this.state.ran) {
-      let tagIDArr = []
-      const addTagID = function (potentialTag) {
-        let existingTag = Object.values(nextProps.tags).filter(obj => obj.text === potentialTag)[0]
-        let tagID = existingTag.id
-        tagIDArr.push(tagID)
-      }
-      const potentialTags = this.state.text.match(/(\B#\w\w+\w+)/g)
-      const formattedPotentialTags = potentialTags.map(tag => tag.replace('#', ''))
-      if (formattedPotentialTags.length > 0) {
-        formattedPotentialTags.forEach(addTagID)
-      }
-
-      this.props.NoteAdd(
-        {
-          text: this.state.text.replace(/\r?\n|\r/, ''),
-          date: new Date().getTime(),
-          tagIDs: tagIDArr || []
-        }
-      )
-      this.setState({ran: true})
-    }
-  }
-
-  createTagIDArr (potentialTags) {
-    let tagIDArr = []
-    let that = this
-    const addTagID = function (potentialTag) {
-      let existingTag = Object.values(that.props.tags).filter(obj => obj.text === potentialTag)[0]
-      let tagID = existingTag.id
-      tagIDArr.push(tagID)
-    }
-    potentialTags.forEach(addTagID)
-    return tagIDArr
+  extractTagsFromInput () {
+    const newTags = this.state.text.match(/(\B#\S+)/g)
+    return newTags ? newTags.map(tag => tag.replace('#', '')) : []
   }
 
   onButtonPress () {
-    let that = this
-
-    // Tag logic
-    const potentialTags = this.state.text.match(/(\B#\w\w+\w+)/g)
-    const formattedPotentialTags = potentialTags.map(tag => tag.replace('#', ''))
-    const existingTagObjs = this.props.tags ? Object.values(this.props.tags) : []
-    const existingTags = existingTagObjs.map(tagObj => tagObj.text)
-    const AddTagIfNew = function (potentialTag) {
-      if (existingTags.length === 0 || existingTags.indexOf(potentialTag) === -1) {
-        that.props.AddTag(potentialTag)
-        that.setState({newTags: true})
-      }
+    const tagsFromInput = this.extractTagsFromInput()
+    const oldTags = Object.values(this.props.tags)
+    const oldTagTitles = oldTags.map(tag => tag.text)
+    const tagMatches = oldTags.filter(tag => tagsFromInput.indexOf(tag.text) !== -1)
+    const existingIDs = tagMatches.map(tag => tag.id)
+    const newTags = tagsFromInput.filter(tag => oldTagTitles.indexOf(tag) === -1)
+    const newTagObjs = newTags.map(newTag => ({ text: newTag, id: uuid.v4() }))
+    const newIDs = newTagObjs.map(newTagObj => newTagObj.id)
+    const allTagIDs = [...existingIDs, ...newIDs]
+    const noteObj = {
+      text: this.state.text.replace(/\r?\n|\r/, ''),
+      date: new Date().getTime(),
+      tagIDs: allTagIDs
     }
-    formattedPotentialTags.forEach(AddTagIfNew)
-    if (!this.state.newTags && !this.state.ran) {
-      let tagIDArr = this.createTagIDArr(formattedPotentialTags)
-      this.props.NoteAdd(
-        {
-          text: this.state.text.replace(/\r?\n|\r/, ''),
-          date: new Date().getTime(),
-          tagIDs: tagIDArr || []
-        }
-      )
-      this.setState({ran: true})
-    }
+    this.props.NoteAdd(noteObj)
+    newTagObjs.forEach(this.props.AddTag)
   }
 
   render () {
+        //define delimiter
+    let delimiter = /\s+/
+
+    //split string
+    let _text = this.state.text
+    let token, index, parts = []
+    while (_text) {
+      delimiter.lastIndex = 0
+      token = delimiter.exec(_text)
+      if (token === null) {
+        break
+      }
+      index = token.index
+      if (token[0].length === 0) {
+        index = 1
+      }
+      parts.push(_text.substr(0, index))
+      parts.push(token[0])
+      index = index + token[0].length
+      _text = _text.slice(index)
+    }
+    parts.push(_text)
+
+    //highlight hashtags
+    parts = parts.map((text) => {
+      if (/^#/.test(text)) {
+        return <Text key={text} style={styles.hashtag}>{text}</Text>
+      } else {
+        return text
+      }
+    })
+
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <View style={{padding: 20, height: 100, alignSelf: 'stretch', margin: 20, marginTop: 90, backgroundColor: 'white'}}>
+          <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderColor: 'lightgray', borderWidth: 1, margin: 20, marginTop: 90, backgroundColor: 'white'}}>
             <TextInput
-              value={this.state.text}
               placeholder='Add your note here'
               numberOfLines={3}
-              fontSize={20}
               multiline
-              style={{backgroundColor: 'white', alignSelf: 'stretch'}}
+              style={{backgroundColor: 'white', alignSelf: 'stretch', fontSize: 20}}
               onChangeText={value => this.setState({text: value})}
-            />
+            ><Text>{parts}</Text></TextInput>
           </View>
-          <View style={{margin: 10, height: 50, alignItems: 'center', justifyContent: 'center', backgroundColor: 'orange', height: 50, padding: 20, borderRadius: 5}}>
+          <View style={{margin: 10, height: 50, alignItems: 'center', justifyContent: 'center', backgroundColor: '#a083c4', padding: 20, borderRadius: 5}}>
             <Text
               style={styles.welcome}
               onPress={this.onButtonPress.bind(this)}
@@ -106,10 +97,10 @@ class NoteAddForm extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     alignSelf: 'stretch',
-    backgroundColor: 'gray'
+    backgroundColor: '#eee'
   },
   welcome: {
     fontSize: 20,
@@ -117,6 +108,10 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontWeight: 'bold',
   },
+  hashtag: {
+    color: '#a083c4',
+    fontWeight: 'bold'
+  }
 })
 
 const mapStateToProps = state => {

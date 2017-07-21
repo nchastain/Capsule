@@ -17,8 +17,8 @@ class TagDetails extends React.Component {
     return (
       <View style={styles.container}>
         {notesForTag.map((note, idx) => (
-          <View key={idx} style={{flexDirection: 'row', padding: 0, alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={{width: 75, color: 'orange', marginRight: 5}}>{moment(new Date(note.date)).format('MM/DD/YYYY')}</Text>
+          <View key={idx} style={{flexDirection: 'row', padding: 20, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: 'lightgray'}}>
+            <Text style={{width: 100, color: '#a083c4', fontWeight: 'bold', marginRight: 5}}>{moment(new Date(note.date)).format('MM/DD/YYYY')}</Text>
             <Text style={styles.welcome}>{note.text.replace(/(\B#\w\w+\w+)/g, '')}</Text>
           </View>
         ))}
@@ -31,15 +31,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    padding: 10,
-    paddingTop: 100,
+    paddingTop: 70,
     alignItems: 'center',
     alignSelf: 'stretch',
-    backgroundColor: '#7851a9',
+    backgroundColor: 'white',
   },
   welcome: {
     fontSize: 16,
-    color: '#ffffff',
+    color: '#555',
     flex: 1
   },
 })
