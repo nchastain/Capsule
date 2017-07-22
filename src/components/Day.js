@@ -4,7 +4,8 @@ import {
   Text,
   View,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -23,9 +24,9 @@ class Day extends React.Component {
 
   buildDayEntries (dayEntries) {
     const that = this
-    return dayEntries.map(function (entry, idx) {
+    return !this.props.projects ? null : dayEntries.map(function (entry, idx) {
       let entryProject = that.props.projects[entry.projectID]
-      return (
+      return that.props.projects[entry.projectID] ? (
         <View key={idx} style={{
           // alignSelf: 'stretch',
           flexDirection: 'row',
@@ -36,7 +37,7 @@ class Day extends React.Component {
           marginTop: 5,
           padding: 30,
           paddingLeft: 0,
-          shadowOffset: { width: 4, height: 4 },
+          shadowOffset: { width: 2, height: 2 },
           shadowColor: '#555',
           shadowOpacity: 0.3,
           borderRadius: 5,
@@ -49,7 +50,7 @@ class Day extends React.Component {
             {entry.description ? <Text style={{color: '#555'}}>{entry.description}</Text> : null}
           </View>
         </View>
-      )
+      ) : null
     })
   }
 
@@ -115,6 +116,7 @@ class Day extends React.Component {
     const dayNotes = notesArr.filter(note => isFromToday(note.date))
     return (
       <View style={{flex: 1, backgroundColor: '#a083c4'}}>
+        <View style={{alignItems: 'center', paddingBottom: 10, backgroundColor:'#e2daed', paddingTop: 30, alignSelf: 'stretch', justifyContent: 'center'}}><Image style={{height: 30, resizeMode: 'contain'}} source={require('.././assets/logo.png')} /></View>
         <View style={styles.topBar}>
           <TouchableOpacity style={styles.topBarButton} onPress={this.addNote.bind(this)}>
             <Text style={{fontSize: 14, fontWeight: 'bold', color: 'white'}}>+ Add note</Text>
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
   },
   topBar: {
     paddingBottom: 5,
-    paddingTop: 70,
+    paddingTop: 5, 
     paddingLeft: 5,
     paddingRight: 5,
     alignItems: 'center',
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 30,
     flexDirection: 'column',
-    shadowOffset: { width: 4,  height: 4,  },
+    shadowOffset: { width: 2,  height: 2,  },
     shadowColor: '#555',
     shadowOpacity: 0.3,
   },

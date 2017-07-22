@@ -80,7 +80,7 @@ class NoteAddForm extends React.Component {
               onChangeText={value => this.setState({text: value})}
             ><Text>{parts}</Text></TextInput>
           </View>
-          <View style={{margin: 10, height: 50, alignItems: 'center', justifyContent: 'center', backgroundColor: '#a083c4', padding: 20, borderRadius: 5}}>
+          <View style={styles.addNoteButton}>
             <Text
               style={styles.welcome}
               onPress={this.onButtonPress.bind(this)}
@@ -101,6 +101,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'stretch',
     backgroundColor: '#eee'
+  },
+  addNoteButton: {
+    margin: 10,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#a083c4',
+    padding: 20,
+    borderRadius: 5
   },
   welcome: {
     fontSize: 20,
