@@ -25,7 +25,13 @@ class ProjectDetails extends React.Component {
         >
           {this.props.project.title}
         </Text>
-        <ScrollView style={styles.projectEntriesContainer} >{projectEntries.map((entry, idx) => <View style={{borderRadius: 10}} key={idx}><Text style={styles.projectEntry}>{createReadableDate(entry.date)}{entry.description.length > 0 ? `, ${entry.description}, ` : ', '}{secondsToString(entry.seconds)}</Text></View>)}</ScrollView>
+        <ScrollView style={styles.projectEntriesContainer} >{projectEntries.map((entry, idx) => 
+          <View style={{borderRadius: 10, flexDirection: 'row', marginBottom: 10, padding: 20, paddingLeft: 10, paddingRight: 15, backgroundColor: 'white'}} key={idx}>
+            <View style={[styles.projectEntry, styles.dateStringContainer]}><Text style={styles.timeString}>{createReadableDate(entry.date)}</Text></View>
+            <View style={[styles.projectEntry, styles.descriptionContainer]}><Text style={entry.description.length === 0 && {color: 'darkgray'}}>{entry.description.length > 0 ? entry.description : '(No description)'}</Text></View>
+            <View style={[styles.projectEntry, styles.timeStringContainer]}><Text style={styles.timeString}>{secondsToString(entry.seconds)}</Text></View>
+          </View>
+        )}</ScrollView>
       </View>
     )
   }
@@ -40,6 +46,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     paddingBottom: 60,
   },
+  dateStringContainer: {
+    width: 60,
+    alignItems: 'flex-start',
+  },
+  descriptionContainer: {
+    flex: 2,
+    justifyContent: 'center'
+  },
+  timeString: {
+    color: '#a083c4',
+  },
+  timeStringContainer: {
+    width: 30,
+    alignItems: 'flex-end',
+    justifyContent: 'center'
+  },
   welcome: {
     fontSize: 28,
     textAlign: 'center',
@@ -53,11 +75,11 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   projectEntry: {
-    padding: 20,
+    flex: 1,
     backgroundColor: 'white',
-    alignSelf: 'stretch',
     marginTop: 5,
     marginBottom: 5,
+    justifyContent: 'center',
   },
   timeStyle: {
     fontSize: 25,
