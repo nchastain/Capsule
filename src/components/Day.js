@@ -107,6 +107,20 @@ class Day extends React.Component {
     Actions.NoteAddForm()
   }
 
+  displayEmptyMessage () {
+    return (
+      <View>
+        <Text style={{fontSize: 25, textAlign: 'center', color: '#e2daed', fontWeight: 'bold', alignSelf: 'center'}}>
+          Nothing here yet.
+        </Text>
+        <View style={{alignItems: 'center', padding: 20}}><Image source={require('.././assets/inbox.png')} style={{height: 50, resizeMode: 'contain'}} /></View>
+        <Text style={{fontSize: 22, textAlign: 'center', color: '#e2daed', fontWeight: 'bold', alignSelf: 'center'}}>
+          Click + to add something{'\n'}to today's capsule.
+        </Text>
+      </View>
+    )
+  }
+
   render () {
     const entriesArr = Object.values(this.props.entries)
     const notesArr = this.props.notes ? Object.values(this.props.notes) : []
@@ -115,7 +129,7 @@ class Day extends React.Component {
     console.log(entriesArr)
     const dayNotes = notesArr.filter(note => isFromToday(note.date))
     return (
-      <View style={{flex: 1, backgroundColor: '#a083c4'}}>
+      <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: '#a083c4'}}>
         <View style={{alignItems: 'center', paddingBottom: 10, backgroundColor:'#e2daed', paddingTop: 30, alignSelf: 'stretch', justifyContent: 'center'}}><Image style={{height: 30, resizeMode: 'contain'}} source={require('.././assets/logo.png')} /></View>
         <View style={styles.topBar}>
           <TouchableOpacity style={styles.topBarButton} onPress={this.addNote.bind(this)}>
@@ -125,10 +139,14 @@ class Day extends React.Component {
             <Text style={{fontSize: 14, fontWeight: 'bold', color: 'white'}}>+ Add progress</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView contentContainerStyle={styles.container}>
+        {dayEntries.length === 0 && dayNotes.length === 0 && 
+          <View style={{alignSelf: 'stretch', justifyContent: 'center', marginTop: 120, borderRadius: 10, marginLeft: 30, marginRight: 30, padding: 10, paddingTop: 20, paddingBottom: 20, alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
+           {this.displayEmptyMessage()}
+        </View>}
+        {dayEntries.length !== 0 || dayNotes.length !== 0 && <ScrollView contentContainerStyle={styles.container}>
           {this.buildDayEntries(dayEntries)}
           {this.buildDayNotes(dayNotes)}
-        </ScrollView>
+        </ScrollView>}
       </View>
     )
   }
