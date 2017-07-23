@@ -30,12 +30,12 @@ class ProjectList extends React.Component {
     const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
     return (
       <TouchableOpacity style={styles.rowStyle} onPress={() => this.handleSelect(project)}>
-        <View style={styles.buttonStyle}><Text style={styles.timeStyle}>{formattedHoursLogged}/{project.hoursGoal}</Text></View>
+        <View style={project.complete ? [styles.buttonStyle, styles.completeButtonStyle] : styles.buttonStyle }><Text style={project.complete ? [styles.timeStyle, styles.completeTextStyle] : styles.timeStyle}>{formattedHoursLogged}/{project.hoursGoal}</Text></View>
         <View style={styles.projectStyle}>
-          <Text style={styles.projectTitleStyle}>
+          <Text style={project.complete ? [styles.projectTitleStyle, styles.completeTextStyle] : styles.projectTitleStyle }>
             {project.title}
           </Text>
-          <Text style={styles.projectInfoStyle}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>
+          <Text style={project.complete ? [styles.projectInfoStyle, styles.completeTextStyle] : styles.projectInfoStyle}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>
         </View>
         <View style={{marginRight: 10}}><Text style={{color: 'lightgray', fontSize: 18}}>></Text></View>
       </TouchableOpacity>
@@ -109,6 +109,10 @@ const styles = {
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  completeTextStyle: {
+    color: 'lightgray',
+    textDecorationLine: 'line-through',
+  },
   dateStyle: {
     fontSize: 12,
     color: '#a083c4',
@@ -122,6 +126,9 @@ const styles = {
     width: 80,
     alignItems: 'center', 
     justifyContent:'center'
+  },
+  completeButtonStyle: {
+    backgroundColor: 'white'
   },
   container: {
     flex: 1,

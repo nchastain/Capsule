@@ -1,8 +1,8 @@
 import React from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
-import { ProjectClear } from '../actions'
+import { ProjectClear, ProjectComplete } from '../actions'
 import { secondsToString } from '../utilities'
 import moment from 'moment'
 
@@ -14,10 +14,17 @@ class ProjectDetails extends React.Component {
   render () {
     const entriesArr = Object.values(this.props.entries) || []
     const projectEntries = entriesArr.filter(entry => entry.projectID === this.props.project.uid)
-    const formattedHoursLogged = parseFloat(this.props.project.hoursLogged.toFixed(1))
+    const formattedHoursLogged = this.props.hoursLogged === 0 ? 0 : parseFloat(this.props.project.hoursLogged.toFixed(1))
     const createReadableDate = (date) => moment(new Date(date)).format('MM/DD/YYYY')
     return (
       <View style={styles.container}>
+        <View style={{margin: 10, alignItems: 'flex-end', alignSelf: 'stretch'}}>
+          <TouchableOpacity onPress={() => this.props.ProjectComplete(this.props.project.uid)} style={this.props.project.complete ? [styles.statusButton, styles.completeStatusButton] : styles.statusButton }>
+            {this.props.project.complete 
+            ? <Text style={{color: 'white', fontWeight: 'bold'}}>complete</Text>
+            : <Text style={{color: '#a083c4', fontWeight: 'bold'}}>mark complete</Text>}
+          </TouchableOpacity>
+        </View>
         <View style={styles.buttonStyle}><Text style={styles.timeStyle}>{formattedHoursLogged}/{this.props.project.hoursGoal}</Text></View>
         <Text
           style={styles.welcome}
@@ -40,11 +47,20 @@ class ProjectDetails extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 80,
+    paddingTop: 70,
     justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#eee',
     paddingBottom: 60,
+  },
+  statusButton: {
+    padding: 10,
+    borderColor: '#a083c4',
+    borderWidth: 2,
+    borderRadius: 10
+  },
+  completeStatusButton: {
+    backgroundColor: '#a083c4'
   },
   dateStringContainer: {
     width: 60,
@@ -105,4 +121,4 @@ const mapStateToProps = state => {
   return { project, entries }
 }
 
-export default connect(mapStateToProps, { ProjectClear })(ProjectDetails);
+export default connect(mapStateToProps, { ProjectClear, ProjectComplete })(ProjectDetails);

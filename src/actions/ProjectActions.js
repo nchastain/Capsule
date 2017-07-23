@@ -5,16 +5,18 @@ import {
   PROJECTS_FETCH_SUCCESS,
   PROJECT_CLEAR,
   PROJECT_UPDATE_PROGRESS,
-  PROJECT_SELECT
+  PROJECT_SELECT,
+  PROJECT_COMPLETE
 } from './types'
 
 export const ProjectAdd = ({ title, hoursGoal }) => {
   // const { currentUser } = firebase.auth()
   let currentDate = new Date()
+  let hoursGoalInt = parseInt(hoursGoal)
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries`)
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects`)
-      .push({ title, time: currentDate.getTime(), hoursGoal, hoursLogged: 0 })
+      .push({ title, time: currentDate.getTime(), hoursGoal: hoursGoalInt, hoursLogged: 0, complete: false })
       .then(() => {
         dispatch({ type: PROJECT_ADD })
         Actions.ProjectList({ type: 'reset' })
@@ -26,6 +28,14 @@ export const ProjectSelect = (project) => {
   return (dispatch) => {
     dispatch({ type: PROJECT_SELECT, payload: project })
     Actions.ProjectDetails({ title: project.title })
+  }
+}
+
+export const ProjectComplete = (id) => {
+  firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}`)
+  .update({ complete: true })
+  return (dispatch) => {
+    dispatch({ type: PROJECT_COMPLETE })
   }
 }
 

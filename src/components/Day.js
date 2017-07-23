@@ -126,7 +126,6 @@ class Day extends React.Component {
     const notesArr = this.props.notes ? Object.values(this.props.notes) : []
     const isFromToday = (date) => moment(new Date(date)).get('date') === moment(new Date()).get('date')
     const dayEntries = entriesArr.filter(entry => isFromToday(entry.date))
-    console.log(entriesArr)
     const dayNotes = notesArr.filter(note => isFromToday(note.date))
     return (
       <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: '#a083c4'}}>
