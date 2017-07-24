@@ -9,13 +9,14 @@ import TagList from './components/TagList'
 import ProjectAddForm from './components/ProjectAddForm'
 import NoteAddForm from './components/NoteAddForm'
 import ProjectDetails from './components/ProjectDetails'
+import TabBar from './components/TabBar'
 import Day from './components/Day'
 import TagDetails from './components/TagDetails'
 
 // Simple component to render something in place of icon
 const DayTabIcon = ({ selected, title }) => {
   return (
-    <View style={{padding: 5, alignItems: 'center'}}>
+    <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-start', marginLeft: 15}}>
       <Image source={selected ? require('./assets/calendar.png') : require('./assets/inactivecalendar.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
       <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>DAYS</Text>
     </View>
@@ -24,7 +25,7 @@ const DayTabIcon = ({ selected, title }) => {
 
 const ProjectTabIcon = ({ selected, title }) => {
   return (
-    <View style={{padding: 5, alignItems: 'center'}}>
+    <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-start', marginLeft: -20}}>
       <Image source={selected ? require('./assets/projects.png') : require('./assets/inactiveprojects.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
       <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>PROJECTS</Text>
     </View>
@@ -33,17 +34,18 @@ const ProjectTabIcon = ({ selected, title }) => {
 
 const TagTabIcon = ({ selected, title }) => {
   return (
-    <View style={{padding: 5, alignItems: 'center'}}>
+    <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-end', marginRight: -5}}>
       <Image source={selected ? require('./assets/tags.png') : require('./assets/inactivetags.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
       <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>TAGS</Text>
     </View>
   )
 }
 
-const AddTabIcon = () => {
+const AllTabIcon = ({ selected, title }) => {
   return (
-    <View style={{alignItems: 'flex-end'}}>
-      <Image source={require('./assets/addicon.png')} style={{width: 35, height: 35, resizeMode: 'contain'}} />
+    <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-end', marginRight: 15}}>
+      <Image source={selected ? require('./assets/all.png') : require('./assets/inactiveall.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
+      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>All</Text>
     </View>
   )
 }
@@ -63,9 +65,8 @@ const RouterComponent = () => {
       </Scene> */}
 
       <Scene key='root'>
-
         {/* Tab Container */}
-        <Scene key='tabbar' tabs tabBarStyle={{ backgroundColor: '#eee', borderColor: 'lightgrey', borderTopWidth: 1 }}>
+        <Scene key='tabbar' component={TabBar} tabs tabBarStyle={{ backgroundColor: '#eee' }}>
 
           {/* Tab and its scenes */}
           <Scene key='days' title='Days' icon={DayTabIcon}>
@@ -87,8 +88,8 @@ const RouterComponent = () => {
             <Scene key='TagDetails' component={TagDetails} title='Tag Details' />
           </Scene>
 
-          <Scene key='add' title='Tags' icon={AddTabIcon}>
-            <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' hideNavBar={false} />
+          <Scene key='all' title='Tags' icon={AllTabIcon}>
+            <Scene key='AddButtonAdd' component={EntryAddForm} title='Add New Entry' hideNavBar={false} />
           </Scene>
 
         {/* End of Tab Container */}
