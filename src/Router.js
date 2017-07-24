@@ -18,7 +18,7 @@ const DayTabIcon = ({ selected, title }) => {
   return (
     <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-start', marginLeft: 15}}>
       <Image source={selected ? require('./assets/calendar.png') : require('./assets/inactivecalendar.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>DAYS</Text>
+      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Days</Text>
     </View>
   )
 }
@@ -27,7 +27,7 @@ const ProjectTabIcon = ({ selected, title }) => {
   return (
     <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-start', marginLeft: -20}}>
       <Image source={selected ? require('./assets/projects.png') : require('./assets/inactiveprojects.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>PROJECTS</Text>
+      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Projects</Text>
     </View>
   )
 }
@@ -36,7 +36,7 @@ const TagTabIcon = ({ selected, title }) => {
   return (
     <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-end', marginRight: -5}}>
       <Image source={selected ? require('./assets/tags.png') : require('./assets/inactivetags.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>TAGS</Text>
+      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Tags</Text>
     </View>
   )
 }

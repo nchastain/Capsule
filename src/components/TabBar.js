@@ -86,11 +86,11 @@ class TabBar extends Component {
     );
     return (
       <View
-        style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0)' }}
+        style={{ flex: 1, alignItems: 'center'}}
       >
         <TabbedView
           navigationState={this.props.navigationState}
-          style={{ flex: 1 }}
+          style={{ flex: 1, alignSelf: 'stretch' }}
           renderScene={this.renderScene}
         />
         {!hideTabBar && state.children.filter(el => el.icon).length > 0 &&
@@ -102,8 +102,8 @@ class TabBar extends Component {
             </View>
           ) : contents)
         }
-        <View style={{position: 'absolute', width: this.deviceWidth, bottom: 0, height: 80, alignItems: 'center', justifyContent: 'center', borderRadius: 40, alignSelf: 'center'}}>
-          <View style={{height: 80, width: 80, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}><Image source={require('.././assets/addicon.png')} style={{width: 64, height: 64, resizeMode: 'contain'}} /></View>
+        <View style={{position: 'absolute', width: 80, bottom: 0, height: 80, alignItems: 'center', justifyContent: 'center', borderRadius: 40, alignSelf: 'center'}}>
+          <View style={{height: 80, width: 80, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}><Image source={require('.././assets/addiconsolid.png')} style={{width: 64, height: 64, resizeMode: 'contain'}} /></View>
         </View>
       </View>
     );
