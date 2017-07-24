@@ -86,7 +86,7 @@ class TabBar extends Component {
     );
     return (
       <View
-        style={{ flex: 1, alignItems: 'center'}}
+        style={{ flex: 1, alignItems: 'center' }}
       >
         <TabbedView
           navigationState={this.props.navigationState}
@@ -103,12 +103,13 @@ class TabBar extends Component {
           ) : contents)
         }
         <View style={{position: 'absolute', width: 80, bottom: 0, height: 80, alignItems: 'center', justifyContent: 'center', borderRadius: 40, alignSelf: 'center'}}>
-          <View style={{height: 80, width: 80, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}><Image source={require('.././assets/addiconsolid.png')} style={{width: 64, height: 64, resizeMode: 'contain'}} /></View>
+          <View style={{height: 80, width: 80, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}>
+            <Image source={require('.././assets/addiconsolid.png')} style={{width: 64, height: 64, resizeMode: 'contain'}} />
+          </View>
         </View>
       </View>
     );
   }
-
 }
 
 export default TabBar;

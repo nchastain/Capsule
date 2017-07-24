@@ -12,40 +12,41 @@ import ProjectDetails from './components/ProjectDetails'
 import TabBar from './components/TabBar'
 import Day from './components/Day'
 import TagDetails from './components/TagDetails'
+import EntryList from './components/EntryList'
 
 // Simple component to render something in place of icon
 const DayTabIcon = ({ selected, title }) => {
   return (
-    <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-start', marginLeft: 15}}>
+    <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-start'}}>
       <Image source={selected ? require('./assets/calendar.png') : require('./assets/inactivecalendar.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Days</Text>
+      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Days</Text></View>
     </View>
   )
 }
 
 const ProjectTabIcon = ({ selected, title }) => {
   return (
-    <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-start', marginLeft: -20}}>
+    <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-start', marginLeft: -20}}>
       <Image source={selected ? require('./assets/projects.png') : require('./assets/inactiveprojects.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Projects</Text>
+      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Projects</Text></View>
     </View>
   )
 }
 
-const TagTabIcon = ({ selected, title }) => {
+const EntriesTabIcon = ({ selected, title }) => {
   return (
-    <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-end', marginRight: -5}}>
-      <Image source={selected ? require('./assets/tags.png') : require('./assets/inactivetags.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Tags</Text>
+    <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-end', marginRight: -20}}>
+      <Image source={selected ? require('./assets/entries.png') : require('./assets/inactiveentries.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
+      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Entries</Text></View>
     </View>
   )
 }
 
 const AllTabIcon = ({ selected, title }) => {
   return (
-    <View style={{padding: 5, alignItems: 'center', alignSelf: 'flex-end', marginRight: 15}}>
+    <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-end'}}>
       <Image source={selected ? require('./assets/all.png') : require('./assets/inactiveall.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>All</Text>
+      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>All</Text></View>
     </View>
   )
 }
@@ -83,9 +84,8 @@ const RouterComponent = () => {
             <Scene key='ProjectDetails' component={ProjectDetails} title='Project Details' />
           </Scene>
 
-          <Scene key='tags' title='Tags' icon={TagTabIcon}>
-            <Scene key='TagList' component={TagList} title='Tags' initial />
-            <Scene key='TagDetails' component={TagDetails} title='Tag Details' />
+          <Scene key='entries' title='Entries' icon={EntriesTabIcon}>
+            <Scene key='TagList' component={EntryList} title='Entries' initial />
           </Scene>
 
           <Scene key='all' title='Tags' icon={AllTabIcon}>
