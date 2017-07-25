@@ -2,8 +2,8 @@ import React from 'React'
 import { View, Text, Keyboard, StyleSheet, TextInput, TouchableWithoutFeedback, Image } from 'react-native'
 import { NoteAdd, AddTag, TagsFetch, AddEntry } from '../actions'
 import { connect } from 'react-redux'
-import ParsedText from 'react-native-parsed-text'
 import uuid from 'react-native-uuid'
+import { darkColorMap, imageMap, colors } from '../utilities'
 
 class EntryAdditionForm extends React.Component {
   constructor (props) {
@@ -26,7 +26,7 @@ class EntryAdditionForm extends React.Component {
     const newTagObjs = newTags.map(newTag => ({ text: newTag, id: uuid.v4() }))
     const newIDs = newTagObjs.map(newTagObj => newTagObj.id)
     const allTagIDs = [...existingIDs, ...newIDs]
-    
+
     const noteObj = {
       text: this.state.text.replace(/\r?\n|\r/, ''),
       date: new Date().getTime(),
@@ -70,43 +70,13 @@ class EntryAdditionForm extends React.Component {
       }
     })
 
-    const backgroundMap = {
-      note: '#8AC3FB',
-      journal: '#FFBDFA',
-      milestone: '#F6DF7F',
-      view: '#B09BFF',
-      progress: '#9EE986',
-      habit: '#FFC566',
-      experience: '#F96262'
-    }
-
-    const buttonMap = {
-      note: '#4A90E2',
-      journal: '#FD8AD7',
-      milestone: '#F5C523',
-      view: '#5D34FA',
-      progress: '#21AC34',
-      habit: '#F59123',
-      experience: '#D0021B'
-    }
-
-    const imageMap = {
-      note: require('.././assets/note.png'),
-      experience: require('.././assets/experience.png'),
-      view: require('.././assets/sight.png'),
-      journal: require('.././assets/journal.png'),
-      milestone: require('.././assets/milestone.png'),
-      habit: require('.././assets/habit.png'),
-      progress: require('.././assets/progress.png')
-    }
-
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch', backgroundColor: '#a083c4'}}>
+        <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch', backgroundColor: colors.main}}>
           <View style={{marginTop: 90, width: 80, borderRadius: 40, height: 80, shadowOffset: {width: 2, height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
             <Image source={imageMap[this.props.entryType]} style={{width: 80, height: 80}} />
           </View>
-          <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderRadius: 10, borderColor: '#eee', borderWidth: 1, margin: 20, backgroundColor: 'white', shadowOffset: { width: 2, height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
+          <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderRadius: 10, borderColor: '#eee', borderWidth: 1, margin: 20, backgroundColor: 'white', shadowOffset: {width: 2, height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
             <TextInput
               placeholder={`Add ${this.props.entryType} here`}
               numberOfLines={3}
@@ -115,7 +85,7 @@ class EntryAdditionForm extends React.Component {
               onChangeText={value => this.setState({text: value})}
             ><Text>{parts}</Text></TextInput>
           </View>
-          <View style={[styles.addNoteButton, {borderRadius: 10, backgroundColor: buttonMap[this.props.entryType], width: 250}]}>
+          <View style={[styles.addNoteButton, {borderRadius: 10, backgroundColor: darkColorMap[this.props.entryType], width: 250}]}>
             <Text
               style={styles.welcome}
               onPress={this.onButtonPress.bind(this)}
@@ -135,10 +105,10 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     padding: 20,
     borderRadius: 5,
-    shadowOffset: { width: 2,  height: 2},
+    shadowOffset: {width: 2, height: 2},
     shadowColor: '#555',
     shadowOpacity: 0.3
   },
@@ -149,7 +119,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   hashtag: {
-    color: '#a083c4',
+    color: colors.main,
     fontWeight: 'bold'
   }
 })

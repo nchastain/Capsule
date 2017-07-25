@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-nati
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { ProjectClear, ProjectComplete } from '../actions'
-import { secondsToString } from '../utilities'
+import { secondsToString, colors } from '../utilities'
 import moment from 'moment'
 
 class ProjectDetails extends React.Component {
@@ -22,7 +22,7 @@ class ProjectDetails extends React.Component {
           <TouchableOpacity onPress={() => this.props.ProjectComplete(this.props.project.uid)} style={this.props.project.complete ? [styles.statusButton, styles.completeStatusButton] : styles.statusButton }>
             {this.props.project.complete 
             ? <Text style={{color: 'white', fontWeight: 'bold'}}>complete</Text>
-            : <Text style={{color: '#a083c4', fontWeight: 'bold'}}>mark complete</Text>}
+            : <Text style={{color: colors.main, fontWeight: 'bold'}}>mark complete</Text>}
           </TouchableOpacity>
         </View>
         <View style={styles.buttonStyle}><Text style={styles.timeStyle}>{formattedHoursLogged}/{this.props.project.hoursGoal}</Text></View>
@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
   },
   statusButton: {
     padding: 10,
-    borderColor: '#a083c4',
+    borderColor: colors.main,
     borderWidth: 2,
     borderRadius: 10
   },
   completeStatusButton: {
-    backgroundColor: '#a083c4'
+    backgroundColor: colors.main
   },
   dateStringContainer: {
     width: 60,
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   timeString: {
-    color: '#a083c4',
+    color: colors.main,
   },
   timeStringContainer: {
     width: 30,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     borderColor: '#eee',
     borderWidth: 3,
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     borderRadius: 100,
     height: 200,
     width: 200,

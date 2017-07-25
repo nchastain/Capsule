@@ -1,6 +1,7 @@
 import React from 'react'
 import { Scene, Router, Actions } from 'react-native-router-flux'
 import { Text, View, Image } from 'react-native'
+import { colors } from './utilities'
 import LoginForm from './components/LoginForm'
 import EntryAddForm from './components/EntryAddForm'
 import EntryDetail from './components/EntryDetail'
@@ -20,7 +21,7 @@ const DayTabIcon = ({ selected, title }) => {
   return (
     <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-start'}}>
       <Image source={selected ? require('./assets/calendar.png') : require('./assets/inactivecalendar.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Days</Text></View>
+      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? colors.main : 'darkgrey', fontWeight: 'bold'}}>Day</Text></View>
     </View>
   )
 }
@@ -29,7 +30,7 @@ const ProjectTabIcon = ({ selected, title }) => {
   return (
     <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-start', marginLeft: -20}}>
       <Image source={selected ? require('./assets/projects.png') : require('./assets/inactiveprojects.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Projects</Text></View>
+      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? colors.main : 'darkgrey', fontWeight: 'bold'}}>Projects</Text></View>
     </View>
   )
 }
@@ -38,7 +39,7 @@ const EntriesTabIcon = ({ selected, title }) => {
   return (
     <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-end', marginRight: -20}}>
       <Image source={selected ? require('./assets/entries.png') : require('./assets/inactiveentries.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>Entries</Text></View>
+      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? colors.main : 'darkgrey', fontWeight: 'bold'}}>Entries</Text></View>
     </View>
   )
 }
@@ -47,7 +48,7 @@ const AllTabIcon = ({ selected, title }) => {
   return (
     <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-end'}}>
       <Image source={selected ? require('./assets/all.png') : require('./assets/inactiveall.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? '#a083c4' : 'darkgrey', fontWeight: 'bold'}}>All</Text></View>
+      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? colors.main : 'darkgrey', fontWeight: 'bold'}}>All</Text></View>
     </View>
   )
 }
@@ -71,7 +72,7 @@ const RouterComponent = () => {
         <Scene key='tabbar' component={TabBar} tabs tabBarStyle={{ backgroundColor: '#eee' }}>
 
           {/* Tab and its scenes */}
-          <Scene key='days' title='Days' icon={DayTabIcon}>
+          <Scene key='day' title='Day' icon={DayTabIcon}>
             <Scene key='Today' component={Day} title='Today' initial hideNavBar />
             <Scene key='TagDetailsDay' component={TagDetails} title='Tag Details' />
             <Scene key='EntryAdditionForm' component={EntryAdditionForm} hideNavBar={false} />
@@ -109,23 +110,23 @@ export default RouterComponent
 const styles = {
   navBar: {
     backgroundColor:'#e2daed',
-    borderBottomColor: '#a083c4'
+    borderBottomColor: colors.main
   },
   navBarTitle: {
-    color: '#a083c4',
+    color: colors.main,
     fontWeight: 'bold',
   },
   barButtonTextStyle: {
-    color:'#a083c4',
+    color:colors.main,
   },
   barButtonIconStyle: {
-    tintColor:'#a083c4'
+    tintColor:colors.main
   },
   backButtonTextStyle: {
-    color: '#a083c4'
+    color: colors.main
   },
   rightButtonTextStyle: {
-    color: '#a083c4',
+    color: colors.main,
     fontWeight: 'bold'
   },
 }

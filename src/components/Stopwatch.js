@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from
 import { Button } from './common/Button'
 import { connect } from 'react-redux'
 import { EntryUpdate, EntryAdd, ProjectUpdateProgress } from '../actions'
+import { colors } from '../utilities'
 
 class Stopwatch extends React.Component {
   constructor (props) {
@@ -132,7 +133,7 @@ const styles = {
   },
   stopwatchTimer: {
     fontSize: 35,
-    color: '#a083c4',
+    color: colors.main,
     fontWeight: 'bold'
   },
   counterContainer: {
@@ -179,11 +180,11 @@ const styles = {
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     height: 75
   },
   btn: {
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     borderRadius: 50,
     width: 100,
     height: 100,

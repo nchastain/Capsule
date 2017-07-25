@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, ListView } from 'react-native'
 import { ProjectsFetch, ProjectSelect } from '../actions'
 import { Actions } from 'react-native-router-flux'
+import { colors } from '../utilities'
 
 class ProjectList extends React.Component {
   componentWillMount () {
@@ -29,7 +30,7 @@ class ProjectList extends React.Component {
   renderRow (project) {
     const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
     return (
-      <TouchableOpacity style={styles.rowStyle} onPress={() => this.handleSelect(project)}>
+      <TouchableOpacity activeOpacity={0.8} style={styles.rowStyle} onPress={() => this.handleSelect(project)}>
         <View style={project.complete ? [styles.buttonStyle, styles.completeButtonStyle] : styles.buttonStyle }><Text style={project.complete ? [styles.timeStyle, styles.completeTextStyle] : styles.timeStyle}>{formattedHoursLogged}/{project.hoursGoal}</Text></View>
         <View style={styles.projectStyle}>
           <Text style={project.complete ? [styles.projectTitleStyle, styles.completeTextStyle] : styles.projectTitleStyle }>
@@ -73,7 +74,7 @@ const styles = {
   },
   hourRecordStyle: {
     fontSize: 18,
-    color: '#a083c4',
+    color: colors.main,
     fontWeight: 'bold'
   },
   hourRecordContainer: {
@@ -96,7 +97,7 @@ const styles = {
     flexDirection: 'column',
   },
   projectInfoStyle: {
-    color: '#a083c4',
+    color: colors.main,
     fontSize: 14
   },
   descriptionStyle: {
@@ -116,12 +117,12 @@ const styles = {
   },
   dateStyle: {
     fontSize: 12,
-    color: '#a083c4',
+    color: colors.main,
   },
   buttonStyle: {
     borderColor: '#eee',
     borderWidth: 3,
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     borderRadius: 40,
     height: 80,
     width: 80,
@@ -135,7 +136,7 @@ const styles = {
     flex: 1,
     marginTop: 65,
     marginBottom: 48,
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
   }
 }
 

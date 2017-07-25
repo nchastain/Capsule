@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 // import { Grid, Row, Col } from 'react-flexbox-grid'
+import { colors } from '../utilities'
 
 class AllGrid extends React.Component {
   constructor (props) {
@@ -16,7 +17,7 @@ class AllGrid extends React.Component {
 
   render () {
     return (
-      <View style={{paddingLeft: 5, paddingTop: 75, paddingRight: 5, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'flex-start', flex: 1, backgroundColor: '#a083c4'}}>
+      <View style={{paddingLeft: 5, paddingTop: 75, paddingRight: 5, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'flex-start', flex: 1, backgroundColor: colors.main}}>
         <TouchableOpacity style={{padding: 5, height: 100, flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <View style={{ height: 100, padding: 10, borderRadius: 5, backgroundColor: '#eee', alignSelf: 'stretch' }}>
             <Text>

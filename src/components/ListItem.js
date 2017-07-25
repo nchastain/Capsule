@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Text, TouchableOpacity, View } from 'react-native'
 import moment from 'moment'
 import { Actions } from 'react-native-router-flux'
-import { secondsToString, getProjectByID } from '../utilities'
+import { secondsToString, getProjectByID, colors } from '../utilities'
 import _ from 'lodash'
 
 class ListItem extends Component {
@@ -69,18 +69,16 @@ const styles = {
     fontSize: 18,
     color: 'white',
     overflow: 'hidden',
-    // backgroundColor: '#555',
     fontWeight: 'bold',
-    // width: 80,
   },
   dateStyle: {
     fontSize: 12,
-    color: '#a083c4',
+    color: colors.main,
   },
   buttonStyle: {
     borderColor: '#eee',
     borderWidth: 3,
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     borderRadius: 40,
     height: 80,
     width: 80,

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, ListView } from 'react-native'
 import { TagsFetch, TagSelect } from '../actions'
 import { Actions } from 'react-native-router-flux'
+import { colors } from '../utilities'
 
 class TagList extends React.Component {
   componentWillMount () {
@@ -50,7 +51,7 @@ class TagList extends React.Component {
             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
               <View style={{flexDirection: 'row', width: 250, alignItems: 'center'}}>
                 <View style={{marginRight: 5}}><Text style={goalStyle}>#{tag.text}</Text></View>
-                <Text style={{color: '#a083c4', fontWeight: 'bold'}}>({numNotes})</Text>
+                <Text style={{color: colors.main, fontWeight: 'bold'}}>({numNotes})</Text>
               </View>
               <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
                 <Text style={{color: 'lightgray', fontWeight: 'bold', fontSize: 20}}>></Text>
@@ -87,13 +88,13 @@ const styles = {
   },
   hourRecordStyle: {
     fontSize: 14,
-    color: '#a083c4',
+    color: colors.main,
     fontWeight: 'bold'
   },
   hourRecordContainer: {
     padding: 5,
     borderRadius: 5,
-    borderColor: '#a083c4',
+    borderColor: colors.main,
     borderWidth: 1,
   },
   goalContainerStyle: {
@@ -120,12 +121,12 @@ const styles = {
   },
   dateStyle: {
     fontSize: 12,
-    color: '#a083c4',
+    color: colors.main,
   },
   buttonStyle: {
     borderColor: '#eee',
     borderWidth: 3,
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     borderRadius: 40,
     height: 80,
     width: 80,

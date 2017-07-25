@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback }
 import { ProjectAdd, ProjectClear } from '../actions'
 import { connect } from 'react-redux'
 import { Input } from './common'
+import { colors } from '../utilities'
 
 class ProjectAddForm extends React.Component {
   constructor () {
@@ -22,15 +23,19 @@ class ProjectAddForm extends React.Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <Input
-            placeholder='Add a project title'
-            value={this.state.project}
-            onChangeText={value => this.setState({project: value})}
-          />
+          <View style={{alignItems: 'center', marginTop: 20}}>
+            <TextInput
+              placeholder='Add a project title'
+              value={this.state.project}
+              onChangeText={value => this.setState({project: value})}
+              style={{textAlign: 'center', height: 50, width: 200}}
+
+            />
+          </View>
           <View style={{flexDirection: 'row', padding: 20, borderRadius: 5, margin: 20, marginTop: 5, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
             <Text style={{flex: 5, padding: 0, color: '#555' }}>This goal will be complete after</Text>
             <TextInput
-              style={{flex: 1, padding: 0, textAlign: 'right', backgroundColor: 'white', color: '#a083c4'}}
+              style={{flex: 1, padding: 0, textAlign: 'right', backgroundColor: 'white', color: colors.main}}
               value={this.state.hoursGoal}
               onChangeText={value => this.setState({hoursGoal: parseInt(value)})}
             />
@@ -63,7 +68,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     padding: 20,
     borderRadius: 5
   },

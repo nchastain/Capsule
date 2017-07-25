@@ -42,3 +42,17 @@ export const lightColorMap = {
   habit: '#FFC566',
   experience: '#F96262'
 }
+
+export const darkColorMap = {
+  note: '#4A90E2',
+  journal: '#FD8AD7',
+  milestone: '#F5C523',
+  view: '#5D34FA',
+  progress: '#21AC34',
+  habit: '#F59123',
+  experience: '#D0021B'
+}
+
+export const colors = {
+  main: '#a083c4'
+}

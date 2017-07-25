@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
   StyleSheet,
   Text,
@@ -10,12 +10,11 @@ import {
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { secondsToString, lightColorMap, imageMap } from '../utilities'
+import { imageMap, colors } from '../utilities'
 import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect } from '../actions'
 import _ from 'lodash'
 
 class EntryList extends React.Component {
-
   findTagByID (id) {
     let tagObj = this.props.tags ? Object.values(this.props.tags).filter(tagObj => tagObj.id === id)[0] : {text: ''}
     return tagObj
@@ -50,21 +49,21 @@ class EntryList extends React.Component {
   render () {
     const entries = this.props.entries ? Object.values(this.props.entries) : []
     return (
-      <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: '#a083c4', paddingTop: 65}}>
+      <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main, paddingTop: 65}}>
         <ScrollView contentContainerStyle={styles.container}>
           {entries.map((entry, idx) => (
-            <TouchableOpacity key={idx} onPress={() => Actions.EntryDetail({entry: entry, title: entry.text, location: 'entryList'})}>
+            <TouchableOpacity activeOpacity={0.8} key={idx} onPress={() => Actions.EntryDetail({entry: entry, title: entry.text, location: 'entryList'})}>
               <View key={idx} style={{backgroundColor: 'white', borderRadius: 10, borderTopLeftRadius: 10, borderBottomLeftRadius: 10, marginBottom: 10, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingRight: 10}}>
                 <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                   <View style={{padding: 5, borderRightWidth: 1, borderColor: '#eee', marginRight: 10, backgroundColor: '#eee', borderTopLeftRadius: 10, borderBottomLeftRadius: 10}}>
                     <Image source={imageMap[entry.type]} style={{height: 40, width: 40}} />
                   </View>
-                  <View>
+                  <View style={{flex: 1}}>
                     <Text style={{color: '#555', fontWeight: 'bold'}}>{entry.text}</Text>
                   </View>
                 </View>
-                <View style={{alignItems: 'flex-end'}}>
-                  <Text style={{color: '#a083c4'}}>{moment(new Date(entry.date)).format('MMM DD')}</Text>
+                <View style={{alignItems: 'flex-end', flex: 1}}>
+                  <Text style={{color: colors.main}}>{moment(new Date(entry.date)).format('MMM DD')}</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -80,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 10,
     alignSelf: 'stretch',
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     paddingBottom: 80,
   },
   topBar: {
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
   topBarButton: {
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#a083c4',
+    backgroundColor: colors.main,
     flex: 1,
     alignItems: 'center',
     margin: 5,
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   entryDuration: {
-    color: '#a083c4',
+    color: colors.main,
     fontWeight: 'bold'
   },
   dayEntry: {
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 30,
     flexDirection: 'column',
-    shadowOffset: { width: 2,  height: 2,  },
+    shadowOffset: {width: 2, height: 2},
     shadowColor: '#555',
     shadowOpacity: 0.3,
   },
