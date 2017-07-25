@@ -76,7 +76,7 @@ class TabBar extends Component {
     const imageMap = {
       note: require('.././assets/note.png'),
       experience: require('.././assets/experience.png'),
-      sight: require('.././assets/sight.png'),
+      view: require('.././assets/sight.png'),
       journal: require('.././assets/journal.png'),
       milestone: require('.././assets/milestone.png'),
       habit: require('.././assets/habit.png'),
@@ -85,7 +85,7 @@ class TabBar extends Component {
     const descriptionMap = {
       note: 'a note',
       experience: 'an experience',
-      sight: 'a sight',
+      view: 'a view',
       journal: 'a journal entry',
       milestone: 'a milestone',
       habit: 'a completed habit',
@@ -170,17 +170,17 @@ class TabBar extends Component {
                 </View>
             </View>*/}
             <TouchableWithoutFeedback onPress={() => this.setState({showModal: !this.state.showModal})}>
-              <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', padding: 30, paddingBottom: 65, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
-                <View style={{flex: 1, backgroundColor: '#eee', borderRadius: 10, alignSelf: 'stretch', alignItems: 'flex-start', justifyContent: 'space-between', paddingLeft: 10, paddingRight: 10, paddingTop: 10, paddingBottom: 10}}>
+              <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', padding: 30, paddingBottom: 55, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
+                <View style={{flex: 1, backgroundColor: '#eee', borderRadius: 10, alignSelf: 'stretch', alignItems: 'flex-start', justifyContent: 'space-between', padding: 20}}>
                   {this.createAddFormLink('journal')}
                   {this.createAddFormLink('milestone')}
-                  {this.createAddFormLink('sight')}
+                  {this.createAddFormLink('view')}
                   {this.createAddFormLink('experience')}
                   {this.createAddFormLink('habit')}
                   {this.createAddFormLink('progress')}
                   {this.createAddFormLink('note')}
                 </View>
-                  <View style={{position: 'absolute', bottom: 9, height: 63, width: 63, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}>
+                  <View style={{position: 'absolute', bottom: 0, height: 80, width: 80, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}>
                     <TouchableOpacity onPress={() => this.setState({showModal: !this.state.showModal})}><Image source={require('.././assets/down.png')} style={{width: 65, height: 65, resizeMode: 'contain'}} /></TouchableOpacity>
                   </View>
                 </View>

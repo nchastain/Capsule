@@ -108,12 +108,42 @@ class EntryList extends React.Component {
 
   render () {
     const entries = Object.values(this.props.entries)
-    const notes = Object.values(this.props.notes)
+    const imageMap = {
+      note: require('.././assets/note.png'),
+      experience: require('.././assets/experience.png'),
+      view: require('.././assets/sight.png'),
+      journal: require('.././assets/journal.png'),
+      milestone: require('.././assets/milestone.png'),
+      habit: require('.././assets/habit.png'),
+      progress: require('.././assets/progress.png')
+    }
+    const lightColorMap = {
+      note: '#8AC3FB',
+      journal: '#FFBDFA',
+      milestone: '#F6DF7F',
+      view: '#B09BFF',
+      progress: '#9EE986',
+      habit: '#FFC566',
+      experience: '#F96262'
+    }
     return (
-      <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: '#a083c4', paddingTop: 60}}>
+      <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: '#a083c4', paddingTop: 65}}>
         <ScrollView contentContainerStyle={styles.container}>
-          {this.buildEntries(entries)}
-          {this.buildNotes(notes)}
+          {entries.map((entry, idx) => (
+            <View key={idx} style={{backgroundColor: 'white', borderRadius: 10, borderTopLeftRadius: 10, borderBottomLeftRadius: 10, marginBottom: 10, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingRight: 10}}>
+              <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                <View style={{padding: 5, borderRightWidth: 1, borderColor: '#eee', marginRight: 10, backgroundColor: '#eee', borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}>
+                  <Image source={imageMap[entry.type]} style={{height: 40, width: 40}} />
+                </View>
+                <View>
+                  <Text style={{color: '#555', fontWeight: 'bold'}}>{entry.text}</Text>
+                </View>
+              </View>
+              <View style={{alignItems: 'flex-end'}}>
+                <Text style={{color: '#a083c4'}}>{moment(new Date(entry.date)).format('MMM DD')}</Text>
+              </View>
+            </View>
+          ))}
         </ScrollView>
       </View>
     )
@@ -126,7 +156,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignSelf: 'stretch',
     backgroundColor: '#a083c4',
-    paddingBottom: 60,
+    paddingBottom: 80,
   },
   topBar: {
     paddingBottom: 5,
