@@ -8,11 +8,13 @@ import ProjectList from './components/ProjectList'
 import TagList from './components/TagList'
 import ProjectAddForm from './components/ProjectAddForm'
 import NoteAddForm from './components/NoteAddForm'
+import EntryAdditionForm from './components/EntryAdditionForm'
 import ProjectDetails from './components/ProjectDetails'
 import TabBar from './components/TabBar'
 import Day from './components/Day'
 import TagDetails from './components/TagDetails'
 import EntryList from './components/EntryList'
+import AllGrid from './components/AllGrid'
 
 // Simple component to render something in place of icon
 const DayTabIcon = ({ selected, title }) => {
@@ -74,6 +76,7 @@ const RouterComponent = () => {
             <Scene key='Today' component={Day} title='Today' initial hideNavBar />
             <Scene key='TagDetailsDay' component={TagDetails} title='Tag Details' />
             <Scene key='NoteAddForm' component={NoteAddForm} title='Add a Note' hideNavBar={false} />
+            <Scene key='EntryAdditionForm' component={EntryAdditionForm} hideNavBar={false} />
             <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' hideNavBar={false} />
           </Scene>
 
@@ -89,7 +92,7 @@ const RouterComponent = () => {
           </Scene>
 
           <Scene key='all' title='Tags' icon={AllTabIcon}>
-            <Scene key='AddButtonAdd' component={EntryAddForm} title='Add New Entry' hideNavBar={false} />
+            <Scene key='AllGrid' component={AllGrid} title='All' hideNavBar={false} />
           </Scene>
 
         {/* End of Tab Container */}

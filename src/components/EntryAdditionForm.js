@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import ParsedText from 'react-native-parsed-text'
 import uuid from 'react-native-uuid'
 
-class NoteAddForm extends React.Component {
-  constructor () {
+class EntryAdditionForm extends React.Component {
+  constructor (props) {
     super()
     this.state = {text: '', ran: false, newTags: false}
   }
@@ -17,24 +17,25 @@ class NoteAddForm extends React.Component {
   }
 
   onButtonPress () {
-    const tagsFromInput = this.extractTagsFromInput()
-    const oldTags = Object.values(this.props.tags)
-    const oldTagTitles = oldTags.map(tag => tag.text)
-    const tagMatches = oldTags.filter(tag => tagsFromInput.indexOf(tag.text) !== -1)
-    const existingIDs = tagMatches.map(tag => tag.id)
-    const newTags = tagsFromInput.filter(tag => oldTagTitles.indexOf(tag) === -1)
-    const newTagObjs = newTags.map(newTag => ({ text: newTag, id: uuid.v4() }))
-    const newIDs = newTagObjs.map(newTagObj => newTagObj.id)
-    const allTagIDs = [...existingIDs, ...newIDs]
+    console.log(this.props.entryType)
+    // const tagsFromInput = this.extractTagsFromInput()
+    // const oldTags = Object.values(this.props.tags)
+    // const oldTagTitles = oldTags.map(tag => tag.text)
+    // const tagMatches = oldTags.filter(tag => tagsFromInput.indexOf(tag.text) !== -1)
+    // const existingIDs = tagMatches.map(tag => tag.id)
+    // const newTags = tagsFromInput.filter(tag => oldTagTitles.indexOf(tag) === -1)
+    // const newTagObjs = newTags.map(newTag => ({ text: newTag, id: uuid.v4() }))
+    // const newIDs = newTagObjs.map(newTagObj => newTagObj.id)
+    // const allTagIDs = [...existingIDs, ...newIDs]
     
-    const noteObj = {
-      text: this.state.text.replace(/\r?\n|\r/, ''),
-      date: new Date().getTime(),
-      tagIDs: allTagIDs,
-      type: 'note'
-    }
-    newTagObjs.forEach(this.props.AddTag)
-    this.props.AddEntry(noteObj)
+    // const noteObj = {
+    //   text: this.state.text.replace(/\r?\n|\r/, ''),
+    //   date: new Date().getTime(),
+    //   tagIDs: allTagIDs,
+    //   type: 'note'
+    // }
+    // newTagObjs.forEach(this.props.AddTag)
+    // this.props.AddEntry(noteObj)
   }
 
   render () {
@@ -75,7 +76,7 @@ class NoteAddForm extends React.Component {
         <View style={styles.container}>
           <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderColor: 'lightgray', borderWidth: 1, margin: 20, marginTop: 90, backgroundColor: 'white'}}>
             <TextInput
-              placeholder='Add your note here'
+              placeholder={`Add ${this.props.entryType} here`}
               numberOfLines={3}
               multiline
               style={{backgroundColor: 'white', alignSelf: 'stretch', fontSize: 20}}
@@ -87,7 +88,7 @@ class NoteAddForm extends React.Component {
               style={styles.welcome}
               onPress={this.onButtonPress.bind(this)}
             >
-              Add Note
+              Add {this.props.entryType}
             </Text>
           </View>
         </View>
@@ -130,4 +131,4 @@ const mapStateToProps = state => {
   return { tags }
 }
 
-export default connect(mapStateToProps, { NoteAdd, AddTag, AddEntry, TagsFetch })(NoteAddForm)
+export default connect(mapStateToProps, { NoteAdd, AddTag, AddEntry, TagsFetch })(EntryAdditionForm)

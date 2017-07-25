@@ -36,6 +36,7 @@ const styles = {
     flex: 1
   }
 }
+
 const mapStateToProps = (state) => {
   const { project, description, time } = state.entryForm
 

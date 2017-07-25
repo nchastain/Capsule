@@ -100,11 +100,11 @@ class Day extends React.Component {
   //             </View>}
 
   addProgress () {
-    Actions.EntryAdd()
+    Actions.EntryAdditionForm({entryType: 'progress'})
   }
 
   addNote () {
-    Actions.NoteAddForm()
+    Actions.EntryAdditionForm({entryType: 'note'})
   }
 
   displayEmptyMessage () {

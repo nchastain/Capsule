@@ -2,7 +2,8 @@ import firebase from 'firebase'
 import { Actions } from 'react-native-router-flux'
 import {
   NOTE_ADD,
-  NOTES_FETCH_SUCCESS
+  NOTES_FETCH_SUCCESS,
+  ADD_ENTRY
 } from './types'
 
 export const NoteAdd = ({ text, date, tagIDs }) => {
@@ -27,5 +28,16 @@ export const NotesFetch = () => {
       .on('value', snapshot => {
         dispatch({ type: NOTES_FETCH_SUCCESS, payload: snapshot.val() })
       })
+  }
+}
+
+export const AddEntry = ({ text, date, tagIDs, type }) => {
+  return (dispatch) => {
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)
+    .push({ text, date, tagIDs, type })
+    .then(() => {
+      dispatch({ type: ADD_ENTRY, payload: { text, date, tagIDs, type } })
+      Actions.Today()
+    })
   }
 }
