@@ -24,14 +24,6 @@ class EntryList extends React.Component {
     this.props.TagSelect(tag)
   }
 
-  addProgress () {
-    Actions.EntryAdd()
-  }
-
-  addNote () {
-    Actions.NoteAddForm()
-  }
-
   displayEmptyMessage () {
     return (
       <View>
@@ -46,27 +38,34 @@ class EntryList extends React.Component {
     )
   }
 
+  goToEntryType (entryType) {
+    console.log(entryType)
+    Actions.TypeList({ entryType })
+  }
+
   render () {
     const entries = this.props.entries ? Object.values(this.props.entries) : []
     return (
       <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main, paddingTop: 65}}>
         <ScrollView contentContainerStyle={styles.container}>
           {entries.map((entry, idx) => (
-            <TouchableOpacity activeOpacity={0.8} key={idx} onPress={() => Actions.EntryDetail({entry: entry, title: entry.text, location: 'entryList'})}>
               <View key={idx} style={{backgroundColor: 'white', borderRadius: 10, borderTopLeftRadius: 10, borderBottomLeftRadius: 10, marginBottom: 10, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingRight: 10}}>
                 <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                  <View style={{padding: 5, borderRightWidth: 1, borderColor: '#eee', marginRight: 10, backgroundColor: '#eee', borderTopLeftRadius: 10, borderBottomLeftRadius: 10}}>
-                    <Image source={imageMap[entry.type]} style={{height: 40, width: 40}} />
-                  </View>
-                  <View style={{flex: 1}}>
-                    <Text style={{color: '#555', fontWeight: 'bold'}}>{entry.text}</Text>
-                  </View>
+                  <TouchableOpacity activeOpacity={0.8} onPress={() => this.goToEntryType(entry.type)}>
+                    <View style={{padding: 5, borderRightWidth: 1, borderColor: '#eee', marginRight: 10, backgroundColor: '#eee', borderTopLeftRadius: 10, borderBottomLeftRadius: 10}}>
+                      <Image source={imageMap[entry.type]} style={{height: 40, width: 40}} />
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity activeOpacity={0.8} key={idx} onPress={() => Actions.EntryDetail({entry: entry, title: entry.text, location: 'entryList'})}>
+                    <View>
+                      <Text style={{color: '#555', fontWeight: 'bold'}}>{entry.text}</Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
                 <View style={{alignItems: 'flex-end', flex: 1}}>
                   <Text style={{color: colors.main}}>{moment(new Date(entry.date)).format('MMM DD')}</Text>
                 </View>
               </View>
-            </TouchableOpacity>
           ))}
         </ScrollView>
       </View>

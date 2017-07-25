@@ -6,7 +6,6 @@ import LoginForm from './components/LoginForm'
 import EntryAddForm from './components/EntryAddForm'
 import EntryDetail from './components/EntryDetail'
 import ProjectList from './components/ProjectList'
-import TagList from './components/TagList'
 import ProjectAddForm from './components/ProjectAddForm'
 import EntryAdditionForm from './components/EntryAdditionForm'
 import ProjectDetails from './components/ProjectDetails'
@@ -15,6 +14,7 @@ import Day from './components/Day'
 import TagDetails from './components/TagDetails'
 import EntryList from './components/EntryList'
 import AllGrid from './components/AllGrid'
+import TypeList from './components/TypeList'
 
 // Simple component to render something in place of icon
 const DayTabIcon = ({ selected, title }) => {
@@ -89,6 +89,7 @@ const RouterComponent = () => {
 
           <Scene key='entries' title='Entries' icon={EntriesTabIcon}>
             <Scene key='EntryList' component={EntryList} title='Entries' initial />
+            <Scene key='TypeList' component={TypeList} title='Type List' />
             <Scene key='EntryDetail' component={EntryDetail} title='Entry Detail' />
           </Scene>
 
