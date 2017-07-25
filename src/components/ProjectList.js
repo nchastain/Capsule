@@ -59,6 +59,7 @@ const styles = {
     borderBottomWidth: 1,
     borderColor: 'lightgray',
     padding: 10,
+    backgroundColor: 'white',
   },
   containerStyle: {
     flex: 1,
@@ -133,7 +134,8 @@ const styles = {
   container: {
     flex: 1,
     marginTop: 65,
-    marginBottom: 48
+    marginBottom: 48,
+    backgroundColor: '#a083c4',
   }
 }
 

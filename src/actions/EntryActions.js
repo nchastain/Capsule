@@ -8,10 +8,14 @@ import {
   ENTRY_CLEAR
 } from './types'
 
-export const EntryUpdate = ({ prop, value }) => {
-  return {
-    type: ENTRY_UPDATE,
-    payload: { prop, value }
+export const EntryUpdate = (entry, location) => {
+  return (dispatch) => {
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${entry.uid}`)
+      .set(entry)
+      .then(() => {
+        dispatch({ type: ENTRY_SAVE_SUCCESS })
+        location === 'today' ? Actions.Today({ type: 'reset' }) : Actions.EntryList({ type: 'reset'})
+      })
   }
 }
 
@@ -19,7 +23,7 @@ export const EntryAdd = ({ description, date, seconds, projectID }) => {
   // const { currentUser } = firebase.auth()
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`) 
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)
       .push({ description, date, seconds, projectID })
       .then(() => {
         dispatch({ type: ENTRY_ADD })
@@ -51,7 +55,7 @@ export const EntrySave = ({ description, seconds, uid, projectID }) => {
 
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)  
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${uid}`)  
       .set({ description, seconds, projectID })
       .then(() => {
         dispatch({ type: ENTRY_SAVE_SUCCESS })
@@ -60,15 +64,15 @@ export const EntrySave = ({ description, seconds, uid, projectID }) => {
   }
 }
 
-export const EntryDelete = ({ uid }) => {
+export const EntryDelete = ({ uid }, location) => {
   // const { currentUser } = firebase.auth()
 
   return () => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)  
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${uid}`)  
       .remove()
       .then(() => {
-        Actions.Today({ type: 'reset' })
+        location === 'today' ? Actions.Today({ type: 'reset' }) : Actions.EntryList({ type: 'reset'})
       })
   }
 }

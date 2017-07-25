@@ -1,19 +1,27 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
+  Image,
+  Dimensions,
+  TouchableHighlight,
   TouchableOpacity,
-  Image
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { secondsToString } from '../utilities'
+import { imageMap } from '../utilities'
 import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect } from '../actions'
+import _ from 'lodash'
 
 class Day extends React.Component {
+  constructor (props) {
+    super(props)
+    this.deviceWidth = Dimensions.get('window').width
+    this.deviceHeight = Dimensions.get('window').height
+  }
 
   componentWillMount () {
     this.props.NotesFetch()
@@ -22,38 +30,27 @@ class Day extends React.Component {
     this.props.TagsFetch()
   }
 
+  onLayout (evt) {
+    this.deviceHeight = evt.nativeEvent.layout.height
+    this.deviceWidth = evt.nativeEvent.layout.width
+  }
+
   buildDayEntries (dayEntries) {
-    const imageMap = {
-      note: require('.././assets/barenote.png'),
-      experience: require('.././assets/bareexperience.png'),
-      view: require('.././assets/bareview.png'),
-      journal: require('.././assets/barejournal.png'),
-      milestone: require('.././assets/baremilestone.png'),
-      habit: require('.././assets/barehabit.png'),
-      progress: require('.././assets/bareprogress.png')
-    }
-    const lightColorMap = {
-      note: '#8AC3FB',
-      journal: '#FFBDFA',
-      milestone: '#F6DF7F',
-      view: '#B09BFF',
-      progress: '#9EE986',
-      habit: '#FFC566',
-      experience: '#F96262'
-    }
     return dayEntries.map((entry, idx) => (
-      <View key={idx} style={{backgroundColor: 'white', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', padding: 5, borderBottomWidth: 1, borderColor: '#eee', paddingRight: 5, paddingLeft: 5}}>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-          <View style={{padding: 10, paddingTop: entry.type === 'view' ? 15 : 10, paddingBottom: entry.type === 'view' ? 15 : 10, borderRadius: 13, marginRight: 5 }}>
-            <Image source={imageMap[entry.type]} style={{height: entry.type === 'view' ? 16 : 26, width: 26}} />
-          </View>
-          <View>
-            <Text style={{color: '#555', fontWeight: 'bold'}}>{entry.text}</Text>
-          </View>
+      <TouchableOpacity key={idx} onPress={() => Actions.DayEntryDetail({entry: entry, title: entry.text, location: 'today'})}>
+        <View key={idx} style={{backgroundColor: 'white', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', padding: 5, borderBottomWidth: 1, borderColor: '#eee', paddingRight: 5, paddingLeft: 5}}>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+              <View style={{ padding: 10, paddingTop: 10, paddingBottom: 10, borderRadius: 13, marginRight: 0 }}>
+                <Image source={imageMap[entry.type]} style={{height: 26, width: 26}} />
+              </View>
+              <View>
+                <Text style={{color: '#555', fontWeight: 'bold'}}>{entry.text}</Text>
+              </View>
+            </View>
         </View>
-      </View>
+      </TouchableOpacity>
     ))
-}
+  }
 
   findTagByID (id) {
     let tagObj = this.props.tags ? Object.values(this.props.tags).filter(tagObj => tagObj.id === id)[0] : {text: ''}
@@ -87,14 +84,14 @@ class Day extends React.Component {
   }
 
   render () {
-    const entriesArr = Object.values(this.props.entries)
+    const entriesArr = this.props.entries ? Object.values(this.props.entries) : []
     const isFromToday = (date) => moment(new Date(date)).get('date') === moment(new Date()).get('date')
     const dayEntries = entriesArr.filter(entry => isFromToday(entry.date))
     return (
       <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: '#a083c4'}}>
         <View style={{alignItems: 'center', paddingBottom: 10, backgroundColor: '#e2daed', paddingTop: 30, alignSelf: 'stretch', justifyContent: 'center'}}><Image style={{height: 30, resizeMode: 'contain'}} source={require('.././assets/logo.png')} /></View>
         {dayEntries.length === 0 &&
-          <View style={{alignSelf: 'stretch', justifyContent: 'center', marginTop: 120, borderRadius: 10, marginLeft: 30, marginRight: 30, padding: 10, paddingTop: 20, paddingBottom: 20, alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
+          <View style={{alignSelf: 'stretch', justifyContent: 'center', marginTop: 15, marginBottom: (this.deviceHeight - 120) / 4, borderRadius: 10, marginLeft: 30, marginRight: 30, padding: 10, height: 200, alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
            {this.displayEmptyMessage()}
         </View>}
         {dayEntries.length !== 0 && <ScrollView contentContainerStyle={styles.container}>
@@ -154,7 +151,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 30,
     flexDirection: 'column',
-    shadowOffset: { width: 2,  height: 2,  },
+    shadowOffset: {width: 2, height: 2},
     shadowColor: '#555',
     shadowOpacity: 0.3,
   },
@@ -166,7 +163,10 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => {
-  const { entries, projects, project, notes, tags } = state
+  const { projects, project, notes, tags } = state
+  const entries = _.map(state.entries, (val, uid) => {
+    return { ...val, uid }
+  })
   return { entries, projects, project, notes, tags }
 }
 

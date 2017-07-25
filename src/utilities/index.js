@@ -22,3 +22,23 @@ const numberEnding = (number) => {
 }
 
 export const getProjectByID = (ID, projects) => projects.filter(obj => obj.uid === ID)[0]
+
+export const imageMap = {
+  note: require('.././assets/note.png'),
+  experience: require('.././assets/experience.png'),
+  view: require('.././assets/sight.png'),
+  journal: require('.././assets/journal.png'),
+  milestone: require('.././assets/milestone.png'),
+  habit: require('.././assets/habit.png'),
+  progress: require('.././assets/progress.png')
+}
+
+export const lightColorMap = {
+  note: '#8AC3FB',
+  journal: '#FFBDFA',
+  milestone: '#F6DF7F',
+  view: '#B09BFF',
+  progress: '#9EE986',
+  habit: '#FFC566',
+  experience: '#F96262'
+}

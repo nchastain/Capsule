@@ -97,18 +97,16 @@ class EntryAdditionForm extends React.Component {
       journal: require('.././assets/journal.png'),
       milestone: require('.././assets/milestone.png'),
       habit: require('.././assets/habit.png'),
-      progress: require('.././assets/progress.png'),
+      progress: require('.././assets/progress.png')
     }
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch', backgroundColor: '#a083c4'}}>
-          <View style={{marginTop: 90, width: 80, borderRadius: 40, height: 80, shadowOffset: { width: 2,  height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
+          <View style={{marginTop: 90, width: 80, borderRadius: 40, height: 80, shadowOffset: {width: 2, height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
             <Image source={imageMap[this.props.entryType]} style={{width: 80, height: 80}} />
           </View>
-          <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderRadius: 10, borderColor: '#eee', borderWidth: 1, margin: 20, backgroundColor: 'white',     shadowOffset: { width: 2,  height: 2},
-    shadowColor: '#555',
-    shadowOpacity: 0.3}}>
+          <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderRadius: 10, borderColor: '#eee', borderWidth: 1, margin: 20, backgroundColor: 'white', shadowOffset: { width: 2, height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
             <TextInput
               placeholder={`Add ${this.props.entryType} here`}
               numberOfLines={3}

@@ -3,11 +3,10 @@ import { Scene, Router, Actions } from 'react-native-router-flux'
 import { Text, View, Image } from 'react-native'
 import LoginForm from './components/LoginForm'
 import EntryAddForm from './components/EntryAddForm'
-import EntryEdit from './components/EntryEdit'
+import EntryDetail from './components/EntryDetail'
 import ProjectList from './components/ProjectList'
 import TagList from './components/TagList'
 import ProjectAddForm from './components/ProjectAddForm'
-import NoteAddForm from './components/NoteAddForm'
 import EntryAdditionForm from './components/EntryAdditionForm'
 import ProjectDetails from './components/ProjectDetails'
 import TabBar from './components/TabBar'
@@ -75,9 +74,9 @@ const RouterComponent = () => {
           <Scene key='days' title='Days' icon={DayTabIcon}>
             <Scene key='Today' component={Day} title='Today' initial hideNavBar />
             <Scene key='TagDetailsDay' component={TagDetails} title='Tag Details' />
-            <Scene key='NoteAddForm' component={NoteAddForm} title='Add a Note' hideNavBar={false} />
             <Scene key='EntryAdditionForm' component={EntryAdditionForm} hideNavBar={false} />
             <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' hideNavBar={false} />
+            <Scene key='DayEntryDetail' component={EntryDetail} title='Entry Detail' hideNavBar={false} />
           </Scene>
 
           {/* Tab and its scenes */}
@@ -88,7 +87,8 @@ const RouterComponent = () => {
           </Scene>
 
           <Scene key='entries' title='Entries' icon={EntriesTabIcon}>
-            <Scene key='TagList' component={EntryList} title='Entries' initial />
+            <Scene key='EntryList' component={EntryList} title='Entries' initial />
+            <Scene key='EntryDetail' component={EntryDetail} title='Entry Detail' />
           </Scene>
 
           <Scene key='all' title='Tags' icon={AllTabIcon}>
