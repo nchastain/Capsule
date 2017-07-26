@@ -30,7 +30,19 @@ export const imageMap = {
   journal: require('.././assets/journal.png'),
   milestone: require('.././assets/milestone.png'),
   habit: require('.././assets/habit.png'),
-  progress: require('.././assets/progress.png')
+  progress: require('.././assets/progress.png'),
+  projects: require('.././assets/projectsicon.png')
+}
+
+export const borderlessImageMap = {
+  note: require('.././assets/notenoborder.png'),
+  experience: require('.././assets/experiencenoborder.png'),
+  view: require('.././assets/viewnoborder.png'),
+  journal: require('.././assets/journalnoborder.png'),
+  milestone: require('.././assets/milestonenoborder.png'),
+  habit: require('.././assets/habitnoborder.png'),
+  progress: require('.././assets/progressnoborder.png'),
+  projects: require('.././assets/projectsiconnoborder.png')
 }
 
 export const lightColorMap = {
@@ -52,6 +64,8 @@ export const darkColorMap = {
   habit: '#F59123',
   experience: '#D0021B'
 }
+
+export const entryTypes = ['journal', 'experience', 'view', 'note', 'progress', 'habit', 'milestone']
 
 export const colors = {
   main: '#a083c4'

@@ -10,7 +10,7 @@ import {
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { imageMap, colors } from '../utilities'
+import { imageMap, colors, borderlessImageMap } from '../utilities'
 import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect } from '../actions'
 import _ from 'lodash'
 
@@ -39,30 +39,30 @@ class EntryList extends React.Component {
   }
 
   goToEntryType (entryType) {
-    console.log(entryType)
-    Actions.TypeList({ entryType })
+    const entries = this.props.entries.filter(entry => entry.type === entryType)
+    Actions.TypeList({ entryType, entries, title: `${entryType[0].toUpperCase()}${entryType.substring(1)}${entryType !== 'progress' ? 's' : ''}`, location: 'entrylist'})
   }
-
+ 
   render () {
     const entries = this.props.entries ? Object.values(this.props.entries) : []
     return (
       <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main, paddingTop: 65}}>
         <ScrollView contentContainerStyle={styles.container}>
           {entries.map((entry, idx) => (
-              <View key={idx} style={{backgroundColor: 'white', borderRadius: 10, borderTopLeftRadius: 10, borderBottomLeftRadius: 10, marginBottom: 10, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingRight: 10}}>
+              <View key={idx} style={{backgroundColor: 'white', borderRadius: 10, borderTopLeftRadius: 10, borderBottomLeftRadius: 10, marginBottom: 10, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', padding: 10, paddingLeft: 5, paddingRight: 15}}>
                 <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                   <TouchableOpacity activeOpacity={0.8} onPress={() => this.goToEntryType(entry.type)}>
-                    <View style={{padding: 5, borderRightWidth: 1, borderColor: '#eee', marginRight: 10, backgroundColor: '#eee', borderTopLeftRadius: 10, borderBottomLeftRadius: 10}}>
-                      <Image source={imageMap[entry.type]} style={{height: 40, width: 40}} />
+                    <View style={{padding: 5, marginRight: 10, width: 45}}>
+                      <Image source={borderlessImageMap[entry.type]} style={{height: 45, width: 45}} />
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity activeOpacity={0.8} key={idx} onPress={() => Actions.EntryDetail({entry: entry, title: entry.text, location: 'entryList'})}>
-                    <View>
+                    <View style={{flex: 1, alignSelf: 'center', alignItems: 'flex-start', justifyContent: 'center', width: 230, paddingRight: 10, paddingLeft: 5}}>
                       <Text style={{color: '#555', fontWeight: 'bold'}}>{entry.text}</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
-                <View style={{alignItems: 'flex-end', flex: 1}}>
+                <View style={{}}>
                   <Text style={{color: colors.main}}>{moment(new Date(entry.date)).format('MMM DD')}</Text>
                 </View>
               </View>

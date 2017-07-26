@@ -39,15 +39,15 @@ class Day extends React.Component {
   buildDayEntries (dayEntries) {
     return dayEntries.map((entry, idx) => (
       <TouchableOpacity activeOpacity={0.8} key={idx} onPress={() => Actions.DayEntryDetail({entry: entry, title: entry.text, location: 'today'})}>
-        <View key={idx} style={{backgroundColor: 'white', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', padding: 5, borderBottomWidth: 1, borderColor: '#eee', paddingRight: 5, paddingLeft: 5}}>
-            <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+        <View key={idx} style={{backgroundColor: 'white', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', padding: 5, borderBottomWidth: 1, borderColor: '#eee', paddingRight: 5, paddingLeft: 5, paddingBottom: 15}}>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
               <View style={{ padding: 10, paddingTop: 10, paddingLeft: 5, paddingBottom: 10, borderRadius: 13, marginRight: 0 }}>
                 <Image source={imageMap[entry.type]} style={{height: 26, width: 26}} />
               </View>
-              <View style={{flex: 1, flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center', justifyContent: 'space-between'}}>
+              <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center', justifyContent: 'space-between', width: 250}}>
                 <Text style={{color: '#555', fontWeight: 'bold'}}>{entry.text}</Text>
-                <View style={{marginRight: 10}}><Text style={{color: 'lightgray', fontSize: 18}}>></Text></View>
               </View>
+              <View style={{flex: 1}}><Text style={{color: 'lightgray', fontSize: 18}}>></Text></View>
             </View>
         </View>
       </TouchableOpacity>
