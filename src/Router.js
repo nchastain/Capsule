@@ -94,7 +94,7 @@ const RouterComponent = () => {
           </Scene>
 
           <Scene key='all' title='Tags' icon={AllTabIcon}>
-            <Scene key='AllGrid' component={AllGrid} title='All' hideNavBar={false} />
+            <Scene key='AllGrid' component={AllGrid} title='All' hideNavBar />
           </Scene>
 
         {/* End of Tab Container */}

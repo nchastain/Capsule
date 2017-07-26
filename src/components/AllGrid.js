@@ -28,10 +28,10 @@ class AllGrid extends React.Component {
     if (entryType === 'projects') {
       return (
         <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => Actions.projects()}>
-          <View style={{ height: 110, borderRadius: 10, backgroundColor: '#555', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', shadowOffset: {width: 2, height: 2},
+          <View style={{ height: 128, borderRadius: 10, backgroundColor: '#555', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', shadowOffset: {width: 2, height: 2},
       shadowColor: '#555',
       shadowOpacity: 0.3, overflow: 'hidden'}}>
-            <Image source={imageMap[entryType]} style={{position: 'absolute', width: 140, height: 140, opacity: 0.4}} />
+            <Image source={imageMap[entryType]} style={{position: 'absolute', width: 170, height: 170, opacity: 0.4}} />
             <View style={{position: 'absolute', padding: 2}}>
               <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold', textShadowColor: '#555', textShadowOffset: {width: 1, height: 1}, backgroundColor: 'rgba(0,0,0,0)'}}>
                 Projects
@@ -43,10 +43,10 @@ class AllGrid extends React.Component {
     }
     return (
       <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => this.goToEntryType(entryType)}>
-        <View style={{ height: 110, borderRadius: 10, backgroundColor: lightColorMap[entryType], alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', shadowOffset: {width: 2, height: 2},
+        <View style={{ height: 128, borderRadius: 10, backgroundColor: lightColorMap[entryType], alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', shadowOffset: {width: 2, height: 2},
     shadowColor: '#555',
     shadowOpacity: 0.3, overflow: 'hidden'}}>
-          <Image source={imageMap[entryType]} style={{position: 'absolute', width: 140, height: 140, opacity: 0.4}} />
+          <Image source={imageMap[entryType]} style={{position: 'absolute', width: 170, height: 170, opacity: 0.4}} />
           <View style={{position: 'absolute', padding: 2}}>
             <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold', textShadowColor: darkColorMap[entryType], textShadowOffset: {width: 1, height: 1}, backgroundColor: 'rgba(0,0,0,0)'}}>
               {`${entryType[0].toUpperCase()}${entryType.substring(1)}${entryType !== 'progress' ? 's' : ''}`}
@@ -59,21 +59,21 @@ class AllGrid extends React.Component {
 
   render () {
     return (
-      <ScrollView contentContainerStyle={{paddingTop: 75, justifyContent: 'flex-start', alignItems: 'flex-start', flex: 1, backgroundColor: colors.main}}>
+      <ScrollView contentContainerStyle={{paddingTop: 30, justifyContent: 'flex-start', alignItems: 'flex-start', flex: 1, backgroundColor: colors.main}}>
         <View style={{flexDirection: 'row', paddingLeft: 10, paddingRight: 10, paddingBottom: 10}}>
           <View style={{flex: 1, paddingRight: 10}}>{this.createCardForEntryType('experience')}</View>
-          <View style={{flex: 1}}>{this.createCardForEntryType('journal')}</View>
+          <View style={{flex: 1}}>{this.createCardForEntryType('habit')}</View>
         </View>
         <View style={{flexDirection: 'row', paddingLeft: 10, paddingRight: 10, paddingBottom: 10}}>
-          <View style={{flex: 1, paddingRight: 10}}>{this.createCardForEntryType('habit')}</View>
-          <View style={{flex: 1}}>{this.createCardForEntryType('note')}</View>
+          <View style={{flex: 1, paddingRight: 10}}>{this.createCardForEntryType('milestone')}</View>
+          <View style={{flex: 1}}>{this.createCardForEntryType('progress')}</View>
         </View>
         <View style={{flexDirection: 'row', paddingLeft: 10, paddingRight: 10, paddingBottom: 10}}>
-          <View style={{flex: 1, paddingRight: 10}}>{this.createCardForEntryType('progress')}</View>
-          <View style={{flex: 1,}}>{this.createCardForEntryType('milestone')}</View>
+          <View style={{flex: 1, paddingRight: 10}}>{this.createCardForEntryType('note')}</View>
+          <View style={{flex: 1,}}>{this.createCardForEntryType('view')}</View>
         </View>
         <View style={{flexDirection: 'row', paddingLeft: 10, paddingRight: 10, paddingBottom: 10}}>
-          <View style={{flex: 1, paddingRight: 10}}>{this.createCardForEntryType('view')}</View>
+          <View style={{flex: 1, paddingRight: 10}}>{this.createCardForEntryType('journal')}</View>
           <View style={{flex: 1}}>{this.createCardForEntryType('projects')}</View>
         </View>
       </ScrollView>

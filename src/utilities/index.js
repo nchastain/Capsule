@@ -68,5 +68,6 @@ export const darkColorMap = {
 export const entryTypes = ['journal', 'experience', 'view', 'note', 'progress', 'habit', 'milestone']
 
 export const colors = {
-  main: '#a083c4'
+  main: '#a083c4',
+  lightAccent: '#DDC6FA'
 }

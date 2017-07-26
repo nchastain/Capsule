@@ -1,12 +1,16 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { View, Text, TouchableOpacity, ListView } from 'react-native'
+import { View, Text, TouchableOpacity, ListView, TouchableWithoutFeedback } from 'react-native'
 import { ProjectsFetch, ProjectSelect } from '../actions'
 import { Actions } from 'react-native-router-flux'
 import { colors } from '../utilities'
 
 class ProjectList extends React.Component {
+  constructor () {
+    super()
+    this.state = {activeFilter: 'current'}
+  }
   componentWillMount () {
     this.props.ProjectsFetch()
     this.createDataSource(this.props)
@@ -17,10 +21,24 @@ class ProjectList extends React.Component {
   }
 
   createDataSource ({ projects }) {
+    let filteredProjects
+    switch (this.state.activeFilter) {
+      case 'current':
+        filteredProjects = projects.filter(project => !project.complete)
+        break
+      case 'complete':
+        filteredProjects = projects.filter(project => project.complete)
+        break
+      case 'all':
+        filteredProjects = projects
+        break
+      default:
+        filteredProjects = projects
+    }
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
-    this.dataSource = ds.cloneWithRows(projects.sort((a, b) => b.time - a.time))
+    this.setState({dataSource: ds.cloneWithRows(filteredProjects.sort((a, b) => b.time - a.time))})
   }
 
   handleSelect (project) {
@@ -31,7 +49,9 @@ class ProjectList extends React.Component {
     const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
     return (
       <TouchableOpacity activeOpacity={0.8} style={styles.rowStyle} onPress={() => this.handleSelect(project)}>
-        <View style={project.complete ? [styles.buttonStyle, styles.completeButtonStyle] : styles.buttonStyle }><Text style={project.complete ? [styles.timeStyle, styles.completeTextStyle] : styles.timeStyle}>{formattedHoursLogged}/{project.hoursGoal}</Text></View>
+        <View style={project.complete ? [styles.buttonStyle, styles.completeButtonStyle] : styles.buttonStyle }>
+          <Text style={project.complete ? [styles.timeStyle, styles.completeTextStyle] : styles.timeStyle}>{formattedHoursLogged}/{project.hoursGoal}</Text>
+        </View>
         <View style={styles.projectStyle}>
           <Text style={project.complete ? [styles.projectTitleStyle, styles.completeTextStyle] : styles.projectTitleStyle }>
             {project.title}
@@ -46,7 +66,26 @@ class ProjectList extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-        <ListView enableEmptySections dataSource={this.dataSource} renderRow={this.renderRow.bind(this)} />
+        <View style={{alignSelf: 'stretch', alignItems: 'flex-start'}}>
+          <View style={{padding: 10, paddingBottom: 0, paddingLeft: 5, alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-start'}}>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'current'}, () => this.createDataSource(this.props))}>
+              <View style={this.state.activeFilter === 'current' ? styles.filterButtonActive : styles.filterButtonInactive}>
+                <Text style={this.state.activeFilter === 'current' ? styles.activeFilterText : styles.inactiveFilterText}>current</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'complete'}, () => this.createDataSource(this.props))}>
+              <View style={this.state.activeFilter === 'complete' ? styles.filterButtonActive : styles.filterButtonInactive}>
+                <Text style={this.state.activeFilter === 'complete' ? styles.activeFilterText : styles.inactiveFilterText}>complete</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'all'}, () => this.createDataSource(this.props))}>
+              <View style={this.state.activeFilter === 'all' ? styles.filterButtonActive : styles.filterButtonInactive}>
+                <Text style={this.state.activeFilter === 'all' ? styles.activeFilterText : styles.inactiveFilterText}>all</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
+        <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} style={{marginLeft: 10, marginRight: 10}} />
       </View>
     )
   }
@@ -71,6 +110,42 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  filterButtonActive: {
+    padding: 8,
+    paddingLeft: 12,
+    paddingRight: 12,
+    backgroundColor: 'white',
+    // borderRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderColor: 'white',
+    borderWidth: 1,
+    margin: 5,
+    marginBottom: 0,
+  },
+  filterButtonInactive: {
+    padding: 8,
+    paddingLeft: 12,
+    paddingRight: 12,
+    margin: 5,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.lightAccent,
+    backgroundColor: colors.lightAccent,
+    borderBottomWidth: 0,
+    marginBottom: 0,
+  },
+  activeFilterText: {
+    color: colors.main,
+    fontWeight: 'bold',
+    fontSize: 12
+  },
+  inactiveFilterText: {
+    color: colors.main, 
+    fontSize: 12,
+    fontWeight: 'bold'
   },
   hourRecordStyle: {
     fontSize: 18,
@@ -134,7 +209,7 @@ const styles = {
   },
   container: {
     flex: 1,
-    marginTop: 65,
+    marginTop: 64,
     marginBottom: 48,
     backgroundColor: colors.main,
   }
