@@ -1,10 +1,10 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { View, Text, TouchableOpacity, ListView, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, TouchableOpacity, ListView, TouchableWithoutFeedback, Image } from 'react-native'
 import { ProjectsFetch, ProjectSelect } from '../actions'
 import { Actions } from 'react-native-router-flux'
-import { colors } from '../utilities'
+import { colors, imageMap, borderlessImageMap } from '../utilities'
 
 class ProjectList extends React.Component {
   constructor () {
@@ -45,12 +45,15 @@ class ProjectList extends React.Component {
     this.props.ProjectSelect(project)
   }
 
-  renderRow (project) {
+  /* renderRow (project) {
     const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
     return (
       <TouchableOpacity activeOpacity={0.8} style={styles.rowStyle} onPress={() => this.handleSelect(project)}>
-        <View style={project.complete ? [styles.buttonStyle, styles.completeButtonStyle] : styles.buttonStyle }>
-          <Text style={project.complete ? [styles.timeStyle, styles.completeTextStyle] : styles.timeStyle}>{formattedHoursLogged}/{project.hoursGoal}</Text>
+        <View style={project.complete ? [styles.buttonStyle, styles.completeButtonStyle] : styles.buttonStyle}>
+          {project.complete
+            ? <Image source={borderlessImageMap.complete} style={{height: 35, width: 39, opacity: 0.3}} />
+            : <Text style={styles.timeStyle}>{formattedHoursLogged}/{project.hoursGoal}</Text>
+          }
         </View>
         <View style={styles.projectStyle}>
           <Text style={project.complete ? [styles.projectTitleStyle, styles.completeTextStyle] : styles.projectTitleStyle }>
@@ -59,6 +62,47 @@ class ProjectList extends React.Component {
           <Text style={project.complete ? [styles.projectInfoStyle, styles.completeTextStyle] : styles.projectInfoStyle}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>
         </View>
         <View style={{marginRight: 10}}><Text style={{color: 'lightgray', fontSize: 18}}>></Text></View>
+      </TouchableOpacity>
+    )
+  } */
+
+  renderProgressBar (project) {
+    const percentComplete = parseInt(project.hoursLogged) / parseInt(project.hoursGoal)
+    switch (percentComplete) {
+      case 0:
+        return (
+          <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: colors.main, borderBottomWidth: 0}}>
+            <View style={{backgroundColor: '#eee', padding: 5, flex: 1}}><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12}}>0%</Text></View>
+          </View>
+        )
+      case 1:
+        return (
+          <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderWidth: 1, borderColor: colors.main, borderBottomWidth: 0}}>
+            <View style={{backgroundColor: colors.main, flex: 1, alignItems: 'flex-end'}}><Text style={{color: 'white', fontWeight: 'bold', fontSize: 12}}>100%</Text></View>
+            <View style={{backgroundColor: colors.main, padding: 5}}><Image source={borderlessImageMap.whiteComplete} style={{height: 20, width: 22}} /></View>
+          </View>
+        )
+      default:
+        return (
+          <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: colors.main, borderBottomWidth: 0}}>
+            <View style={{flex: percentComplete, backgroundColor: colors.main, padding: 5, alignItems: 'flex-end'}}><Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 12}}>{percentComplete * 100}%</Text></View>
+            <View style={{flex: 1 - percentComplete, backgroundColor: '#eee', padding: 5, alignSelf: 'stretch'}}></View>
+          </View>
+        )
+    }
+  }
+
+  renderRow (project) {
+    const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
+    return (
+      <TouchableOpacity activeOpacity={0.8} onPress={() => this.handleSelect(project)}>
+        <View style={{marginBottom: 20, marginLeft: 10, marginRight: 10, backgroundColor: 'white', flex: 1, flexDirection: 'column'}}>
+          {this.renderProgressBar(project)}
+          <View style={{padding: 10, backgroundColor: 'white', paddingBottom: 30, borderWidth: 1, borderColor: colors.main, borderRightWidth: 0.5}}>
+            <Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text>
+            <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>
+          </View>
+        </View>
       </TouchableOpacity>
     )
   }
@@ -85,7 +129,7 @@ class ProjectList extends React.Component {
             </TouchableWithoutFeedback>
           </View>
         </View>
-        <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} style={{marginLeft: 10, marginRight: 10}} />
+        <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{marginLeft: 10, marginRight: 10, paddingBottom: 90, backgroundColor: 'white', paddingTop: 10}} />
       </View>
     )
   }
@@ -140,11 +184,11 @@ const styles = {
   activeFilterText: {
     color: colors.main,
     fontWeight: 'bold',
-    fontSize: 12
+    fontSize: 14
   },
   inactiveFilterText: {
     color: colors.main, 
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 'bold'
   },
   hourRecordStyle: {
@@ -188,7 +232,7 @@ const styles = {
   },
   completeTextStyle: {
     color: 'lightgray',
-    textDecorationLine: 'line-through',
+    // textDecorationLine: 'line-through',
   },
   dateStyle: {
     fontSize: 12,
@@ -198,19 +242,18 @@ const styles = {
     borderColor: '#eee',
     borderWidth: 3,
     backgroundColor: colors.main,
-    borderRadius: 40,
-    height: 80,
-    width: 80,
+    borderRadius: 20,
+    height: 40,
+    width: 40,
     alignItems: 'center', 
     justifyContent:'center'
   },
   completeButtonStyle: {
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   container: {
     flex: 1,
     marginTop: 64,
-    marginBottom: 48,
     backgroundColor: colors.main,
   }
 }
