@@ -71,22 +71,22 @@ class ProjectList extends React.Component {
     switch (percentComplete) {
       case 0:
         return (
-          <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: colors.main, borderBottomWidth: 0}}>
-            <View style={{backgroundColor: '#eee', padding: 5, flex: 1}}><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12}}>0%</Text></View>
+          <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{backgroundColor: '#eee', padding: 5, flex: 1, borderRadius: 20}}><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, paddingLeft: 10}}>0%</Text></View>
           </View>
         )
       case 1:
         return (
-          <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderWidth: 1, borderColor: colors.main, borderBottomWidth: 0}}>
-            <View style={{backgroundColor: colors.main, flex: 1, alignItems: 'flex-end'}}><Text style={{color: 'white', fontWeight: 'bold', fontSize: 12}}>100%</Text></View>
-            <View style={{backgroundColor: colors.main, padding: 5}}><Image source={borderlessImageMap.whiteComplete} style={{height: 20, width: 22}} /></View>
+          <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderRadius: 20}}>
+            <View style={{backgroundColor: colors.main, flex: 1, alignItems: 'flex-end', borderRadius: 20}}><Text style={{color: 'white', fontWeight: 'bold', fontSize: 12, borderRadius: 20}}>100%</Text></View>
+            <View style={{backgroundColor: colors.main, padding: 5, paddingRight: 10, borderRadius: 20}}><Image source={borderlessImageMap.whiteComplete} style={{height: 20, width: 22}} /></View>
           </View>
         )
       default:
         return (
-          <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: colors.main, borderBottomWidth: 0}}>
-            <View style={{flex: percentComplete, backgroundColor: colors.main, padding: 5, alignItems: 'flex-end'}}><Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 12}}>{percentComplete * 100}%</Text></View>
-            <View style={{flex: 1 - percentComplete, backgroundColor: '#eee', padding: 5, alignSelf: 'stretch'}}></View>
+          <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', borderRadius: 20, backgroundColor: colors.main}}>
+            <View style={{flex: percentComplete, backgroundColor: colors.main, padding: 5, alignItems: 'flex-end', borderTopLeftRadius: 20, borderBottomLeftRadius: 20, paddingLeft: 10}}><Text style={{color: 'white', fontWeight: 'bold', fontSize: 12}}>{percentComplete * 100}%</Text></View>
+            <View style={{flex: 1 - percentComplete, backgroundColor: '#eee', padding: 5, alignSelf: 'stretch', borderTopRightRadius: 20, borderBottomRightRadius: 20}}></View>
           </View>
         )
     }
@@ -98,7 +98,7 @@ class ProjectList extends React.Component {
       <TouchableOpacity activeOpacity={0.8} onPress={() => this.handleSelect(project)}>
         <View style={{marginBottom: 20, marginLeft: 10, marginRight: 10, backgroundColor: 'white', flex: 1, flexDirection: 'column'}}>
           {this.renderProgressBar(project)}
-          <View style={{padding: 10, backgroundColor: 'white', paddingBottom: 30, borderWidth: 1, borderColor: colors.main, borderRightWidth: 0.5}}>
+          <View style={{padding: 10, backgroundColor: 'white', paddingBottom: 30}}>
             <Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text>
             <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>
           </View>
