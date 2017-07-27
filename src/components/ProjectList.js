@@ -72,21 +72,21 @@ class ProjectList extends React.Component {
       case 0:
         return (
           <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{backgroundColor: '#eee', padding: 5, flex: 1, borderRadius: 20}}><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, paddingLeft: 10}}>0%</Text></View>
+            <View style={{backgroundColor: '#eee', padding: 5, flex: 1, borderRadius: 20}}><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, paddingLeft: 10, marginRight: -3}}>0%</Text></View>
           </View>
         )
       case 1:
         return (
           <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderRadius: 20}}>
             <View style={{backgroundColor: colors.main, flex: 1, alignItems: 'flex-end', borderRadius: 20}}><Text style={{color: 'white', fontWeight: 'bold', fontSize: 12, borderRadius: 20}}>100%</Text></View>
-            <View style={{backgroundColor: colors.main, padding: 5, paddingRight: 10, borderRadius: 20}}><Image source={borderlessImageMap.whiteComplete} style={{height: 20, width: 22}} /></View>
+            <View style={{backgroundColor: colors.main, padding: 5, paddingRight: 15, borderRadius: 20}}><Image source={borderlessImageMap.whiteComplete} style={{height: 18, width: 20, marginRight: -3}} /></View>
           </View>
         )
       default:
         return (
           <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', borderRadius: 20, backgroundColor: colors.main}}>
             <View style={{flex: percentComplete, backgroundColor: colors.main, padding: 5, alignItems: 'flex-end', borderTopLeftRadius: 20, borderBottomLeftRadius: 20, paddingLeft: 10}}><Text style={{color: 'white', fontWeight: 'bold', fontSize: 12}}>{percentComplete * 100}%</Text></View>
-            <View style={{flex: 1 - percentComplete, backgroundColor: '#eee', padding: 5, alignSelf: 'stretch', borderTopRightRadius: 20, borderBottomRightRadius: 20}}></View>
+            <View style={{flex: 1 - percentComplete, backgroundColor: '#eee', padding: 5, alignSelf: 'stretch', borderTopRightRadius: 20, borderBottomRightRadius: 20, marginRight: -3}}></View>
           </View>
         )
     }
@@ -129,7 +129,7 @@ class ProjectList extends React.Component {
             </TouchableWithoutFeedback>
           </View>
         </View>
-        <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{marginLeft: 10, marginRight: 10, paddingBottom: 90, backgroundColor: 'white', paddingTop: 10}} />
+        <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{paddingBottom: 70, backgroundColor: 'white', paddingTop: 20}} />
       </View>
     )
   }
