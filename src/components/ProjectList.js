@@ -111,7 +111,7 @@ class ProjectList extends React.Component {
     return (
       <View style={styles.container}>
         <View style={{alignSelf: 'stretch', alignItems: 'flex-start'}}>
-          <View style={{padding: 10, paddingBottom: 0, paddingLeft: 5, alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-start'}}>
+          <View style={{padding: 10, paddingBottom: 0, paddingLeft: 5, alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-start', backgroundColor: colors.main, alignSelf: 'stretch'}}>
             <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'current'}, () => this.createDataSource(this.props))}>
               <View style={this.state.activeFilter === 'current' ? styles.filterButtonActive : styles.filterButtonInactive}>
                 <Text style={this.state.activeFilter === 'current' ? styles.activeFilterText : styles.inactiveFilterText}>current</Text>
@@ -254,7 +254,7 @@ const styles = {
   container: {
     flex: 1,
     marginTop: 64,
-    backgroundColor: colors.main,
+    backgroundColor: 'white',
   }
 }
 

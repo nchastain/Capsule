@@ -32,7 +32,9 @@ export const imageMap = {
   habit: require('.././assets/habit.png'),
   progress: require('.././assets/progress.png'),
   projects: require('.././assets/projectsicon.png'),
-  complete: require('.././assets/checkeredflagicon.png')
+  complete: require('.././assets/checkeredflagicon.png'),
+  trash: require('.././assets/trash.png'),
+  trash2: require('.././assets/trash2.png'),
 }
 
 export const borderlessImageMap = {
@@ -45,7 +47,11 @@ export const borderlessImageMap = {
   progress: require('.././assets/progressnoborder.png'),
   projects: require('.././assets/projectsiconnoborder.png'),
   complete: require('.././assets/checkeredflag.png'),
-  whiteComplete: require('.././assets/whitecomplete.png')
+  whiteComplete: require('.././assets/whitecomplete.png'),
+  trash3: require('.././assets/trash3.png'),
+  trash4: require('.././assets/trash4.png'),
+  trash5: require('.././assets/trash5.png'),
+  trash6: require('.././assets/trash6.png'),
 }
 
 export const lightColorMap = {
