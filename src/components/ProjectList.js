@@ -9,7 +9,7 @@ import { colors, imageMap, borderlessImageMap } from '../utilities'
 class ProjectList extends React.Component {
   constructor () {
     super()
-    this.state = {activeFilter: 'current'}
+    this.state = {activeFilter: 'current', activeType: 'all'}
   }
   componentWillMount () {
     this.props.ProjectsFetch()
@@ -35,6 +35,22 @@ class ProjectList extends React.Component {
       default:
         filteredProjects = projects
     }
+    switch (this.state.activeType) {
+      case 'education':
+        filteredProjects = projects.filter(project => project.type === 'education')
+        break
+      case 'art':
+        filteredProjects = projects.filter(project => project.type === 'art')
+        break
+      case 'enterprise':
+        filteredProjects = projects.filter(project => project.type === 'enterprise')
+        break
+      case 'all':
+        filteredProjects = projects
+        break
+      default:
+        filteredProjects = projects
+    }
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
@@ -46,7 +62,8 @@ class ProjectList extends React.Component {
   }
 
   renderProgressBar (project) {
-    let percentComplete = parseInt(parseInt(project.hoursLogged) / parseInt(project.hoursGoal))
+    let percentComplete = (project.hoursLogged) / (project.hoursGoal)
+    console.log(percentComplete)
     if (project.complete && !project.timed) {
       return (
         <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderRadius: 20}}>
@@ -74,7 +91,8 @@ class ProjectList extends React.Component {
       default:
         return (
           <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', borderRadius: 20, backgroundColor: colors.main}}>
-            <View style={{flex: percentComplete, backgroundColor: colors.main, padding: 5, alignItems: 'flex-end', borderTopLeftRadius: 20, borderBottomLeftRadius: 20, paddingLeft: 10}}><Text style={{color: 'white', fontWeight: 'bold', fontSize: 12}}>{percentComplete * 100}%</Text></View>
+            <View style={{flex: percentComplete, backgroundColor: colors.main, padding: 5, alignItems: 'flex-end', borderTopLeftRadius: 20, borderBottomLeftRadius: 20, paddingLeft: 10, height: 25}}>
+              {percentComplete > 0.08 && <Text style={{color: 'white', fontWeight: 'bold', fontSize: 12, textAlign: 'right'}}>{(percentComplete * 100).toFixed(0)}%</Text>}</View>
             <View style={{flex: 1 - percentComplete, backgroundColor: '#eee', padding: 5, alignSelf: 'stretch', borderTopRightRadius: 20, borderBottomRightRadius: 20, marginRight: -3}}></View>
           </View>
         )
@@ -96,33 +114,86 @@ class ProjectList extends React.Component {
     )
   }
 
+  checkActiveType (typeName) {
+    return this.state.activeType === typeName
+    ? {borderWidth: 5, borderColor: colors.main, borderRadius: 25, width: 50, height: 50, backgroundColor: 'white'}
+    : {borderWidth: 0, borderRadius: 20, width: 40, height: 40}
+  }
+  
   render () {
     return (
       <View style={styles.container}>
-        <View style={{alignSelf: 'stretch', alignItems: 'flex-start'}}>
-          <View style={{padding: 10, paddingBottom: 0, paddingLeft: 5, alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-start', backgroundColor: colors.main, alignSelf: 'stretch'}}>
+        <View style={{flexDirection: 'column', width: 80, backgroundColor: colors.lightAccent, alignItems: 'center', justifyContent: 'space-between', paddingBottom: 60}}>
+          <View style={{alignItems: 'center'}}>
+            <View><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 5, paddingTop: 10}}>TYPE</Text></View>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'all'}, () => this.createDataSource(this.props))}>
+              <View style={[{width: 40, height: 40, margin: 5, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('all', 'type')]}>
+                <Text style={{fontSize: 20, textAlign: 'center', marginTop: 0, marginRight: -2}}>⭕️</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'art'}, () => this.createDataSource(this.props))}>
+              <View style={[{width: 40, height: 40, margin: 5, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('art', 'type')]}>
+                <Text style={{fontSize: 20, textAlign: 'center'}}>🎨</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'education'}, () => this.createDataSource(this.props))}>
+              <View style={[{width: 40, height: 40, margin: 5, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('education', 'type')]}>
+                <Text style={{fontSize: 20, textAlign: 'center'}}>📚</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'enterprise'}, () => this.createDataSource(this.props))}>
+              <View style={[{width: 40, height: 40, margin: 5, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('enterprise', 'type')]}>
+                <Text style={{fontSize: 20, textAlign: 'center', marginTop: -5, marginRight: -2}}>💼</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+          <View style={{alignItems: 'center'}}>
+            <View><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 5}}>STATUS</Text></View>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'all'}, () => this.createDataSource(this.props))}>
+              <View style={styles.filterContainer}>
+              <Text style={[{fontSize: 15, fontWeight: 'bold', color: 'rgba(0,0,0,0.5)'}, this.state.activeFilter === 'all' ? {fontWeight: 'bold', color: 'white'} : null]}>all</Text>
+            </View>
+            </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'current'}, () => this.createDataSource(this.props))}>
-              <View style={this.state.activeFilter === 'current' ? styles.filterButtonActive : styles.filterButtonInactive}>
-                <Text style={this.state.activeFilter === 'current' ? styles.activeFilterText : styles.inactiveFilterText}>current</Text>
+              <View style={styles.filterContainer}>
+                <Text style={[{fontSize: 15, fontWeight: 'bold', color: 'rgba(0,0,0,0.5)'}, this.state.activeFilter === 'current' ? {fontWeight: 'bold', color: 'white'} : null]}>current</Text>
               </View>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'complete'}, () => this.createDataSource(this.props))}>
-              <View style={this.state.activeFilter === 'complete' ? styles.filterButtonActive : styles.filterButtonInactive}>
-                <Text style={this.state.activeFilter === 'complete' ? styles.activeFilterText : styles.inactiveFilterText}>complete</Text>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'all'}, () => this.createDataSource(this.props))}>
-              <View style={this.state.activeFilter === 'all' ? styles.filterButtonActive : styles.filterButtonInactive}>
-                <Text style={this.state.activeFilter === 'all' ? styles.activeFilterText : styles.inactiveFilterText}>all</Text>
+              <View style={styles.filterContainer}>
+                <Text style={[{fontSize: 15, fontWeight: 'bold', color: 'rgba(0,0,0,0.5)'}, this.state.activeFilter === 'complete' ? {fontWeight: 'bold', color: 'white'} : null]}>done</Text>
               </View>
             </TouchableWithoutFeedback>
           </View>
         </View>
-        <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{paddingBottom: 70, backgroundColor: 'white', paddingTop: 20}} />
+        <View style={{flexDirection: 'column', flex: 1}}>
+          <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{paddingBottom: 70, backgroundColor: 'white', paddingTop: 20}} />
+        </View>
       </View>
     )
   }
 }
+
+          {/* <View style={{alignSelf: 'stretch', alignItems: 'flex-start'}}>
+            <View style={{padding: 10, paddingBottom: 0, paddingLeft: 5, alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-start', backgroundColor: colors.main, alignSelf: 'stretch'}}>
+              <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'current'}, () => this.createDataSource(this.props))}>
+                <View style={this.state.activeFilter === 'current' ? styles.filterButtonActive : styles.filterButtonInactive}>
+                  <Text style={this.state.activeFilter === 'current' ? styles.activeFilterText : styles.inactiveFilterText}>current</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'complete'}, () => this.createDataSource(this.props))}>
+                <View style={this.state.activeFilter === 'complete' ? styles.filterButtonActive : styles.filterButtonInactive}>
+                  <Text style={this.state.activeFilter === 'complete' ? styles.activeFilterText : styles.inactiveFilterText}>complete</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'all'}, () => this.createDataSource(this.props))}>
+                <View style={this.state.activeFilter === 'all' ? styles.filterButtonActive : styles.filterButtonInactive}>
+                  <Text style={this.state.activeFilter === 'all' ? styles.activeFilterText : styles.inactiveFilterText}>all</Text>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </View> */}
 
 const styles = {
   rowStyle: {
@@ -133,6 +204,13 @@ const styles = {
     borderColor: 'lightgray',
     padding: 10,
     backgroundColor: 'white',
+  },
+  filterContainer: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 5,
+    paddingRight: 5,
+    alignItems: 'center',
   },
   containerStyle: {
     flex: 1,
@@ -243,6 +321,7 @@ const styles = {
     flex: 1,
     marginTop: 64,
     backgroundColor: 'white',
+    flexDirection: 'row',
   }
 }
 
