@@ -45,29 +45,18 @@ class ProjectList extends React.Component {
     this.props.ProjectSelect(project)
   }
 
-  /* renderRow (project) {
-    const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
-    return (
-      <TouchableOpacity activeOpacity={0.8} style={styles.rowStyle} onPress={() => this.handleSelect(project)}>
-        <View style={project.complete ? [styles.buttonStyle, styles.completeButtonStyle] : styles.buttonStyle}>
-          {project.complete
-            ? <Image source={borderlessImageMap.complete} style={{height: 35, width: 39, opacity: 0.3}} />
-            : <Text style={styles.timeStyle}>{formattedHoursLogged}/{project.hoursGoal}</Text>
-          }
-        </View>
-        <View style={styles.projectStyle}>
-          <Text style={project.complete ? [styles.projectTitleStyle, styles.completeTextStyle] : styles.projectTitleStyle }>
-            {project.title}
-          </Text>
-          <Text style={project.complete ? [styles.projectInfoStyle, styles.completeTextStyle] : styles.projectInfoStyle}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>
-        </View>
-        <View style={{marginRight: 10}}><Text style={{color: 'lightgray', fontSize: 18}}>></Text></View>
-      </TouchableOpacity>
-    )
-  } */
-
   renderProgressBar (project) {
-    const percentComplete = parseInt(project.hoursLogged) / parseInt(project.hoursGoal)
+    let percentComplete = parseInt(parseInt(project.hoursLogged) / parseInt(project.hoursGoal))
+    if (project.complete && !project.timed) {
+      return (
+        <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderRadius: 20}}>
+          <View style={{backgroundColor: colors.main, flex: 1, alignItems: 'flex-end', borderRadius: 20}} />
+          <View style={{backgroundColor: colors.main, padding: 5, paddingRight: 15, borderRadius: 20}}><Image source={borderlessImageMap.whiteComplete} style={{height: 18, width: 20, marginRight: -3}} /></View>
+        </View>
+      )
+    }
+    if (!project.timed) return null
+
     switch (percentComplete) {
       case 0:
         return (
@@ -96,11 +85,11 @@ class ProjectList extends React.Component {
     const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
     return (
       <TouchableOpacity activeOpacity={0.8} onPress={() => this.handleSelect(project)}>
-        <View style={{marginBottom: 20, marginLeft: 10, marginRight: 10, backgroundColor: 'white', flex: 1, flexDirection: 'column'}}>
-          {this.renderProgressBar(project)}
-          <View style={{padding: 10, backgroundColor: 'white', paddingBottom: 30}}>
+        <View style={{marginBottom: 20, backgroundColor: 'white', flex: 1, flexDirection: 'column', borderBottomWidth: 1, borderColor: '#eee'}}>
+          <View style={{marginLeft: 10, marginRight: 10}}>{this.renderProgressBar(project)}</View>
+          <View style={{padding: 10, backgroundColor: 'white', paddingBottom: 30, paddingTop: 10, marginLeft: 10, marginRight: 10}}>
             <Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text>
-            <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>
+            {project.timed && <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>}
           </View>
         </View>
       </TouchableOpacity>
@@ -110,16 +99,6 @@ class ProjectList extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-        <View style={{padding: 10, paddingBottom: 5, alignSelf: 'stretch', backgroundColor: colors.main, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row'}}>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.ProjectAdd()}>
-            <View style={{flexDirection: 'row', alignItems: 'center', backgroundColor: 'white', padding: 10, paddingLeft: 0, borderRadius: 10, shadowOffset: {width: 2, height: 2},
-      shadowColor: '#555',
-      shadowOpacity: 0.3,}}>
-              <Image source={imageMap.addproject} style={{height: 18, backgroundColor: 'white', width: 30}} />
-              <Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold', marginLeft: 5}}>New</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
         <View style={{alignSelf: 'stretch', alignItems: 'flex-start'}}>
           <View style={{padding: 10, paddingBottom: 0, paddingLeft: 5, alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-start', backgroundColor: colors.main, alignSelf: 'stretch'}}>
             <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'current'}, () => this.createDataSource(this.props))}>
@@ -170,7 +149,6 @@ const styles = {
     paddingLeft: 12,
     paddingRight: 12,
     backgroundColor: 'white',
-    // borderRadius: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     borderColor: 'white',

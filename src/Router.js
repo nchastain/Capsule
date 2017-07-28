@@ -1,7 +1,7 @@
 import React from 'react'
 import { Scene, Router, Actions } from 'react-native-router-flux'
-import { Text, View, Image } from 'react-native'
-import { colors } from './utilities'
+import { Text, View, Image, TouchableOpacity } from 'react-native'
+import { colors, imageMap } from './utilities'
 import LoginForm from './components/LoginForm'
 import EntryAddForm from './components/EntryAddForm'
 import EntryDetail from './components/EntryDetail'
@@ -16,7 +16,6 @@ import EntryList from './components/EntryList'
 import AllGrid from './components/AllGrid'
 import TypeList from './components/TypeList'
 
-// Simple component to render something in place of icon
 const DayTabIcon = ({ selected, title }) => {
   return (
     <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-start'}}>
@@ -53,6 +52,17 @@ const AllTabIcon = ({ selected, title }) => {
   )
 }
 
+const AddProjectButton = () => {
+    return (
+      <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.ProjectAdd()}>
+        <View style={{flexDirection: 'row', alignItems: 'center', borderRadius: 15, marginTop: -6, marginRight: -3, padding: 10, paddingBottom: 5, paddingTop: 5, paddingLeft: 5, backgroundColor: 'white'}}>
+          <Image source={imageMap.plus} style={{height: 20, width: 20, marginRight: 5, marginLeft: 5}} />
+          <Text style={{color: colors.main, fontSize: 14, fontWeight: 'bold'}}>New</Text>
+        </View>
+    </TouchableOpacity>
+    )
+}
+
 const RouterComponent = () => {
   return (
     <Router
@@ -82,7 +92,7 @@ const RouterComponent = () => {
 
           {/* Tab and its scenes */}
           <Scene key='projects' title='Projects' icon={ProjectTabIcon}>
-            <Scene key='ProjectList' component={ProjectList} title='Projects' initial />
+            <Scene key='ProjectList' component={ProjectList} title='Projects' initial onRight={() => Actions.ProjectAdd()} rightButtonImage={imageMap.addproject} renderRightButton={() => AddProjectButton()} />
             <Scene key='ProjectAdd' component={ProjectAddForm} title='Add a Project' />
             <Scene key='ProjectDetails' component={ProjectDetails} title='Project Details' />
           </Scene>
