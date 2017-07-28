@@ -82,7 +82,7 @@ const RouterComponent = () => {
 
           {/* Tab and its scenes */}
           <Scene key='projects' title='Projects' icon={ProjectTabIcon}>
-            <Scene key='ProjectList' component={ProjectList} title='Projects' onRight={() => Actions.ProjectAdd()} initial rightTitle='Add +' />
+            <Scene key='ProjectList' component={ProjectList} title='Projects' initial />
             <Scene key='ProjectAdd' component={ProjectAddForm} title='Add a Project' />
             <Scene key='ProjectDetails' component={ProjectDetails} title='Project Details' />
           </Scene>

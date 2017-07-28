@@ -110,6 +110,16 @@ class ProjectList extends React.Component {
   render () {
     return (
       <View style={styles.container}>
+        <View style={{padding: 10, paddingBottom: 5, alignSelf: 'stretch', backgroundColor: colors.main, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row'}}>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.ProjectAdd()}>
+            <View style={{flexDirection: 'row', alignItems: 'center', backgroundColor: 'white', padding: 10, paddingLeft: 0, borderRadius: 10, shadowOffset: {width: 2, height: 2},
+      shadowColor: '#555',
+      shadowOpacity: 0.3,}}>
+              <Image source={imageMap.addproject} style={{height: 18, backgroundColor: 'white', width: 30}} />
+              <Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold', marginLeft: 5}}>New</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
         <View style={{alignSelf: 'stretch', alignItems: 'flex-start'}}>
           <View style={{padding: 10, paddingBottom: 0, paddingLeft: 5, alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-start', backgroundColor: colors.main, alignSelf: 'stretch'}}>
             <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'current'}, () => this.createDataSource(this.props))}>
