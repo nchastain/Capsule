@@ -21,7 +21,7 @@ class ProjectList extends React.Component {
   }
 
   createDataSource ({ projects }) {
-    let filteredProjects, refilteredProjects
+    let filteredProjects
     switch (this.state.activeFilter) {
       case 'current':
         filteredProjects = projects.filter(project => !project.complete)
@@ -114,8 +114,9 @@ class ProjectList extends React.Component {
     )
   }
 
-  checkActiveType (typeName) {
-    return this.state.activeType === typeName
+  checkActiveType (typeName, filter) {
+    const filterOrType = filter ? this.state.activeFilter : this.state.activeType
+    return filterOrType === typeName
     ? {borderWidth: 5, borderColor: colors.main, borderRadius: 25, width: 50, height: 50, backgroundColor: 'white'}
     : {borderWidth: 0, borderRadius: 20, width: 40, height: 40}
   }
@@ -128,7 +129,7 @@ class ProjectList extends React.Component {
             <View><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 5, paddingTop: 10}}>TYPE</Text></View>
             <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'all'}, () => this.createDataSource(this.props))}>
               <View style={[{width: 40, height: 40, margin: 5, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('all', 'type')]}>
-                <Text style={{fontSize: 20, textAlign: 'center', marginTop: 0, marginRight: -2}}>⭕️</Text>
+                <Image source={borderlessImageMap.alltype} style={{height: 12, width: 30}} />
               </View>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'art'}, () => this.createDataSource(this.props))}>
@@ -150,19 +151,19 @@ class ProjectList extends React.Component {
 
           <View style={{alignItems: 'center'}}>
             <View><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 5}}>STATUS</Text></View>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'all'}, () => this.createDataSource(this.props))}>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'all', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
               <View style={styles.filterContainer}>
-              <Text style={[{fontSize: 15, fontWeight: 'bold', color: 'rgba(0,0,0,0.5)'}, this.state.activeFilter === 'all' ? {fontWeight: 'bold', color: 'white'} : null]}>all</Text>
-            </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'current'}, () => this.createDataSource(this.props))}>
-              <View style={styles.filterContainer}>
-                <Text style={[{fontSize: 15, fontWeight: 'bold', color: 'rgba(0,0,0,0.5)'}, this.state.activeFilter === 'current' ? {fontWeight: 'bold', color: 'white'} : null]}>now</Text>
+                <Image source={borderlessImageMap.allstatus} style={[{width: 20, height: 20, resizeMode: 'contain'}, this.checkActiveType('all', true)]} />
               </View>
             </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'complete'}, () => this.createDataSource(this.props))}>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'current', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
               <View style={styles.filterContainer}>
-                <Text style={[{fontSize: 15, fontWeight: 'bold', color: 'rgba(0,0,0,0.5)'}, this.state.activeFilter === 'complete' ? {fontWeight: 'bold', color: 'white'} : null]}>done</Text>
+                <Image source={borderlessImageMap.nowstatus} style={[{width: 30, height: 25, resizeMode: 'contain'}, this.checkActiveType('current', true)]} />
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'complete', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
+              <View style={styles.filterContainer}>
+                <Image source={borderlessImageMap.donestatus} style={[{width: 30, height: 25, resizeMode: 'contain'}, this.checkActiveType('complete', true)]} />
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -208,8 +209,6 @@ const styles = {
   filterContainer: {
     paddingTop: 15,
     paddingBottom: 15,
-    paddingLeft: 5,
-    paddingRight: 5,
     alignItems: 'center',
   },
   containerStyle: {

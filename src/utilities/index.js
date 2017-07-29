@@ -54,6 +54,10 @@ export const borderlessImageMap = {
   trash4: require('.././assets/trash4.png'),
   trash5: require('.././assets/trash5.png'),
   trash6: require('.././assets/trash6.png'),
+  alltype: require('.././assets/alltype.png'),
+  allstatus: require('.././assets/allstatus.png'),
+  nowstatus: require('.././assets/nowstatus.png'),
+  donestatus: require('.././assets/donestatus.png'),
 }
 
 export const lightColorMap = {
