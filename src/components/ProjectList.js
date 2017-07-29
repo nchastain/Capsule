@@ -9,7 +9,7 @@ import { colors, imageMap, borderlessImageMap } from '../utilities'
 class ProjectList extends React.Component {
   constructor () {
     super()
-    this.state = {activeFilter: 'current', activeType: 'all'}
+    this.state = {activeStatus: 'current', activeType: 'all'}
   }
   componentWillMount () {
     this.props.ProjectsFetch()
@@ -21,8 +21,9 @@ class ProjectList extends React.Component {
   }
 
   createDataSource ({ projects }) {
+    console.log(this.state.activeStatus, this.state.activeType)
     let filteredProjects
-    switch (this.state.activeFilter) {
+    switch (this.state.activeStatus) {
       case 'current':
         filteredProjects = projects.filter(project => !project.complete)
         break
@@ -51,6 +52,7 @@ class ProjectList extends React.Component {
       default:
         break
     }
+
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
@@ -114,11 +116,11 @@ class ProjectList extends React.Component {
     )
   }
 
-  checkActiveType (typeName, filter) {
-    const filterOrType = filter ? this.state.activeFilter : this.state.activeType
-    return filterOrType === typeName
-    ? {borderWidth: 5, borderColor: colors.main, borderRadius: 25, width: 50, height: 50, backgroundColor: 'white'}
-    : {borderWidth: 0, borderRadius: 20, width: 40, height: 40}
+  checkActiveType (typeName, status) {
+    const statusOrType = status ? this.state.activeStatus : this.state.activeType
+    return statusOrType === typeName
+    ? status ? {borderColor: colors.main, backgroundColor: 'white', borderWidth: 5} : {borderColor: colors.main, borderWidth: 5, borderRadius: 25, backgroundColor: 'white'}
+    : {}
   }
   
   render () {
@@ -126,44 +128,44 @@ class ProjectList extends React.Component {
       <View style={styles.container}>
         <View style={{flexDirection: 'column', width: 70, backgroundColor: colors.lightAccent, alignItems: 'center', justifyContent: 'space-between', paddingBottom: 60}}>
           <View style={{alignItems: 'center'}}>
-            <View><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 5, paddingTop: 10}}>TYPE</Text></View>
+            <View><Text style={{color: 'rgba(0,0,0,0.3)', fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 10, paddingTop: 10}}>TYPE</Text></View>
             <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'all'}, () => this.createDataSource(this.props))}>
-              <View style={[{width: 40, height: 40, margin: 5, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('all', 'type')]}>
-                <Image source={borderlessImageMap.alltype} style={{height: 12, width: 30}} />
+              <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('all')]}>
+                <Image source={borderlessImageMap.allstatus} style={{height: 8, resizeMode: 'contain'}} />
               </View>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'art'}, () => this.createDataSource(this.props))}>
-              <View style={[{width: 40, height: 40, margin: 5, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('art', 'type')]}>
-                <Text style={{fontSize: 20, textAlign: 'center'}}>🎨</Text>
+              <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('art')]}>
+                <Text style={{fontSize: 15, textAlign: 'center'}}>🎨</Text>
               </View>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'education'}, () => this.createDataSource(this.props))}>
-              <View style={[{width: 40, height: 40, margin: 5, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('education', 'type')]}>
-                <Text style={{fontSize: 20, textAlign: 'center'}}>📚</Text>
+              <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('education')]}>
+                <Text style={{fontSize: 15, textAlign: 'center'}}>📚</Text>
               </View>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'enterprise'}, () => this.createDataSource(this.props))}>
-              <View style={[{width: 40, height: 40, margin: 5, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('enterprise', 'type')]}>
-                <Text style={{fontSize: 20, textAlign: 'center', marginTop: -5, marginRight: -2}}>💼</Text>
+              <View style={[{width: 50, height: 50, marginBottom: 0, alignItems: 'center', justifyContent: 'center', overflow: 'hidden'}, this.checkActiveType('enterprise')]}>
+                <Text style={{fontSize: 15, textAlign: 'center', marginTop: -5, marginRight: -2}}>💼</Text>
               </View>
             </TouchableWithoutFeedback>
           </View>
 
           <View style={{alignItems: 'center'}}>
-            <View><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 5}}>STATUS</Text></View>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'all', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
+            <View><Text style={{color: 'rgba(0,0,0,0.3)', fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 10}}>STATUS</Text></View>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeStatus: 'all', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
               <View style={styles.filterContainer}>
-                <Image source={borderlessImageMap.allstatus} style={[{width: 20, height: 20, resizeMode: 'contain'}, this.checkActiveType('all', true)]} />
+                <View style={[{alignItems: 'center', justifyContent: 'center', borderRadius: 25, height: 50, width: 50}, this.checkActiveType('all', true)]}><Image source={borderlessImageMap.allstatus} style={[{height: 8, resizeMode: 'contain'}]} /></View>
               </View>
             </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'current', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeStatus: 'current', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
               <View style={styles.filterContainer}>
-                <Image source={borderlessImageMap.nowstatus} style={[{width: 30, height: 25, resizeMode: 'contain'}, this.checkActiveType('current', true)]} />
+                <View style={[{alignItems: 'center', justifyContent: 'center', borderRadius: 25, height: 50, width: 50}, this.checkActiveType('current', true)]}><Image source={borderlessImageMap.nowstatus} style={[{height: 8, resizeMode: 'contain'}]} /></View>
               </View>
             </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeFilter: 'complete', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
+            <TouchableWithoutFeedback onPress={() => this.setState({activeStatus: 'complete', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
               <View style={styles.filterContainer}>
-                <Image source={borderlessImageMap.donestatus} style={[{width: 30, height: 25, resizeMode: 'contain'}, this.checkActiveType('complete', true)]} />
+                <View style={[{alignItems: 'center', justifyContent: 'center', borderRadius: 25, height: 50, width: 50}, this.checkActiveType('complete', true)]}><Image source={borderlessImageMap.donestatus} style={[{height: 8, resizeMode: 'contain'}]} /></View>
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -207,8 +209,6 @@ const styles = {
     backgroundColor: 'white',
   },
   filterContainer: {
-    paddingTop: 15,
-    paddingBottom: 15,
     alignItems: 'center',
   },
   containerStyle: {
