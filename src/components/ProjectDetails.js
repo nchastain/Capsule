@@ -7,8 +7,25 @@ import { secondsToString, colors, borderlessImageMap, typeMap } from '../utiliti
 import moment from 'moment'
 
 class ProjectDetails extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {complete: false}
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.project.complete !== this.state.complete) {
+      this.setState({complete: true})
+    }
+  }
+
   componentWillUnmount () {
     this.props.ProjectClear()
+  }
+
+  handleProjectComplete () {
+    this.setState({complete: true}, () => {
+      this.props.ProjectComplete(this.props.project.uid)
+    })
   }
 
   render () {
@@ -20,13 +37,13 @@ class ProjectDetails extends React.Component {
       <View style={styles.container}>
               <View style={{backgroundColor: colors.main, alignSelf: 'stretch'}}>
         <View style={{margin: 10, marginRight: 5, alignItems: 'flex-end', alignSelf: 'stretch'}}>
-          <TouchableOpacity onPress={() => this.props.ProjectComplete(this.props.project.uid)} style={this.props.project.complete ? [styles.statusButton, styles.completeStatusButton] : styles.statusButton }>
-            {this.props.project.complete 
-            ? <Text style={{color: 'white', fontWeight: 'bold'}}>complete</Text>
+          <TouchableOpacity onPress={() => this.handleProjectComplete()} style={this.props.project.complete ? {} : styles.statusButton }>
+            {this.props.project.complete
+            ? <Image source={borderlessImageMap.complete} style={{height: 40, width: 50, resizeMode: 'contain', marginTop: 0}} />
             : <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>mark complete</Text>}
           </TouchableOpacity>
         </View>
-          <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.hoursGoal} hours</Text>
+          {this.props.project.timed && <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.hoursGoal} hours</Text>}
           <Text
             style={styles.welcome}
           >

@@ -21,7 +21,8 @@ export const EntryUpdate = (entry, location) => {
 }
 
 export const AddEntry = ({ text, date, tagIDs, type, projectID, minutesProgress}) => {
-  let actionObj = { type: ADD_ENTRY, payload: { text, date, tagIDs, type, projectID } }
+  let actionObj = { type: ADD_ENTRY, payload: { text, date, tagIDs, type } }
+  if (projectID) actionObj.payload.projectID = projectID
   let entryObj = actionObj.payload
   if (parseInt(minutesProgress) > 0) entryObj.seconds = parseInt(minutesProgress) * 60 
   return (dispatch) => {

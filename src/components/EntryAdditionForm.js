@@ -51,7 +51,7 @@ class EntryAdditionForm extends React.Component {
       tagIDs: allTagIDs,
       type: this.props.entryType,
     }
-    if (this.state.hasProject) noteObj.projectID = this.state.project.uid
+    this.state.hasProject ? noteObj.projectID = this.state.project.uid : null
     newTagObjs.forEach(this.props.AddTag)
     if (this.state.hasProject && this.props.entryType === 'progress') this.props.ProjectUpdateProgress(this.state.project.uid, this.state.minutesProgress)
     if (parseInt(this.state.minutesProgress) > 0) noteObj.minutesProgress = parseInt(this.state.minutesProgress)

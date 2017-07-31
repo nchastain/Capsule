@@ -29,7 +29,7 @@ class TypeList extends React.Component {
 
   render () {
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingTop: 75, backgroundColor: '#eee'}}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingTop: 75, backgroundColor: colors.main}}>
         {this.displayEntries()}
       </View>
     )

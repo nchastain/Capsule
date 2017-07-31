@@ -93,10 +93,18 @@ class Day extends React.Component {
       <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main}}>
         <View style={{alignItems: 'center', paddingBottom: 10, backgroundColor: '#e2daed', paddingTop: 30, alignSelf: 'stretch', justifyContent: 'center'}}><Image style={{height: 30, resizeMode: 'contain'}} source={require('.././assets/logo.png')} /></View>
         {dayEntries.length === 0 &&
-          <View style={{alignSelf: 'stretch', justifyContent: 'center', marginTop: 15, marginBottom: (this.deviceHeight - 120) / 4, borderRadius: 10, marginLeft: 30, marginRight: 30, padding: 10, height: 200, alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
+          <View>
+                  <View style={{height: 100, backgroundColor: 'rgba(0,0,0,0.2)', borderTopLeftRadius: 10, borderTopRightRadius: 10, marginTop: 15, marginLeft: 30, marginRight: 30, alignItems: 'center', justifyContent: 'center'}}>
+         <Text style={{color: '#e2daed', fontWeight: 'bold', fontSize: 20}}>{moment(new Date()).format('MMMM Do, YYYY')}</Text>
+        </View>
+          <View style={{alignSelf: 'stretch', justifyContent: 'center', marginBottom: (this.deviceHeight - 120) / 4, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0, marginLeft: 30, marginRight: 30, padding: 10, height: 200, alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
            {this.displayEmptyMessage()}
+        </View>
         </View>}
         {dayEntries.length !== 0 && <ScrollView contentContainerStyle={styles.container}>
+          <View style={{height: 100, backgroundColor: 'rgba(0,0,0,0.3)', marginTop: 15, alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={{color: colors.main, fontWeight: 'bold', fontSize: 30}}>{moment(new Date()).format('MMMM Do, YYYY')}</Text>
+          </View>
           <DateHeader deviceWidth={this.deviceWidth} label='TODAY' />
           {this.buildDayEntries(dayEntries)}
         </ScrollView>}
@@ -112,6 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.main,
     padding: 10,
     paddingBottom: 60,
+    paddingTop: 0,
   },
   topBar: {
     paddingBottom: 5,
