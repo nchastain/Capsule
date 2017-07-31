@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { ProjectClear, ProjectComplete } from '../actions'
-import { secondsToString, colors } from '../utilities'
+import { secondsToString, colors, borderlessImageMap } from '../utilities'
 import moment from 'moment'
 
 class ProjectDetails extends React.Component {
@@ -16,6 +16,7 @@ class ProjectDetails extends React.Component {
     const projectEntries = entriesArr.filter(entry => entry.projectID === this.props.project.uid)
     const formattedHoursLogged = this.props.hoursLogged === 0 ? 0 : parseFloat(this.props.project.hoursLogged.toFixed(1))
     const createReadableDate = (date) => moment(new Date(date)).format('MM/DD/YYYY')
+    console.log(projectEntries[0].type)
     return (
       <View style={styles.container}>
         <View style={{margin: 10, alignItems: 'flex-end', alignSelf: 'stretch'}}>
@@ -34,9 +35,10 @@ class ProjectDetails extends React.Component {
         </Text>
         <ScrollView style={styles.projectEntriesContainer} >{projectEntries.map((entry, idx) => 
           <View style={{borderRadius: 10, flexDirection: 'row', marginBottom: 10, padding: 20, paddingLeft: 10, paddingRight: 15, backgroundColor: 'white'}} key={idx}>
+            <View style={{marginRight: 10}}><Image source={borderlessImageMap[entry.type]} style={{width: 30, height: 30}} /></View>
             <View style={[styles.projectEntry, styles.dateStringContainer]}><Text style={styles.timeString}>{createReadableDate(entry.date)}</Text></View>
-            <View style={[styles.projectEntry, styles.descriptionContainer]}><Text style={entry.description.length === 0 && {color: 'darkgray'}}>{entry.description.length > 0 ? entry.description : '(No description)'}</Text></View>
-            <View style={[styles.projectEntry, styles.timeStringContainer]}><Text style={styles.timeString}>{secondsToString(entry.seconds)}</Text></View>
+            <View style={[styles.projectEntry, styles.descriptionContainer]}><Text style={(!entry.description || entry.description.length === 0) && {color: 'darkgray'}}>{entry.description && entry.description.length > 0 ? entry.description : '(No description)'}</Text></View>
+            {entry.seconds > 0 && <View style={[styles.projectEntry, styles.timeStringContainer]}><Text style={styles.timeString}>{secondsToString(entry.seconds)}</Text></View>}
           </View>
         )}</ScrollView>
       </View>

@@ -21,7 +21,6 @@ class ProjectList extends React.Component {
   }
 
   createDataSource ({ projects }) {
-    console.log(this.state.activeStatus, this.state.activeType)
     let filteredProjects
     switch (this.state.activeStatus) {
       case 'current':
@@ -66,7 +65,7 @@ class ProjectList extends React.Component {
   renderProgressBar (project) {
     let percentComplete = (project.hoursLogged) / (project.hoursGoal)
     console.log(percentComplete)
-    if (project.complete && !project.timed) {
+    if (project.complete) {
       return (
         <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderRadius: 20}}>
           <View style={{backgroundColor: colors.main, flex: 1, alignItems: 'flex-end', borderRadius: 20}} />
@@ -125,7 +124,7 @@ class ProjectList extends React.Component {
     ? status ? {borderColor: colors.main, backgroundColor: 'white', borderWidth: 5} : {borderColor: colors.main, borderWidth: 5, borderRadius: 25, backgroundColor: 'white'}
     : {}
   }
-  
+
   render () {
     return (
       <View style={styles.container}>

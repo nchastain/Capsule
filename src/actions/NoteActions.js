@@ -31,12 +31,12 @@ export const NotesFetch = () => {
   }
 }
 
-export const AddEntry = ({ text, date, tagIDs, type }) => {
+export const AddEntry = ({ text, date, tagIDs, type, projectID }) => {
   return (dispatch) => {
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)
-    .push({ text, date, tagIDs, type })
+    .push({ text, date, tagIDs, type, projectID })
     .then(() => {
-      dispatch({ type: ADD_ENTRY, payload: { text, date, tagIDs, type } })
+      dispatch({ type: ADD_ENTRY, payload: { text, date, tagIDs, type, projectID } })
       Actions.Today()
     })
   }

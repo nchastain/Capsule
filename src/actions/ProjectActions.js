@@ -39,10 +39,11 @@ export const ProjectComplete = (id) => {
   }
 }
 
-export const ProjectUpdateProgress = (id, seconds) => {
+export const ProjectUpdateProgress = (id, minutes) => {
+  let formattedMinutes = parseInt(minutes)
   return (dispatch) => {
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}/hoursLogged`)
-    .transaction((data) => data + seconds / 3600)
+    .transaction((data) => data + formattedMinutes / 60)
     .then(() => {
       dispatch({ type: PROJECT_UPDATE_PROGRESS })
     })
