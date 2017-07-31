@@ -9,14 +9,14 @@ import {
   PROJECT_COMPLETE
 } from './types'
 
-export const ProjectAdd = ({ title, hoursGoal, timed }) => {
+export const ProjectAdd = ({ title, hoursGoal, timed, type }) => {
   // const { currentUser } = firebase.auth()
   let currentDate = new Date()
   let hoursGoalInt = timed ? parseInt(hoursGoal) : null
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries`)
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects`)
-      .push({ title, time: currentDate.getTime(), hoursGoal: hoursGoalInt, timed, hoursLogged: 0, complete: false })
+      .push({ title, time: currentDate.getTime(), hoursGoal: hoursGoalInt, timed, type, hoursLogged: 0, complete: false })
       .then(() => {
         dispatch({ type: PROJECT_ADD })
         Actions.ProjectList({ type: 'reset' })

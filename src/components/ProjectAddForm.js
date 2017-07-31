@@ -1,5 +1,5 @@
 import React from 'React'
-import { View, Text, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback, Switch, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback, Switch, Dimensions, Image } from 'react-native'
 import { ProjectAdd, ProjectClear } from '../actions'
 import { connect } from 'react-redux'
 import { Input } from './common'
@@ -8,7 +8,7 @@ import { colors } from '../utilities'
 class ProjectAddForm extends React.Component {
   constructor () {
     super()
-    this.state = {project: '', hoursGoal: '100', timed: false}
+    this.state = {project: '', hoursGoal: '100', timed: false, activeType: 'enterprise'}
   }
 
   componentWillUnmount() {
@@ -16,7 +16,13 @@ class ProjectAddForm extends React.Component {
   }
 
   handleAddProject () {
-    this.props.ProjectAdd({title: this.state.project, hoursGoal: this.state.timed ? this.state.hoursGoal : null, timed: this.state.timed})
+    this.props.ProjectAdd({title: this.state.project, hoursGoal: this.state.timed ? this.state.hoursGoal : null, timed: this.state.timed, type: this.state.activeType})
+  }
+
+  checkActiveType (typeName) {
+    return this.state.activeType === typeName
+    ? {borderColor: 'white', borderWidth: 5, borderRadius: 25, backgroundColor: 'rgba(0,0,0,0.5)'}
+    : {}
   }
 
   render () {
@@ -51,6 +57,26 @@ class ProjectAddForm extends React.Component {
             </View>
             <Text style={{padding: 0, textAlign: 'center', color: colors.lightAccent, fontWeight: 'bold'}}>hours</Text>
           </View>}
+          <View style={{flexDirection: 'row', marginLeft: 15, marginRight: 10, padding: 10, paddingTop: 0, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch'}}>
+            <View style={{flex: 4}}><Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>Select project type</Text></View>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end', flex: 1}}>
+              <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'enterprise'})}>
+                <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('enterprise')]}>
+                  <Text style={{fontSize: 15, textAlign: 'center', marginTop: -4}}>💼</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'art'})}>
+                <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('art')]}>
+                  <Text style={{fontSize: 15, textAlign: 'center', marginTop: -1}}>🎨</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'education'})}>
+                <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('education')]}>
+                  <Text style={{fontSize: 15, textAlign: 'center'}}>📚</Text>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </View>
           <View style={styles.addProjectButton}>
             <Text
               style={styles.addText}
