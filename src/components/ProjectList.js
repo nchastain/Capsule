@@ -9,7 +9,7 @@ import { colors, imageMap, borderlessImageMap, typeMap } from '../utilities'
 class ProjectList extends React.Component {
   constructor () {
     super()
-    this.state = {activeStatus: 'current', activeType: 'all'}
+    this.state = {activeStatus: 'all', activeType: 'all'}
   }
   componentWillMount () {
     this.props.ProjectsFetch()

@@ -66,7 +66,7 @@ class EntryList extends React.Component {
                   <Text style={{color: colors.main}}>{moment(new Date(entry.date)).format('MMM DD')}</Text>
                 </View>
               </View>
-          ))}
+          )).reverse()}
         </ScrollView>
       </View>
     )

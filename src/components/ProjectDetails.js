@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'rea
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { ProjectClear, ProjectComplete } from '../actions'
-import { secondsToString, colors, borderlessImageMap } from '../utilities'
+import { secondsToString, colors, borderlessImageMap, typeMap } from '../utilities'
 import moment from 'moment'
 
 class ProjectDetails extends React.Component {
@@ -16,31 +16,35 @@ class ProjectDetails extends React.Component {
     const projectEntries = entriesArr.filter(entry => entry.projectID === this.props.project.uid)
     const formattedHoursLogged = this.props.hoursLogged === 0 ? 0 : parseFloat(this.props.project.hoursLogged.toFixed(1))
     const createReadableDate = (date) => moment(new Date(date)).format('MM/DD/YYYY')
-    console.log(projectEntries[0].type)
     return (
       <View style={styles.container}>
-        <View style={{margin: 10, alignItems: 'flex-end', alignSelf: 'stretch'}}>
+              <View style={{backgroundColor: colors.main, alignSelf: 'stretch'}}>
+        <View style={{margin: 10, marginRight: 5, alignItems: 'flex-end', alignSelf: 'stretch'}}>
           <TouchableOpacity onPress={() => this.props.ProjectComplete(this.props.project.uid)} style={this.props.project.complete ? [styles.statusButton, styles.completeStatusButton] : styles.statusButton }>
             {this.props.project.complete 
             ? <Text style={{color: 'white', fontWeight: 'bold'}}>complete</Text>
-            : <Text style={{color: colors.main, fontWeight: 'bold'}}>mark complete</Text>}
+            : <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>mark complete</Text>}
           </TouchableOpacity>
         </View>
-        <View style={styles.buttonStyle}><Text style={styles.timeStyle}>{formattedHoursLogged}/{this.props.project.hoursGoal}</Text></View>
-        <Text
-          style={styles.welcome}
-          onPress={() => Actions.blue()}
-        >
-          {this.props.project.title}
-        </Text>
+          <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.hoursGoal} hours</Text>
+          <Text
+            style={styles.welcome}
+          >
+            {this.props.project.type ? typeMap[this.props.project.type] : typeMap.enterprise } {this.props.project.title}
+          </Text>
+        </View>
         <ScrollView style={styles.projectEntriesContainer} >{projectEntries.map((entry, idx) => 
-          <View style={{borderRadius: 10, flexDirection: 'row', marginBottom: 10, padding: 20, paddingLeft: 10, paddingRight: 15, backgroundColor: 'white'}} key={idx}>
-            <View style={{marginRight: 10}}><Image source={borderlessImageMap[entry.type]} style={{width: 30, height: 30}} /></View>
-            <View style={[styles.projectEntry, styles.dateStringContainer]}><Text style={styles.timeString}>{createReadableDate(entry.date)}</Text></View>
-            <View style={[styles.projectEntry, styles.descriptionContainer]}><Text style={(!entry.description || entry.description.length === 0) && {color: 'darkgray'}}>{entry.description && entry.description.length > 0 ? entry.description : '(No description)'}</Text></View>
-            {entry.seconds > 0 && <View style={[styles.projectEntry, styles.timeStringContainer]}><Text style={styles.timeString}>{secondsToString(entry.seconds)}</Text></View>}
-          </View>
-        )}</ScrollView>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.ProjectEntryDetail({entry, location: 'project'})} key={idx}>
+            <View style={{borderRadius: 10, flexDirection: 'row', marginBottom: 10, padding: 20, paddingLeft: 10, paddingRight: 15, backgroundColor: 'white', alignItems: 'center'}}>
+              <View style={{marginRight: 10, width: 30}}><Image source={borderlessImageMap[entry.type]} style={{width: 30, height: 30}} /></View>
+              <View style={[styles.projectEntry, styles.descriptionContainer, {flex: 2}]}>
+                <Text style={[(!entry.text || entry.text.length === 0) && {color: 'rgba(0,0,0,0.3)'}, {fontSize: 12, fontWeight: 'bold', color: 'rgba(0,0,0,0.7)'}]}>{entry.text && entry.text.length > 0 ? entry.text : '(No description)'}</Text>
+                {entry.seconds > 0 && <Text style={styles.timeString}>{secondsToString(entry.seconds)}</Text>}
+              </View>
+              <View style={[styles.projectEntry, styles.dateStringContainer, {alignItems: 'flex-end', width: 50}]}><Text style={styles.timeString}>{createReadableDate(entry.date)}</Text></View>
+            </View>
+          </TouchableOpacity>
+        ).reverse()}<View style={{height: 40}} /></ScrollView>
       </View>
     )
   }
@@ -49,20 +53,21 @@ class ProjectDetails extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 70,
+    paddingTop: 60,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: '#eee',
-    paddingBottom: 60,
+    backgroundColor: colors.lightAccent,
+    paddingBottom: 50,
   },
   statusButton: {
     padding: 10,
-    borderColor: colors.main,
+    borderRadius: 10,
+    borderColor: colors.lightAccent,
     borderWidth: 2,
-    borderRadius: 10
   },
   completeStatusButton: {
-    backgroundColor: colors.main
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderWidth: 0,
   },
   dateStringContainer: {
     width: 60,
@@ -81,16 +86,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   welcome: {
-    fontSize: 28,
+    fontSize: 22,
     textAlign: 'center',
-    margin: 10,
-    color: '#555',
+    paddingBottom: 10,
+    color: 'rgba(0,0,0,0.5)',
     fontWeight: 'bold'
   },
   projectEntriesContainer: {
-    marginLeft: 10,
-    marginRight: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 10,
     alignSelf: 'stretch',
+    backgroundColor: 'rgba(0,0,0,0.5)'
   },
   projectEntry: {
     flex: 1,
@@ -100,7 +107,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   timeStyle: {
-    fontSize: 25,
+    fontSize: 18,
     color: 'white',
     overflow: 'hidden',
     fontWeight: 'bold',

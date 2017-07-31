@@ -95,6 +95,7 @@ const RouterComponent = () => {
             <Scene key='ProjectList' component={ProjectList} title='Projects' initial onRight={() => Actions.ProjectAdd()} rightButtonImage={imageMap.addproject} renderRightButton={() => AddProjectButton()} />
             <Scene key='ProjectAdd' component={ProjectAddForm} title='Add a Project' />
             <Scene key='ProjectDetails' component={ProjectDetails} title='Project Details' />
+            <Scene key='ProjectEntryDetail' component={EntryDetail} title='Entry Detail' hideNavBar={false} />
           </Scene>
 
           <Scene key='entries' title='Entries' icon={EntriesTabIcon}>

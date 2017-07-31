@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 import { Actions } from 'react-native-router-flux'
 import {
+  ADD_ENTRY,
   ENTRY_UPDATE,
   ENTRY_ADD,
   ENTRIES_FETCH_SUCCESS,
@@ -19,16 +20,17 @@ export const EntryUpdate = (entry, location) => {
   }
 }
 
-export const EntryAdd = ({ description, date, seconds, projectID }) => {
-  // const { currentUser } = firebase.auth()
+export const AddEntry = ({ text, date, tagIDs, type, projectID, minutesProgress}) => {
+  let actionObj = { type: ADD_ENTRY, payload: { text, date, tagIDs, type, projectID } }
+  let entryObj = actionObj.payload
+  if (parseInt(minutesProgress) > 0) entryObj.seconds = parseInt(minutesProgress) * 60 
   return (dispatch) => {
-    // firebase.database().ref(`/users/${currentUser.uid}/entries`)
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)
-      .push({ description, date, seconds, projectID })
-      .then(() => {
-        dispatch({ type: ENTRY_ADD })
-        Actions.Today({ type: 'reset' })
-      })
+    .push(entryObj)
+    .then(() => {
+      dispatch(actionObj)
+      Actions.Today()
+    })
   }
 }
 
