@@ -70,6 +70,12 @@ export const lightColorMap = {
   experience: '#F96262'
 }
 
+export const typeMap = {
+  art: '🎨',
+  enterprise: '💼',
+  education: '📚'
+}
+
 export const darkColorMap = {
   note: '#4A90E2',
   journal: '#FD8AD7',

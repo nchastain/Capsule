@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, ListView, TouchableWithoutFeedback, Image } from 'react-native'
 import { ProjectsFetch, ProjectSelect } from '../actions'
 import { Actions } from 'react-native-router-flux'
-import { colors, imageMap, borderlessImageMap } from '../utilities'
+import { colors, imageMap, borderlessImageMap, typeMap } from '../utilities'
 
 class ProjectList extends React.Component {
   constructor () {
@@ -107,8 +107,11 @@ class ProjectList extends React.Component {
       <TouchableOpacity activeOpacity={0.8} onPress={() => this.handleSelect(project)}>
         <View style={{marginBottom: 20, backgroundColor: 'white', flex: 1, flexDirection: 'column', borderBottomWidth: 1, borderColor: '#eee'}}>
           <View style={{marginLeft: 10, marginRight: 10}}>{this.renderProgressBar(project)}</View>
-          <View style={{padding: 10, backgroundColor: 'white', paddingBottom: 30, paddingTop: 10, marginLeft: 10, marginRight: 10}}>
-            <Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text>
+          <View style={{padding: 10, backgroundColor: 'white', marginLeft: 10, marginRight: 10, paddingBottom: 30}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{alignItems: 'center', marginTop: -4, paddingRight: 4, width: 25}}><Text>{project.type ? typeMap[project.type] : typeMap['enterprise']}</Text></View>
+              <View style={{flex: 1}}><Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text></View>
+            </View>
             {project.timed && <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>}
           </View>
         </View>
