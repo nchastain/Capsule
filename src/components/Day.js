@@ -6,7 +6,6 @@ import {
   ScrollView,
   Image,
   Dimensions,
-  TouchableHighlight,
   TouchableOpacity,
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -74,14 +73,56 @@ class Day extends React.Component {
   displayEmptyMessage () {
     return (
       <View>
-        <Text style={{fontSize: 25, textAlign: 'center', color: '#e2daed', fontWeight: 'bold', alignSelf: 'center'}}>
+        <Text style={styles.emptyMessageText}>
           Nothing here yet.
         </Text>
-        <View style={{alignItems: 'center', padding: 20}}><Image source={require('.././assets/inbox.png')} style={{height: 50, resizeMode: 'contain'}} /></View>
-        <Text style={{fontSize: 22, textAlign: 'center', color: '#e2daed', fontWeight: 'bold', alignSelf: 'center'}}>
+        <View style={{alignItems: 'center', padding: 20}}>
+          <Image source={require('.././assets/inbox.png')} style={styles.inboxImage} />
+        </View>
+        <Text style={styles.emptyMessageText}>
           Click + to add something{'\n'}to today's capsule.
         </Text>
       </View>
+    )
+  }
+
+  createDateText () {
+    return (
+      <Text style={{color: 'white', fontWeight: 'bold', fontSize: 30}}>
+        {moment(new Date()).format('MMMM Do, YYYY')}
+      </Text>
+    )
+  }
+
+  buildEmptyContainer () {
+    return (
+      <View>
+        <View style={styles.emptyHeroContainer}>
+          <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={[styles.heroImage, {width: this.deviceWidth}]} />
+          <View style={{backgroundColor: 'rgba(0,0,0,0.5)', position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
+          <View>
+            {this.createDateText()}
+          </View>
+        </View>
+        <View style={[styles.emptyMessage, {marginBottom: (this.deviceHeight - 120) / 4}]}>
+         {this.displayEmptyMessage()}
+        </View>
+      </View>
+    )
+  }
+
+  buildContainer (dayEntries) {
+    const that = this
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.heroContainer}>
+          <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
+          <View style={[styles.opacityContainer, {width: this.deviceWidth}]} />
+          <Text style={styles.dateText}>{this.createDateText()}</Text>
+        </View>
+        <DateHeader deviceWidth={that.deviceWidth} label='TODAY' />
+        {this.buildDayEntries(dayEntries)}
+      </ScrollView>
     )
   }
 
@@ -91,19 +132,10 @@ class Day extends React.Component {
     const dayEntries = entriesArr.filter(entry => isFromToday(entry.date))
     return (
       <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main}}>
-        <View style={{alignItems: 'center', paddingBottom: 10, backgroundColor: '#e2daed', paddingTop: 30, alignSelf: 'stretch', justifyContent: 'center'}}><Image style={{height: 30, resizeMode: 'contain'}} source={require('.././assets/logo.png')} /></View>
-        {dayEntries.length === 0 &&
-          <View>
-            <View style={{height: 100, backgroundColor: 'rgba(0,0,0,0.3)', alignItems: 'center', justifyContent: 'center'}}>
-              <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
-              <View style={{backgroundColor: 'rgba(0,0,0,0.5)', position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
-              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 30}}>{moment(new Date()).format('MMMM Do, YYYY')}</Text>
-            </View>
-          <View style={{alignSelf: 'stretch', justifyContent: 'center', marginBottom: (this.deviceHeight - 120) / 4, borderRadius: 10, marginTop: 10, marginLeft: 30, marginRight: 30, padding: 10, height: 200, alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
-           {this.displayEmptyMessage()}
+        <View style={styles.logoheader}>
+          <Image style={{height: 30, resizeMode: 'contain'}} source={require('.././assets/logo.png')} />
         </View>
-        </View>}
-        {dayEntries.length !== 0 && <ScrollView contentContainerStyle={styles.container}>
+        {dayEntries.length === 0 ? this.buildEmptyContainer() : <ScrollView contentContainerStyle={styles.container}>
           <View style={{height: 100, backgroundColor: 'rgba(0,0,0,0.3)', marginTop: 0, alignItems: 'center', justifyContent: 'center'}}>
             <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
             <View style={{backgroundColor: 'rgba(0,0,0,0.5)', position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
@@ -111,7 +143,8 @@ class Day extends React.Component {
           </View>
           <DateHeader deviceWidth={this.deviceWidth} label='TODAY' />
           {this.buildDayEntries(dayEntries)}
-        </ScrollView>}
+        </ScrollView>
+        }
       </View>
     )
   }
@@ -126,6 +159,61 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
     paddingTop: 0,
   },
+  heroContainer: {
+    height: 100,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    marginTop: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dateText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 30,
+  },
+  emptyHeroContainer: {
+    height: 100,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  opacityContainer: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: 100, 
+  },
+  emptyMessage: {
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginTop: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    padding: 10,
+    height: 220,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.1)'
+  },
+  logoheader: {
+    alignItems: 'center',
+    paddingBottom: 10,
+    backgroundColor: '#e2daed',
+    paddingTop: 30,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+  },
+  emptyMessageText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  inboxImage: {
+    height: 50,
+    resizeMode: 'contain',
+  },
   topBar: {
     paddingBottom: 5,
     paddingTop: 5, 
@@ -136,6 +224,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  heroImage: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: 100,
+  },
   topBarButton: {
     padding: 10,
     borderRadius: 5,
@@ -144,15 +238,45 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 5,
   },
+  detailArrowText: {
+    color: 'lightgray',
+    fontSize: 18
+  },
   entryDurationContainer: {
     width: 100,
     alignItems: 'flex-start',
     justifyContent: 'center',
     alignSelf: 'center',
   },
+  dayEntryText: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 250
+  },
+  innerDayEntryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  dayEntryTextContainer: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 250
+  },
   entryDuration: {
     color: colors.main,
     fontWeight: 'bold'
+  },
+  dayEntryImageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   },
   dayEntry: {
     backgroundColor: 'white',
@@ -171,6 +295,17 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 2, height: 2},
     shadowColor: '#555',
     shadowOpacity: 0.3,
+  },
+  dayEntryContainer: {
+    backgroundColor: 'white',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5,
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+    paddingRight: 5,
+    paddingLeft: 5,
   },
   welcome: {
     fontSize: 20,
