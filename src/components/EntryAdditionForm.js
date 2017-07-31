@@ -135,7 +135,7 @@ class EntryAdditionForm extends React.Component {
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch', backgroundColor: colors.main}}>
+          <ScrollView style={{backgroundColor: colors.main}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch', backgroundColor: colors.main}}>
               <View style={{marginTop: 90, width: 80, borderRadius: 40, height: 80, shadowOffset: {width: 2, height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
                 <Image source={imageMap[this.props.entryType]} style={{width: 80, height: 80}} />
               </View>

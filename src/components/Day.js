@@ -94,16 +94,20 @@ class Day extends React.Component {
         <View style={{alignItems: 'center', paddingBottom: 10, backgroundColor: '#e2daed', paddingTop: 30, alignSelf: 'stretch', justifyContent: 'center'}}><Image style={{height: 30, resizeMode: 'contain'}} source={require('.././assets/logo.png')} /></View>
         {dayEntries.length === 0 &&
           <View>
-                  <View style={{height: 100, backgroundColor: 'rgba(0,0,0,0.2)', borderTopLeftRadius: 10, borderTopRightRadius: 10, marginTop: 15, marginLeft: 30, marginRight: 30, alignItems: 'center', justifyContent: 'center'}}>
-         <Text style={{color: '#e2daed', fontWeight: 'bold', fontSize: 20}}>{moment(new Date()).format('MMMM Do, YYYY')}</Text>
-        </View>
-          <View style={{alignSelf: 'stretch', justifyContent: 'center', marginBottom: (this.deviceHeight - 120) / 4, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0, marginLeft: 30, marginRight: 30, padding: 10, height: 200, alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
+            <View style={{height: 100, backgroundColor: 'rgba(0,0,0,0.3)', alignItems: 'center', justifyContent: 'center'}}>
+              <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
+              <View style={{backgroundColor: 'rgba(0,0,0,0.5)', position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
+              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 30}}>{moment(new Date()).format('MMMM Do, YYYY')}</Text>
+            </View>
+          <View style={{alignSelf: 'stretch', justifyContent: 'center', marginBottom: (this.deviceHeight - 120) / 4, borderRadius: 10, marginTop: 10, marginLeft: 30, marginRight: 30, padding: 10, height: 200, alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
            {this.displayEmptyMessage()}
         </View>
         </View>}
         {dayEntries.length !== 0 && <ScrollView contentContainerStyle={styles.container}>
-          <View style={{height: 100, backgroundColor: 'rgba(0,0,0,0.3)', marginTop: 15, alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={{color: colors.main, fontWeight: 'bold', fontSize: 30}}>{moment(new Date()).format('MMMM Do, YYYY')}</Text>
+          <View style={{height: 100, backgroundColor: 'rgba(0,0,0,0.3)', marginTop: 0, alignItems: 'center', justifyContent: 'center'}}>
+            <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
+            <View style={{backgroundColor: 'rgba(0,0,0,0.5)', position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
+            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 30}}>{moment(new Date()).format('MMMM Do, YYYY')}</Text>
           </View>
           <DateHeader deviceWidth={this.deviceWidth} label='TODAY' />
           {this.buildDayEntries(dayEntries)}
@@ -118,7 +122,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignSelf: 'stretch',
     backgroundColor: colors.main,
-    padding: 10,
+    padding: 0,
     paddingBottom: 60,
     paddingTop: 0,
   },
