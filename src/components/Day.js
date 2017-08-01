@@ -22,7 +22,7 @@ class Day extends React.Component {
     super(props)
     this.deviceWidth = Dimensions.get('window').width
     this.deviceHeight = Dimensions.get('window').height
-    this.state = {activeDay: new Date()}
+    this.state = {activeDay: moment()}
   }
 
   componentWillMount () {
@@ -40,7 +40,7 @@ class Day extends React.Component {
   buildDayEntries (dayEntries) {
     return dayEntries.map((entry, idx) => (
       <TouchableOpacity activeOpacity={0.8} key={idx} onPress={() => Actions.DayEntryDetail({entry: entry, title: entry.text, location: 'today'})}>
-        <View key={idx} style={{backgroundColor: 'white', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', padding: 5, borderBottomWidth: 1, borderColor: '#eee', paddingRight: 5, paddingLeft: 5, paddingBottom: dayEntries.length === 1 ? 15 : 5}}>
+        <View key={idx} style={{backgroundColor: 'white', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', padding: 5, borderBottomWidth: 1, borderColor: '#eee', paddingRight: 5, paddingLeft: 5, paddingBottom: 15}}>
             <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
               <View style={{ padding: 10, paddingTop: 10, paddingLeft: 5, paddingBottom: 10, borderRadius: 13, marginRight: 0 }}>
                 <Image source={imageMap[entry.type]} style={{height: 26, width: 26}} />
@@ -82,7 +82,7 @@ class Day extends React.Component {
           <Image source={require('.././assets/inbox.png')} style={styles.inboxImage} />
         </View>
         <Text style={styles.emptyMessageText}>
-          Click + to add something{'\n'}to today's capsule.
+          Click + to add something{'\n'}to the day's capsule.
         </Text>
       </View>
     )
@@ -108,22 +108,24 @@ class Day extends React.Component {
     const that = this
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <DateHeader deviceWidth={that.deviceWidth} label='TODAY' />
+        <DateHeader deviceWidth={that.deviceWidth} label='TODAY' day={that.state.activeDay} />
         {this.buildDayEntries(dayEntries)}
       </ScrollView>
     )
   }
 
   buildHero () {
+    const picRandomizer = (day) => moment(day).unix()
+    console.log(picRandomizer(this.state.activeDay))
     return (
       <View style={styles.heroContainer}>
-        <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
+        <Image source={{uri: `https://placeimg.com/${this.deviceWidth * picRandomizer(this.state.activeDay)}/${100 * picRandomizer(this.state.activeDay)}/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
         <View style={[styles.opacityContainer, {width: this.deviceWidth}]} />
         <View>{this.createDateText()}</View>
-        <TouchableOpacity activeOpacity={0.2} style={{position: 'absolute', left: 10, alignItems: 'center', justifyContent: 'center'}}>
+        <TouchableOpacity activeOpacity={0.2} onPress={() => this.setState({activeDay: moment(this.state.activeDay).subtract(1, 'days')})} style={{position: 'absolute', left: 10, alignItems: 'center', justifyContent: 'center'}}>
           <Image source={imageMap.left} style={{height: 25, width: 25}} />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.2} style={{position: 'absolute', right: 10, alignItems: 'center', justifyContent: 'center'}}>
+        <TouchableOpacity activeOpacity={0.2} onPress={() => this.setState({activeDay: moment(this.state.activeDay).add(1, 'days')})} style={{position: 'absolute', right: 10, alignItems: 'center', justifyContent: 'center'}}>
           <Image source={imageMap.right} style={{height: 25, width: 25}} />
         </TouchableOpacity>
       </View>
@@ -132,8 +134,8 @@ class Day extends React.Component {
 
   render () {
     const entriesArr = this.props.entries ? Object.values(this.props.entries) : []
-    const isFromToday = (date) => moment(new Date(date)).get('date') === moment(new Date()).get('date')
-    const dayEntries = entriesArr.filter(entry => isFromToday(entry.date))
+    const fromActiveDay = (date) => moment(new Date(date)).get('date') === moment(new Date(this.state.activeDay)).get('date')
+    const dayEntries = entriesArr.filter(entry => fromActiveDay(entry.date))
     return (
       <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main}}>
         <View style={styles.logoheader}>
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: colors.main,
     padding: 0,
-    paddingBottom: 60,
+    paddingBottom: 90,
     paddingTop: 0,
   },
   heroContainer: {
