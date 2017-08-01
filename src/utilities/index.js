@@ -39,6 +39,8 @@ export const imageMap = {
   plus: require('.././assets/plus.png'),
   left: require('.././assets/chevleft.png'),
   right: require('.././assets/chevright.png'),
+  logo: require('.././assets/logo.png'),
+  inbox: require('.././assets/inbox.png')
 }
 
 export const borderlessImageMap = {

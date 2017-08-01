@@ -20,7 +20,7 @@ const DayTabIcon = ({ selected, title }) => {
   return (
     <View style={{width: 60, padding: 5, alignItems: 'center', alignSelf: 'flex-start'}}>
       <Image source={selected ? require('./assets/calendar.png') : require('./assets/inactivecalendar.png')} style={{width: 25, height: 25, resizeMode: 'contain'}} />
-      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? colors.main : 'darkgrey', fontWeight: 'bold'}}>Day</Text></View>
+      <View style={{marginTop: 3}}><Text style={{fontSize: 10, color: selected ? colors.main : 'darkgrey', fontWeight: 'bold'}}>Days</Text></View>
     </View>
   )
 }
