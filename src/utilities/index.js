@@ -37,6 +37,8 @@ export const imageMap = {
   trash2: require('.././assets/trash2.png'),
   addproject: require('.././assets/addproject.png'),
   plus: require('.././assets/plus.png'),
+  left: require('.././assets/chevleft.png'),
+  right: require('.././assets/chevright.png'),
 }
 
 export const borderlessImageMap = {

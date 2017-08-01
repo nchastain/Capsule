@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  TouchableHighlight,
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -97,17 +98,8 @@ class Day extends React.Component {
 
   buildEmptyContainer () {
     return (
-      <View>
-        <View style={styles.emptyHeroContainer}>
-          <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={[styles.heroImage, {width: this.deviceWidth}]} />
-          <View style={{backgroundColor: 'rgba(0,0,0,0.5)', position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
-          <View>
-            {this.createDateText()}
-          </View>
-        </View>
-        <View style={[styles.emptyMessage, {marginBottom: (this.deviceHeight - 120) / 4}]}>
-         {this.displayEmptyMessage()}
-        </View>
+      <View style={[styles.emptyMessage, {marginBottom: (this.deviceHeight - 120) / 4}]}>
+        {this.displayEmptyMessage()}
       </View>
     )
   }
@@ -116,14 +108,25 @@ class Day extends React.Component {
     const that = this
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.heroContainer}>
-          <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
-          <View style={[styles.opacityContainer, {width: this.deviceWidth}]} />
-          <View>{this.createDateText()}</View>
-        </View>
         <DateHeader deviceWidth={that.deviceWidth} label='TODAY' />
         {this.buildDayEntries(dayEntries)}
       </ScrollView>
+    )
+  }
+
+  buildHero () {
+    return (
+      <View style={styles.heroContainer}>
+        <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
+        <View style={[styles.opacityContainer, {width: this.deviceWidth}]} />
+        <View>{this.createDateText()}</View>
+        <TouchableOpacity activeOpacity={0.2} style={{position: 'absolute', left: 10, alignItems: 'center', justifyContent: 'center'}}>
+          <Image source={imageMap.left} style={{height: 25, width: 25}} />
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.2} style={{position: 'absolute', right: 10, alignItems: 'center', justifyContent: 'center'}}>
+          <Image source={imageMap.right} style={{height: 25, width: 25}} />
+        </TouchableOpacity>
+      </View>
     )
   }
 
@@ -136,6 +139,7 @@ class Day extends React.Component {
         <View style={styles.logoheader}>
           <Image style={{height: 30, resizeMode: 'contain'}} source={require('.././assets/logo.png')} />
         </View>
+        {this.buildHero()}
         {dayEntries.length === 0 ? this.buildEmptyContainer() : this.buildContainer(dayEntries)}
       </View>
     )
