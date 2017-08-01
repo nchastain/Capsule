@@ -21,6 +21,7 @@ class Day extends React.Component {
     super(props)
     this.deviceWidth = Dimensions.get('window').width
     this.deviceHeight = Dimensions.get('window').height
+    this.state = {activeDay: new Date()}
   }
 
   componentWillMount () {
@@ -89,7 +90,7 @@ class Day extends React.Component {
   createDateText () {
     return (
       <Text style={{color: 'white', fontWeight: 'bold', fontSize: 30}}>
-        {moment(new Date()).format('MMMM Do, YYYY')}
+        {moment(this.state.activeDay).format('MMMM Do, YYYY')}
       </Text>
     )
   }
@@ -118,7 +119,7 @@ class Day extends React.Component {
         <View style={styles.heroContainer}>
           <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
           <View style={[styles.opacityContainer, {width: this.deviceWidth}]} />
-          <Text style={styles.dateText}>{this.createDateText()}</Text>
+          <View>{this.createDateText()}</View>
         </View>
         <DateHeader deviceWidth={that.deviceWidth} label='TODAY' />
         {this.buildDayEntries(dayEntries)}
@@ -135,16 +136,7 @@ class Day extends React.Component {
         <View style={styles.logoheader}>
           <Image style={{height: 30, resizeMode: 'contain'}} source={require('.././assets/logo.png')} />
         </View>
-        {dayEntries.length === 0 ? this.buildEmptyContainer() : <ScrollView contentContainerStyle={styles.container}>
-          <View style={{height: 100, backgroundColor: 'rgba(0,0,0,0.3)', marginTop: 0, alignItems: 'center', justifyContent: 'center'}}>
-            <Image source={{uri: `https://placeimg.com/${this.deviceWidth}/100/nature`}} style={{position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
-            <View style={{backgroundColor: 'rgba(0,0,0,0.5)', position: 'absolute', left: 0, top: 0, height: 100, width: this.deviceWidth}} />
-            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 30}}>{moment(new Date()).format('MMMM Do, YYYY')}</Text>
-          </View>
-          <DateHeader deviceWidth={this.deviceWidth} label='TODAY' />
-          {this.buildDayEntries(dayEntries)}
-        </ScrollView>
-        }
+        {dayEntries.length === 0 ? this.buildEmptyContainer() : this.buildContainer(dayEntries)}
       </View>
     )
   }
@@ -188,7 +180,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'center',
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 30,
     marginLeft: 30,
     marginRight: 30,
     padding: 10,
