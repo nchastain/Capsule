@@ -23,6 +23,10 @@ class AllGrid extends React.Component {
     Actions.TypeList({ entryType, entries, title: `${entryType[0].toUpperCase()}${entryType.substring(1)}${entryType !== 'progress' ? 's' : ''}`, location: 'all'})
   }
 
+  createCardLabel (entryType) {
+    return `${entryType[0].toUpperCase()}${entryType.substring(1)}${entryType !== 'progress' ? 's' : ''}`
+  }
+
   createCardForEntryType (entryType, idx) {
     if (entryType === 'projects') {
       return (
@@ -43,8 +47,8 @@ class AllGrid extends React.Component {
         <View style={[styles.cardContainer, {backgroundColor: lightColorMap[entryType]}]}>
           <Image source={imageMap[entryType]} style={styles.cardImage} />
           <View style={{position: 'absolute', padding: 2}}>
-            <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold', textShadowColor: darkColorMap[entryType], textShadowOffset: {width: 1, height: 1}, backgroundColor: 'rgba(0,0,0,0)'}}>
-              {`${entryType[0].toUpperCase()}${entryType.substring(1)}${entryType !== 'progress' ? 's' : ''}`}
+            <Text style={styles.cardLabel}>
+              {this.createCardLabel(entryType)}
             </Text>
           </View>
         </View>
@@ -113,6 +117,14 @@ const styles = StyleSheet.create({
     shadowColor: '#555',
     shadowOpacity: 0.3,
     overflow: 'hidden',
+  },
+  cardLabel: {
+    fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+    textShadowColor: darkColorMap[entryType],
+    textShadowOffset: {width: 1, height: 1},
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   cardLeft: {
     flex: 1,
