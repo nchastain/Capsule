@@ -166,8 +166,8 @@ class EntryAdditionForm extends React.Component {
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView style={{backgroundColor: 'white'}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch', backgroundColor: 'white'}}>
-            <View style={{marginTop: 64, alignSelf: 'stretch', flex: 1, backgroundColor: colors.main, padding: 10, paddingRight: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+        <ScrollView style={{backgroundColor: colors.main}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
+            <View style={{marginTop: 64, alignSelf: 'stretch', flex: 1, backgroundColor: colors.lightAccent, padding: 10, paddingRight: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <TouchableOpacity activeOpacity={0.3} onPress={() => this.setState({openModal: !this.state.openModal})}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Image source={borderlessImageMap.whiteprojects} style={{width: 20, height: 20, marginRight: 5}} />
@@ -190,16 +190,16 @@ class EntryAdditionForm extends React.Component {
                 </TouchableOpacity>
             </View>
             {this.state.openModal &&
-            <View style={{flex: 1, alignSelf: 'stretch', height: 180, paddingLeft: 10, borderBottomWidth: 5, borderColor: colors.main, paddingRight: 10, backgroundColor: '#eee'}}>
+            <View style={{flex: 1, alignSelf: 'stretch', height: 300, paddingLeft: 10, borderBottomWidth: 5, borderColor: colors.main, paddingRight: 10, backgroundColor: '#eee'}}>
               <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{backgroundColor: 'white'}} />
             </View>}
-            <View style={{alignSelf: 'stretch', padding: 20, paddingBottom: 10}}>
+            <View style={{alignSelf: 'stretch', padding: 20, paddingBottom: 5}}>
               <TextInput
                 placeholder={`Label`}
                 numberOfLines={3}
                 multiline
                 autoFocus
-                style={{alignSelf: 'stretch', fontSize: 21, color: colors.main, fontWeight: 'bold'}}
+                style={{alignSelf: 'stretch', fontSize: 25, color: 'white', fontWeight: 'bold'}}
                 onChangeText={value => this.setState({text: value})}
               ><Text>{parts}</Text></TextInput>
             </View>
@@ -208,7 +208,7 @@ class EntryAdditionForm extends React.Component {
                 placeholder={`Additional details (optional)`}
                 numberOfLines={10}
                 multiline
-                style={{alignSelf: 'stretch', fontSize: 18, color: 'darkgrey'}}
+                style={{alignSelf: 'stretch', fontSize: 18, color: colors.lightAccent}}
                 onChangeText={value => this.setState({description: value})}
               ><Text>{this.state.description}</Text></TextInput>
             </View>

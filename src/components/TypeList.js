@@ -6,38 +6,24 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  ScrollView
 } from 'react-native'
+import EntryListItem from './EntryListItem'
 import { borderlessImageMap, colors } from '../utilities'
 
 class TypeList extends React.Component {
   displayEntries () {
-    return this.props.entries.map(entry => (
-      <View key={entry.uid} style={styles.container}>
-        <View style={styles.inner}>
-          <View style={styles.imageContainer}>
-            <Image source={borderlessImageMap[entry.type]} style={styles.icon} />
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => Actions.EntryDetail({
-              entry: entry,
-              title: entry.text,
-              location: this.props.location
-            })}
-          >
-            <View style={styles.textContainer}>
-              <Text style={styles.text}>{entry.text}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <Text style={styles.dateText}>
-            {moment(new Date(entry.date)).format('MMM DD')}
-          </Text>
-        </View>
+    const entries = this.props.entries.filter(entry => entry.type === this.props.entryType)
+    return (
+      <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main}}>
+        <ScrollView contentContainerStyle={styles.container}>
+          {entries.map((entry, idx) => (
+              <EntryListItem entry={entry} hasDate />
+          )).reverse()}
+        </ScrollView>
       </View>
-    ))
+    )
   }
 
   render () {
@@ -51,17 +37,10 @@ class TypeList extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    marginBottom: 10,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    paddingLeft: 5,
-    paddingRight: 15
+    justifyContent: 'flex-start',
+    alignSelf: 'stretch',
+    backgroundColor: colors.main,
+    paddingBottom: 90,
   },
   dateText: {
     color: colors.main
@@ -78,14 +57,14 @@ const styles = StyleSheet.create({
   inner: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   outerContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingTop: 75,
-    backgroundColor: colors.main
+    paddingTop: 64,
+    backgroundColor: colors.main,
   },
   text: {
     color: '#555',

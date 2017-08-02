@@ -12,6 +12,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import DateHeader from './DateHeader'
+import EntryListItem from './EntryListItem'
 import { imageMap, colors } from '../utilities'
 import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect } from '../actions'
 import _ from 'lodash'
@@ -36,25 +37,9 @@ class Day extends React.Component {
     this.deviceWidth = evt.nativeEvent.layout.width
   }
 
-  buildDayEntries (dayEntries) {
-    return dayEntries.map((entry, idx) => (
-      <TouchableOpacity activeOpacity={0.8} key={idx} onPress={() => Actions.DayEntryDetail({entry: entry, title: entry.text, location: 'today'})}>
-        <View key={idx} style={styles.dayEntryList}>
-            <View style={styles.dayEntryRow}>
-              <View style={styles.entryIconContainer}>
-                <Image source={imageMap[entry.type]} style={styles.entryIcon} />
-              </View>
-              <View style={styles.dayEntryTextContainer}>
-                <Text style={styles.entryText}>
-                  {entry.text}
-                </Text>
-              </View>
-              <View style={styles.entryNavContainer}>
-                <Text style={styles.entryNavIcon}>></Text>
-              </View>
-            </View>
-        </View>
-      </TouchableOpacity>
+  buildDayEntries (entries) {
+    return entries.map((entry, idx) => (
+      <EntryListItem key={idx} entry={entry} />
     ))
   }
 
@@ -202,34 +187,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'stretch'
   },
-  dayEntryList: {
-    backgroundColor: 'white',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 5,
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-    paddingRight: 5,
-    paddingLeft: 5,
-    paddingBottom: 15
-  },
-  dayEntryRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    flex: 1,
-    marginRight: 10,
-  },
   dayEntryText: {
-    flexDirection: 'row',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 250
-  },
-  dayEntryTextContainer: {
     flexDirection: 'row',
     alignSelf: 'stretch',
     alignItems: 'center',
@@ -277,29 +235,6 @@ const styles = StyleSheet.create({
   },
   entryDuration: {
     color: colors.main,
-    fontWeight: 'bold'
-  },
-  entryIcon: {
-    width: 35,
-    height: 35
-  },
-  entryIconContainer: {
-    padding: 10,
-    paddingLeft: 5,
-    borderRadius: 13,
-    marginRight: 0,
-  },
-  entryNavIcon: {
-    color: '#eee',
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
-  entryNavContainer: {
-    flex: 1,
-    alignItems: 'flex-end'
-  },
-  entryText: {
-    color: '#555',
     fontWeight: 'bold'
   },
   fullContainer: {
