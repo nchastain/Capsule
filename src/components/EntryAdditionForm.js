@@ -1,15 +1,41 @@
 import React from 'React'
-import { View, Text, Keyboard, StyleSheet, TextInput, TouchableWithoutFeedback, Image, Switch, ScrollView, ListView, TouchableOpacity } from 'react-native'
-import { NoteAdd, AddTag, TagsFetch, AddEntry, ProjectUpdateProgress } from '../actions'
+import _ from 'lodash'
 import { connect } from 'react-redux'
 import uuid from 'react-native-uuid'
-import { darkColorMap, imageMap, colors, typeMap } from '../utilities'
-import _ from 'lodash'
+import {
+  View,
+  Text,
+  Keyboard,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  Image,
+  Switch,
+  ScrollView,
+  ListView,
+  TouchableOpacity
+} from 'react-native'
+import {
+  NoteAdd,
+  AddTag,
+  TagsFetch,
+  AddEntry,
+  ProjectUpdateProgress
+} from '../actions'
+import {
+  darkColorMap,
+  lightColorMap,
+  imageMap,
+  borderlessImageMap,
+  colors,
+  typeMap
+} from '../utilities'
+
 
 class EntryAdditionForm extends React.Component {
   constructor (props) {
     super()
-    this.state = {text: '', ran: false, newTags: false, minutesProgress: '', hasProject: false, project: null}
+    this.state = {text: '', ran: false, newTags: false, minutesProgress: '', project: null, openModal: false}
   }
 
   componentWillMount () {
@@ -47,29 +73,26 @@ class EntryAdditionForm extends React.Component {
 
     let noteObj = {
       text: this.state.text.replace(/\r?\n|\r/, ''),
+      description: this.state.description.replace(/\r?\n|\r/, ''),
       date: new Date().getTime(),
       tagIDs: allTagIDs,
       type: this.props.entryType,
     }
-    this.state.hasProject ? noteObj.projectID = this.state.project.uid : null
+    noteObj.projectID = this.state.hasProject ? this.state.project.uid : null
     newTagObjs.forEach(this.props.AddTag)
-    if (this.state.hasProject && this.props.entryType === 'progress') this.props.ProjectUpdateProgress(this.state.project.uid, this.state.minutesProgress)
+    if (this.state.project && this.props.entryType === 'progress') this.props.ProjectUpdateProgress(this.state.project.uid, this.state.minutesProgress)
     if (parseInt(this.state.minutesProgress) > 0) noteObj.minutesProgress = parseInt(this.state.minutesProgress)
-    console.log(noteObj, 'blachbsydfwef')
     this.props.AddEntry(noteObj)
   }
 
   onChanged (text) {
-    let newText = ''
-    let numbers = '0123456789'
-
-    for (var i = 0; i < text.length; i++) {
-      if (numbers.indexOf(text[i]) > -1) {
-        newText = newText + text[i]
-      }
-    }
-
-    this.setState({ minutesProgress: newText })
+    let newText = []
+    const numbers = '0123456789'
+    const isNum = (char) => numbers.indexOf(char) !== -1
+    text.split('').forEach(char => {
+      if (isNum(char)) newText.push(char)
+    })
+    this.setState({ minutesProgress: newText.join('') })
   }
 
   displayProjects () {
@@ -79,7 +102,7 @@ class EntryAdditionForm extends React.Component {
   }
 
   handleSelect (project) {
-    this.setState({ project })
+    this.setState({ project, openModal: false })
   }
 
   renderRow (project) {
@@ -87,16 +110,24 @@ class EntryAdditionForm extends React.Component {
 
     return (
       <TouchableOpacity activeOpacity={0.8} onPress={() => this.handleSelect(project)}>
-        <View style={{backgroundColor: entryProjectID === project.uid ? colors.lightAccent : 'white', flexDirection: 'column', borderBottomWidth: 1, borderColor: '#eee', paddingTop: 15, paddingBottom: 15, paddingLeft: 10, paddingRight: 10}}>
+        <View style={{backgroundColor: entryProjectID === project.uid ? colors.lightAccent : 'white', flexDirection: 'column', borderBottomWidth: 1, borderColor: '#eee', paddingTop: 15, paddingBottom: 15, paddingLeft: 15, paddingRight: 15, alignSelf: 'stretch'}}>
           <View style={{backgroundColor: entryProjectID === project.uid ? colors.lightAccent : 'white'}}>
             <View style={{flexDirection: 'row', alignItems: 'center', alignSelf: 'stretch'}}>
               <View style={{alignItems: 'center', marginTop: -4, paddingRight: 4, width: 25}}><Text>{project.type ? typeMap[project.type] : typeMap['enterprise']}</Text></View>
-              <View><Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text></View>
+                <View>
+                  <Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>
+                    {project.title}
+                  </Text>
+                </View>
             </View>
           </View>
         </View>
       </TouchableOpacity>
     )
+  }
+
+  buildSelectedProjectStr () {
+
   }
 
 
@@ -135,53 +166,65 @@ class EntryAdditionForm extends React.Component {
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView style={{backgroundColor: colors.main}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch', backgroundColor: colors.main}}>
-              <View style={{marginTop: 90, width: 80, borderRadius: 40, height: 80, shadowOffset: {width: 2, height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
-                <Image source={imageMap[this.props.entryType]} style={{width: 80, height: 80}} />
-              </View>
-              <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderRadius: 10, borderColor: '#eee', borderWidth: 1, margin: 20, backgroundColor: 'white', shadowOffset: {width: 2, height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
-                <TextInput
-                  placeholder={`Add ${this.props.entryType} here`}
-                  numberOfLines={3}
-                  multiline
-                  style={{backgroundColor: 'white', alignSelf: 'stretch', fontSize: 20}}
-                  onChangeText={value => this.setState({text: value})}
-                ><Text>{parts}</Text></TextInput>
-              </View>
-              {this.props.entryType === 'progress' && 
-              <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderRadius: 10, borderColor: '#eee', borderWidth: 1, margin: 20, backgroundColor: 'white', shadowOffset: {width: 2, height: 2}, shadowColor: '#555', shadowOpacity: 0.3}}>
-                <TextInput
-                  placeholder={'How many minutes of progress?'}
-                  keyboardType='numeric'
-                  maxLength={10}
-                  multiline
-                  onChangeText={(text) => this.onChanged(text)}
-                  style={{backgroundColor: 'white', alignSelf: 'stretch', fontSize: 20}}
-                  value={this.state.minutesProgress}
-                />
-              </View>}
-              <View style={{flexDirection: 'row', alignItems: 'center', padding: 20, paddingTop: 10, paddingBottom: 10}}>
-                <View style={{flex: 4, paddingLeft: 5}}>
-                  <Text style={{color: colors.lightAccent, fontSize: 14, fontWeight: 'bold', textAlign: 'left'}}>Associate this entry with a project?</Text>
-                </View>
-                <View style={{alignItems: 'flex-end', flex: 1, paddingRight: 5}}>
-                  <Switch value={this.state.hasProject} style={{backgroundColor: 'white', borderRadius: 20}} onValueChange={() => this.setState({hasProject: !this.state.hasProject})} onTintColor={colors.lightAccent} />
-                </View>
-              </View>
-
-              {this.state.hasProject &&
-              <View style={{flex: 1, alignSelf: 'stretch', paddingLeft: 20, paddingRight: 20, height: 180}}>
-                <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{backgroundColor: 'white'}} />
-              </View>}
-              <View style={[styles.addNoteButton, {borderRadius: 10, backgroundColor: darkColorMap[this.props.entryType], width: 250, height: 50, marginBottom: 120}]}>
-                <Text
-                  style={styles.welcome}
-                  onPress={this.onButtonPress.bind(this)}
-                >
-                  Add {this.props.entryType}
-                </Text>
-              </View>
-          </ScrollView>
+        <ScrollView style={{backgroundColor: 'white'}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch', backgroundColor: 'white'}}>
+            <View style={{marginTop: 64, alignSelf: 'stretch', flex: 1, backgroundColor: colors.main, padding: 10, paddingRight: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                <TouchableOpacity activeOpacity={0.3} onPress={() => this.setState({openModal: !this.state.openModal})}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Image source={borderlessImageMap.whiteprojects} style={{width: 20, height: 20, marginRight: 5}} />
+                      <Text style={{color: 'white', fontWeight: 'bold'}}>
+                        {this.state.project ? this.state.project.title.substr(0,20) : 'Select a project'}
+                        {(this.state.project && this.state.project.title.length > 20) ? '...' : ''}
+                      </Text>
+                      <Text style={{color: 'white', fontWeight: 'bold', marginLeft: 3}}>{'\u25BE'}</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity activeOpacity={0.8} onPress={this.onButtonPress.bind(this)}>
+                  <View style={{flexDirection: 'row', padding: 10, backgroundColor: darkColorMap[this.props.entryType], borderRadius: 10, alignItems: 'center', justifyContent: 'center', shadowOffset: {width: 1, height: 1},
+    shadowColor: '#555',
+    shadowOpacity: 0.3}}>
+                    <Image source={imageMap[this.props.entryType]} style={{width: 25, height: 25, marginRight: 5}} />
+                    <Text style={{color: 'white', fontWeight: 'bold', paddingRight: 5}}>
+                      save
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+            </View>
+            {this.state.openModal &&
+            <View style={{flex: 1, alignSelf: 'stretch', height: 180, paddingLeft: 10, borderBottomWidth: 5, borderColor: colors.main, paddingRight: 10, backgroundColor: '#eee'}}>
+              <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{backgroundColor: 'white'}} />
+            </View>}
+            <View style={{alignSelf: 'stretch', padding: 20, paddingBottom: 10}}>
+              <TextInput
+                placeholder={`Label`}
+                numberOfLines={3}
+                multiline
+                autoFocus
+                style={{alignSelf: 'stretch', fontSize: 21, color: colors.main, fontWeight: 'bold'}}
+                onChangeText={value => this.setState({text: value})}
+              ><Text>{parts}</Text></TextInput>
+            </View>
+            <View style={{alignSelf: 'stretch', padding: 20, paddingTop: 0, height: 250}}>
+              <TextInput
+                placeholder={`Additional details (optional)`}
+                numberOfLines={10}
+                multiline
+                style={{alignSelf: 'stretch', fontSize: 18, color: 'darkgrey'}}
+                onChangeText={value => this.setState({description: value})}
+              ><Text>{this.state.description}</Text></TextInput>
+            </View>
+            {this.props.entryType === 'progress' && 
+            <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderRadius: 10, borderColor: '#eee', borderWidth: 1, margin: 20, backgroundColor: 'white'}}>
+              <TextInput
+                placeholder={'How many minutes of progress?'}
+                keyboardType='numeric'
+                maxLength={10}
+                multiline
+                onChangeText={(text) => this.onChanged(text)}
+                style={{backgroundColor: 'white', alignSelf: 'stretch', fontSize: 20}}
+                value={this.state.minutesProgress}
+              />
+            </View>}
+        </ScrollView>
       </TouchableWithoutFeedback>
     )
   }

@@ -7,7 +7,7 @@ import { secondsToString, colors, borderlessImageMap, typeMap } from '../utiliti
 import moment from 'moment'
 
 class ProjectDetails extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {complete: false}
   }

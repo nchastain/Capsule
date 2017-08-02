@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, ScrollView, Text, Dimensions, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-
 import { colors, lightColorMap, imageMap, darkColorMap } from '../utilities'
 import { connect } from 'react-redux'
 import _ from 'lodash'

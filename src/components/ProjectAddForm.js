@@ -1,8 +1,16 @@
 import React from 'React'
-import { View, Text, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback, Switch, Dimensions, Image } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Switch,
+  Dimensions
+} from 'react-native'
 import { ProjectAdd, ProjectClear } from '../actions'
 import { connect } from 'react-redux'
-import { Input } from './common'
 import { colors } from '../utilities'
 
 class ProjectAddForm extends React.Component {
@@ -11,7 +19,7 @@ class ProjectAddForm extends React.Component {
     this.state = {project: '', hoursGoal: '100', timed: false, activeType: 'enterprise'}
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.props.ProjectClear()
   }
 

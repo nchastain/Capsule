@@ -2,8 +2,6 @@ import React from 'react'
 import { Scene, Router, Actions } from 'react-native-router-flux'
 import { Text, View, Image, TouchableOpacity } from 'react-native'
 import { colors, imageMap } from './utilities'
-import LoginForm from './components/LoginForm'
-import EntryAddForm from './components/EntryAddForm'
 import EntryDetail from './components/EntryDetail'
 import ProjectList from './components/ProjectList'
 import ProjectAddForm from './components/ProjectAddForm'
@@ -86,7 +84,6 @@ const RouterComponent = () => {
             <Scene key='Today' component={Day} title='Today' initial hideNavBar />
             <Scene key='TagDetailsDay' component={TagDetails} title='Tag Details' />
             <Scene key='EntryAdditionForm' component={EntryAdditionForm} hideNavBar={false} />
-            <Scene key='EntryAdd' component={EntryAddForm} title='Add New Entry' hideNavBar={false} />
             <Scene key='DayEntryDetail' component={EntryDetail} title='Entry Detail' hideNavBar={false} />
           </Scene>
 

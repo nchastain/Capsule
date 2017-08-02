@@ -3,8 +3,7 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, ListView, TouchableWithoutFeedback, Image } from 'react-native'
 import { ProjectsFetch, ProjectSelect } from '../actions'
-import { Actions } from 'react-native-router-flux'
-import { colors, imageMap, borderlessImageMap, typeMap } from '../utilities'
+import { colors, borderlessImageMap, typeMap } from '../utilities'
 
 class ProjectList extends React.Component {
   constructor () {
@@ -21,7 +20,7 @@ class ProjectList extends React.Component {
   }
 
   createDataSource ({ projects }) {
-    let filteredProjects
+    let filteredProjects = projects
     switch (this.state.activeStatus) {
       case 'current':
         filteredProjects = projects.filter(project => !project.complete)
@@ -29,11 +28,8 @@ class ProjectList extends React.Component {
       case 'complete':
         filteredProjects = projects.filter(project => project.complete)
         break
-      case 'all':
-        filteredProjects = projects
-        break
       default:
-        filteredProjects = projects
+        break
     }
 
     switch (this.state.activeType) {
@@ -45,8 +41,6 @@ class ProjectList extends React.Component {
         break
       case 'enterprise':
         filteredProjects = filteredProjects.filter(project => project.type === 'enterprise') || []
-        break
-      case 'all':
         break
       default:
         break
@@ -64,12 +58,13 @@ class ProjectList extends React.Component {
 
   renderProgressBar (project) {
     let percentComplete = (project.hoursLogged) / (project.hoursGoal)
-    console.log(percentComplete)
     if (project.complete) {
       return (
         <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderRadius: 20}}>
           <View style={{backgroundColor: colors.main, flex: 1, alignItems: 'flex-end', borderRadius: 20}} />
-          <View style={{backgroundColor: colors.main, padding: 5, paddingRight: 15, borderRadius: 20}}><Image source={borderlessImageMap.whiteComplete} style={{height: 18, width: 20, marginRight: -3}} /></View>
+          <View style={{backgroundColor: colors.main, padding: 5, paddingRight: 15, borderRadius: 20}}>
+            <Image source={borderlessImageMap.whiteComplete} style={{height: 18, width: 20, marginRight: -3}} />
+          </View>
         </View>
       )
     }
@@ -79,22 +74,33 @@ class ProjectList extends React.Component {
       case 0:
         return (
           <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{backgroundColor: '#eee', padding: 5, flex: 1, borderRadius: 20}}><Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, paddingLeft: 10, marginRight: -3}}>0%</Text></View>
+            <View style={{backgroundColor: '#eee', padding: 5, flex: 1, borderRadius: 20}}>
+              <Text style={{color: colors.main, fontWeight: 'bold', fontSize: 12, paddingLeft: 10, marginRight: -3}}>
+                0%
+              </Text>
+            </View>
           </View>
         )
       case 1:
         return (
           <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderRadius: 20}}>
-            <View style={{backgroundColor: colors.main, flex: 1, alignItems: 'flex-end', borderRadius: 20}}><Text style={{color: 'white', fontWeight: 'bold', fontSize: 12, borderRadius: 20}}>100%</Text></View>
-            <View style={{backgroundColor: colors.main, padding: 5, paddingRight: 15, borderRadius: 20}}><Image source={borderlessImageMap.whiteComplete} style={{height: 18, width: 20, marginRight: -3}} /></View>
+            <View style={{backgroundColor: colors.main, flex: 1, alignItems: 'flex-end', borderRadius: 20}}>
+              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 12, borderRadius: 20}}>
+                100%
+              </Text>
+            </View>
+            <View style={{backgroundColor: colors.main, padding: 5, paddingRight: 15, borderRadius: 20}}>
+              <Image source={borderlessImageMap.whiteComplete} style={{height: 18, width: 20, marginRight: -3}} />
+            </View>
           </View>
         )
       default:
         return (
           <View style={{alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', borderRadius: 20, backgroundColor: colors.main}}>
             <View style={{flex: percentComplete, backgroundColor: colors.main, padding: 5, alignItems: 'flex-end', borderTopLeftRadius: 20, borderBottomLeftRadius: 20, paddingLeft: 10, height: 25}}>
-              {percentComplete > 0.08 && <Text style={{color: 'white', fontWeight: 'bold', fontSize: 12, textAlign: 'right'}}>{(percentComplete * 100).toFixed(0)}%</Text>}</View>
-            <View style={{flex: 1 - percentComplete, backgroundColor: '#eee', padding: 5, alignSelf: 'stretch', borderTopRightRadius: 20, borderBottomRightRadius: 20, marginRight: -3}}></View>
+              {percentComplete > 0.08 && <Text style={{color: 'white', fontWeight: 'bold', fontSize: 12, textAlign: 'right'}}>{(percentComplete * 100).toFixed(0)}%</Text>}
+            </View>
+            <View style={{flex: 1 - percentComplete, backgroundColor: '#eee', padding: 5, alignSelf: 'stretch', borderTopRightRadius: 20, borderBottomRightRadius: 20, marginRight: -3}} />
           </View>
         )
     }

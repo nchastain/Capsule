@@ -10,7 +10,7 @@ import {
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { imageMap, colors, borderlessImageMap } from '../utilities'
+import { colors, borderlessImageMap } from '../utilities'
 import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect } from '../actions'
 import _ from 'lodash'
 

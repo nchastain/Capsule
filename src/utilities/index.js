@@ -52,6 +52,7 @@ export const borderlessImageMap = {
   habit: require('.././assets/habitnoborder.png'),
   progress: require('.././assets/progressnoborder.png'),
   projects: require('.././assets/projectsiconnoborder.png'),
+  whiteprojects: require('.././assets/whiteprojects.png'),
   complete: require('.././assets/checkeredflag.png'),
   whiteComplete: require('.././assets/whitecomplete.png'),
   trash3: require('.././assets/trash3.png'),
