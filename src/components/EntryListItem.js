@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
     paddingRight: 5,
     paddingLeft: 5,
-    paddingBottom: 15
+    paddingBottom: 5
   },
   dayEntryRow: {
     flexDirection: 'row',

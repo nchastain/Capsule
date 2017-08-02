@@ -167,7 +167,7 @@ class EntryAdditionForm extends React.Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView style={{backgroundColor: colors.main}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
-            <View style={{marginTop: 64, alignSelf: 'stretch', flex: 1, backgroundColor: colors.lightAccent, padding: 10, paddingRight: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+            <View style={{marginTop: 64, alignSelf: 'stretch', flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', padding: 10, paddingRight: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <TouchableOpacity activeOpacity={0.3} onPress={() => this.setState({openModal: !this.state.openModal})}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Image source={borderlessImageMap.whiteprojects} style={{width: 20, height: 20, marginRight: 5}} />
@@ -179,10 +179,10 @@ class EntryAdditionForm extends React.Component {
                   </View>
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.8} onPress={this.onButtonPress.bind(this)}>
-                  <View style={{flexDirection: 'row', padding: 10, backgroundColor: darkColorMap[this.props.entryType], borderRadius: 10, alignItems: 'center', justifyContent: 'center', shadowOffset: {width: 1, height: 1},
+                  <View style={{flexDirection: 'row', padding: 5, paddingLeft: 15, paddingRight: 10, backgroundColor: darkColorMap[this.props.entryType], borderRadius: 20, alignItems: 'center', justifyContent: 'center', shadowOffset: {width: 1, height: 1},
     shadowColor: '#555',
     shadowOpacity: 0.3}}>
-                    <Image source={imageMap[this.props.entryType]} style={{width: 25, height: 25, marginRight: 5}} />
+                    <Image source={imageMap[this.props.entryType]} style={{width: 25, height: 25, marginRight: 8, marginLeft: -10}} />
                     <Text style={{color: 'white', fontWeight: 'bold', paddingRight: 5}}>
                       save
                     </Text>
@@ -193,12 +193,28 @@ class EntryAdditionForm extends React.Component {
             <View style={{flex: 1, alignSelf: 'stretch', height: 300, paddingLeft: 10, borderBottomWidth: 5, borderColor: colors.main, paddingRight: 10, backgroundColor: '#eee'}}>
               <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{backgroundColor: 'white'}} />
             </View>}
+            {this.props.entryType === 'progress' && 
+            <View style={{alignItems: 'center', padding: 10, paddingBottom: 15, alignSelf: 'stretch', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
+              <TextInput
+                placeholder={'How many minutes of progress?'}
+                keyboardType='numeric'
+                maxLength={10}
+                multiline
+                autoFocus={this.props.entryType === 'progress'}
+                onChangeText={(text) => this.onChanged(text)}
+                style={{fontSize: 20, textAlign: 'center', color: 'white', flex: 1}}
+                value={this.state.minutesProgress}
+              />
+              {this.state.minutesProgress > 0 && <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+                <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>min</Text>
+              </View>}
+            </View>}
             <View style={{alignSelf: 'stretch', padding: 20, paddingBottom: 5}}>
               <TextInput
                 placeholder={`Label`}
                 numberOfLines={3}
                 multiline
-                autoFocus
+                autoFocus={this.props.entryType !== 'progress'}
                 style={{alignSelf: 'stretch', fontSize: 25, color: 'white', fontWeight: 'bold'}}
                 onChangeText={value => this.setState({text: value})}
               ><Text>{parts}</Text></TextInput>
@@ -212,18 +228,6 @@ class EntryAdditionForm extends React.Component {
                 onChangeText={value => this.setState({description: value})}
               ><Text>{this.state.description}</Text></TextInput>
             </View>
-            {this.props.entryType === 'progress' && 
-            <View style={{padding: 20, height: 100, alignSelf: 'stretch', borderRadius: 10, borderColor: '#eee', borderWidth: 1, margin: 20, backgroundColor: 'white'}}>
-              <TextInput
-                placeholder={'How many minutes of progress?'}
-                keyboardType='numeric'
-                maxLength={10}
-                multiline
-                onChangeText={(text) => this.onChanged(text)}
-                style={{backgroundColor: 'white', alignSelf: 'stretch', fontSize: 20}}
-                value={this.state.minutesProgress}
-              />
-            </View>}
         </ScrollView>
       </TouchableWithoutFeedback>
     )
