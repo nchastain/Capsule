@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   hashtag: {
-    color: colors.main,
+    color: colors.lightAccent,
     fontWeight: 'bold'
   }
 })

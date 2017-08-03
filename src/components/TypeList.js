@@ -14,12 +14,12 @@ import { borderlessImageMap, colors } from '../utilities'
 
 class TypeList extends React.Component {
   displayEntries () {
-    const entries = this.props.entries.filter(entry => entry.type === this.props.entryType)
+    const typeEntries = this.props.entries.filter(entry => entry.type === this.props.entryType)
     return (
-      <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main}}>
+      <View style={styles.innerContainer}>
         <ScrollView contentContainerStyle={styles.container}>
-          {entries.map((entry, idx) => (
-              <EntryListItem entry={entry} hasDate />
+          {typeEntries.map((entry, idx) => (
+            <EntryListItem entry={entry} key={idx} hasDate />
           )).reverse()}
         </ScrollView>
       </View>
@@ -58,6 +58,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+  },
+  innerContainer: {
+    flex: 1,
+    alignSelf: 'stretch',
+    backgroundColor: colors.main
   },
   outerContainer: {
     flex: 1,

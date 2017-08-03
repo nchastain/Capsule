@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const secondsToString = (seconds, longForm) => {
   const hours = Math.floor((seconds %= 86400) / 3600)
   const minutes = Math.floor((seconds %= 3600) / 60)
@@ -21,6 +23,8 @@ const numberEnding = (number) => {
   return number > 1 ? 's' : ''
 }
 
+export const isToday = (day) => moment(new Date(day)).get('date') === moment(new Date()).get('date')
+
 export const getProjectByID = (ID, projects) => projects.filter(obj => obj.uid === ID)[0]
 
 export const imageMap = {
@@ -40,7 +44,8 @@ export const imageMap = {
   left: require('.././assets/chevleft.png'),
   right: require('.././assets/chevright.png'),
   logo: require('.././assets/logo.png'),
-  inbox: require('.././assets/inbox.png')
+  inbox: require('.././assets/inbox.png'),
+  down: require('.././assets/down.png'),
 }
 
 export const borderlessImageMap = {
@@ -81,6 +86,8 @@ export const typeMap = {
   education: '📚'
 }
 
+export const progressTypes = ['time', 'manual', 'none']
+
 export const darkColorMap = {
   note: '#4A90E2',
   journal: '#FD8AD7',
@@ -89,6 +96,16 @@ export const darkColorMap = {
   progress: '#21AC34',
   habit: '#F59123',
   experience: '#D0021B'
+}
+
+export const descriptionMap = {
+  note: 'a note',
+  experience: 'an experience',
+  view: 'a view',
+  journal: 'a journal entry',
+  milestone: 'a milestone',
+  habit: 'a completed habit',
+  progress: 'progress', 
 }
 
 export const entryTypes = ['journal', 'experience', 'view', 'note', 'progress', 'habit', 'milestone']

@@ -31,19 +31,19 @@ class ProjectDetails extends React.Component {
   render () {
     const entriesArr = Object.values(this.props.entries) || []
     const projectEntries = entriesArr.filter(entry => entry.projectID === this.props.project.uid)
-    const formattedHoursLogged = this.props.hoursLogged === 0 ? 0 : parseFloat(this.props.project.hoursLogged.toFixed(1))
+    const formattedHoursLogged = this.props.progressCurrent === 0 ? 0 : parseFloat(this.props.project.progressCurrent.toFixed(1))
     const createReadableDate = (date) => moment(new Date(date)).format('MM/DD/YYYY')
     return (
       <View style={styles.container}>
-              <View style={{backgroundColor: colors.main, alignSelf: 'stretch'}}>
-        <View style={{margin: 10, marginRight: 5, alignItems: 'flex-end', alignSelf: 'stretch'}}>
-          <TouchableOpacity onPress={() => this.handleProjectComplete()} style={this.props.project.complete ? {} : styles.statusButton }>
-            {this.props.project.complete
-            ? <Image source={borderlessImageMap.complete} style={{height: 40, width: 50, resizeMode: 'contain', marginTop: 0}} />
-            : <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>mark complete</Text>}
-          </TouchableOpacity>
-        </View>
-          {this.props.project.timed && <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.hoursGoal} hours</Text>}
+        <View style={{backgroundColor: colors.main, alignSelf: 'stretch'}}>
+          <View style={{margin: 10, marginRight: 5, alignItems: 'flex-end', alignSelf: 'stretch'}}>
+            <TouchableOpacity onPress={() => this.handleProjectComplete()} style={this.props.project.complete ? {} : styles.statusButton }>
+              {this.props.project.complete
+              ? <Image source={borderlessImageMap.complete} style={{height: 40, width: 50, resizeMode: 'contain', marginTop: 0}} />
+              : <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>mark complete</Text>}
+            </TouchableOpacity>
+          </View>
+          {this.props.project.timed && <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.progressTarget} {this.props.project.progressUnits}</Text>}
           <Text
             style={styles.welcome}
           >
@@ -61,7 +61,9 @@ class ProjectDetails extends React.Component {
               <View style={[styles.projectEntry, styles.dateStringContainer, {alignItems: 'flex-end', width: 50}]}><Text style={styles.timeString}>{createReadableDate(entry.date)}</Text></View>
             </View>
           </TouchableOpacity>
-        ).reverse()}<View style={{height: 40}} /></ScrollView>
+          ).reverse()}
+          <View style={{height: 40}} />
+        </ScrollView>
       </View>
     )
   }

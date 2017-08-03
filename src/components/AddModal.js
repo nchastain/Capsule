@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 
-const AddModal = (props) => {
+const AddModal = props => {
   return (
     <View style={styles.container}>
       <View style={styles.modal}>

@@ -41,16 +41,15 @@ class TagList extends React.Component {
   }
 
   renderRow (tag) {
-    const {containerStyle, goalContainerStyle, rowStyle, goalStyle} = styles
     let numNotes = this.props.notes ? this.getNotesForTag(tag).length : 0
     return (
       <TouchableOpacity style={rowStyle} onPress={() => this.handleSelect(tag)}
       >
-        <View style={containerStyle}>
-          <View style={goalContainerStyle}>
+        <View style={styles.containerStyle}>
+          <View style={styles.goalContainerStyle}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
               <View style={{flexDirection: 'row', width: 250, alignItems: 'center'}}>
-                <View style={{marginRight: 5}}><Text style={goalStyle}>#{tag.text}</Text></View>
+                <View style={{marginRight: 5}}><Text style={styles.goalStyle}>#{tag.text}</Text></View>
                 <Text style={{color: colors.main, fontWeight: 'bold'}}>({numNotes})</Text>
               </View>
               <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>

@@ -14,12 +14,15 @@ class TagDetails extends React.Component {
     const notesForTag = notesArr.filter(note => {
       return note.tagIDs && note.tagIDs.indexOf(this.props.tag.id) !== -1
     })
+    const createText = note => note.text.replace(/(\B#\w\w+\w+)/g, '')
     return (
       <View style={styles.container}>
         {notesForTag.map((note, idx) => (
-          <View key={idx} style={{flexDirection: 'row', padding: 20, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: 'lightgray'}}>
-            <Text style={{width: 100, color: '#a083c4', fontWeight: 'bold', marginRight: 5}}>{moment(new Date(note.date)).format('MM/DD/YYYY')}</Text>
-            <Text style={styles.welcome}>{note.text.replace(/(\B#\w\w+\w+)/g, '')}</Text>
+          <View key={idx} style={styles.details}>
+            <Text style={styles.date}>
+              {moment(new Date(note.date)).format('MM/DD/YYYY')}
+            </Text>
+            <Text style={styles.text}>{createText(note)}</Text>
           </View>
         ))}
       </View>
@@ -36,7 +39,21 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: 'white',
   },
-  welcome: {
+  date: {
+    width: 100,
+    color: '#a083c4',
+    fontWeight: 'bold',
+    marginRight: 5
+  },
+  details: {
+    flexDirection: 'row',
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
+  },
+  text: {
     fontSize: 16,
     color: '#555',
     flex: 1

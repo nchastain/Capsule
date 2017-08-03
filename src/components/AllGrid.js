@@ -47,7 +47,7 @@ class AllGrid extends React.Component {
         <View style={[styles.cardContainer, {backgroundColor: lightColorMap[entryType]}]}>
           <Image source={imageMap[entryType]} style={styles.cardImage} />
           <View style={{position: 'absolute', padding: 2}}>
-            <Text style={styles.cardLabel}>
+            <Text style={[styles.cardLabel, {textShadowColor: darkColorMap[entryType]}]}>
               {this.createCardLabel(entryType)}
             </Text>
           </View>
@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'white',
     fontWeight: 'bold',
-    textShadowColor: darkColorMap[entryType],
     textShadowOffset: {width: 1, height: 1},
     backgroundColor: 'rgba(0,0,0,0)',
   },

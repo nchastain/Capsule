@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Modal
 } from 'react-native';
+import { imageMap, descriptionMap } from '../utilities'
 import Tabs from 'react-native-tabs';
 import DefaultRenderer from 'react-native-router-flux/src/DefaultRenderer';
 import Actions from 'react-native-router-flux/src/Actions';
@@ -73,31 +74,11 @@ class TabBar extends Component {
   }
 
   createAddFormLink(type) {
-    const imageMap = {
-      note: require('.././assets/note.png'),
-      experience: require('.././assets/experience.png'),
-      view: require('.././assets/sight.png'),
-      journal: require('.././assets/journal.png'),
-      milestone: require('.././assets/milestone.png'),
-      habit: require('.././assets/habit.png'),
-      progress: require('.././assets/progress.png'),
-    }
-    const descriptionMap = {
-      note: 'a note',
-      experience: 'an experience',
-      view: 'a view',
-      journal: 'a journal entry',
-      milestone: 'a milestone',
-      habit: 'a completed habit',
-      progress: 'progress', 
-    }
     return (
       <TouchableOpacity onPress={() => this.goToAddForm(type)} style={{flex: 1, alignSelf: 'stretch'}}>
-        <View style={{padding: 15, paddingLeft: 10, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', borderColor: 'lightgray', borderRadius: 10, alignSelf: 'stretch', shadowOffset: { width: 2,  height: 2},
-    shadowColor: '#555',
-    shadowOpacity: 0.3}}>
+        <View style={styles.tabContainer}>
           <Image source={imageMap[type]} style={{width: 40, height: 40, marginRight: 10, resizeMode: 'contain'}} />
-          <Text style={{fontSize: 18, color: '#555', fontWeight: 'bold'}}>Add {descriptionMap[type]}</Text>
+          <Text style={styles.tabText}>Add {descriptionMap[type]}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -144,9 +125,11 @@ class TabBar extends Component {
             </View>
           ) : contents)
         }
-        <View style={{position: 'absolute', width: 80, bottom: 0, height: 80, alignItems: 'center', justifyContent: 'center', borderRadius: 40, alignSelf: 'center', overflow: 'hidden'}}>
+        <View style={styles.addIconOuter}>
           <View style={{height: 80, width: 80, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}>
-            <TouchableOpacity onPress={() => this.setState({showModal: !this.state.showModal})}><Image source={require('.././assets/addiconsolid.png')} style={{width: 64, height: 64, resizeMode: 'contain'}} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => this.setState({showModal: !this.state.showModal})}>
+              <Image source={require('.././assets/addiconsolid.png')} style={{width: 64, height: 64, resizeMode: 'contain'}} />
+            </TouchableOpacity>
           </View>
         </View>
         <Modal
@@ -154,24 +137,9 @@ class TabBar extends Component {
           animationType={'fade'}
           transparent
         >
-            {/*<View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)'}}>
-                <View style={{ flex: 1, marginLeft: 30, marginRight: 30, marginTop: 90, borderRadius: 10, marginBottom: 90, padding: 10, backgroundColor: '#eee', justifyContent: 'flex-start', alignItems: 'flex-start', flex: 1}}>
-                  <TouchableOpacity style={{height: 100, borderRadius: 10, borderColor: 'darkgray', width: 100, borderWidth: 1, alignItems: 'center', justifyContent: 'center'}} onPress={() => this.goToAddForm('note')}><Text>Note</Text></TouchableOpacity>
-                </View>
-            </View>
-            <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)'}}>
-                <View style={{ flex: 1, marginLeft: 30, marginRight: 30, marginTop: 90, borderRadius: 10, marginBottom: 90, padding: 10, backgroundColor: '#eee', justifyContent: 'flex-start', alignItems: 'flex-start', flex: 1}}>
-                  <TouchableOpacity style={{height: 100, borderRadius: 10, borderColor: 'darkgray', width: 100, borderWidth: 1, alignItems: 'center', justifyContent: 'center'}} onPress={() => this.goToAddForm('progress')}><Text>Progress</Text></TouchableOpacity>
-                </View>
-            </View>
-            <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)'}}>
-                <View style={{ flex: 1, marginLeft: 30, marginRight: 30, marginTop: 90, borderRadius: 10, marginBottom: 90, padding: 10, backgroundColor: '#eee', justifyContent: 'flex-start', alignItems: 'flex-start', flex: 1}}>
-                  <TouchableOpacity style={{height: 100, borderRadius: 10, borderColor: 'darkgray', width: 100, borderWidth: 1, alignItems: 'center', justifyContent: 'center'}} onPress={() => this.goToAddForm('journal')}><Text>Journal</Text></TouchableOpacity>
-                </View>
-            </View>*/}
             <TouchableWithoutFeedback onPress={() => this.setState({showModal: !this.state.showModal})}>
-              <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', padding: 30, paddingBottom: 55, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
-                <View style={{flex: 1, backgroundColor: '#eee', borderRadius: 10, alignSelf: 'stretch', alignItems: 'flex-start', justifyContent: 'space-between', padding: 20}}>
+              <View style={styles.addLinkContainer}>
+                <View style={styles.addLinkInner}>
                   {this.createAddFormLink('journal')}
                   {this.createAddFormLink('milestone')}
                   {this.createAddFormLink('view')}
@@ -180,14 +148,81 @@ class TabBar extends Component {
                   {this.createAddFormLink('progress')}
                   {this.createAddFormLink('note')}
                 </View>
-                  <View style={{position: 'absolute', bottom: 0, height: 80, width: 80, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity onPress={() => this.setState({showModal: !this.state.showModal})}><Image source={require('.././assets/down.png')} style={{width: 65, height: 65, resizeMode: 'contain'}} /></TouchableOpacity>
+                  <View style={styles.downIconContainer}>
+                    <TouchableOpacity onPress={() => this.setState({showModal: !this.state.showModal})}>
+                      <Image source={imageMap.down} style={styles.downArrow} />
+                    </TouchableOpacity>
                   </View>
                 </View>
             </TouchableWithoutFeedback>
         </Modal>
       </View>
     );
+  }
+}
+
+const styles = {
+  addIconOuter: {
+    position: 'absolute',
+    width: 80,
+    bottom: 0,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 40,
+    alignSelf: 'center',
+    overflow: 'hidden'
+  },
+  addLinkContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 30,
+    paddingBottom: 55,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  addLinkInner: {
+    flex: 1,
+    backgroundColor: '#eee',
+    borderRadius: 10,
+    alignSelf: 'stretch',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    padding: 20,
+  },
+  downIconContainer: {
+    position: 'absolute',
+    bottom: 0,
+    height: 80,
+    width: 80,
+    backgroundColor: '#eee',
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  downArrow: {
+    width: 65,
+    height: 65,
+    resizeMode: 'contain'
+  },
+  tabContainer: {
+    padding: 15,
+    paddingLeft: 10,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: 'lightgray',
+    borderRadius: 10,
+    alignSelf: 'stretch',
+    shadowOffset: { width: 2,  height: 2},
+    shadowColor: '#555',
+    shadowOpacity: 0.3
+  },
+  tabText: {
+    fontSize: 18,
+    color: '#555',
+    fontWeight: 'bold',
   }
 }
 
