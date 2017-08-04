@@ -20,11 +20,11 @@ export const EntryUpdate = (entry, location) => {
   }
 }
 
-export const AddEntry = ({ text, description, date, tagIDs, type, projectID, minutesProgress}) => {
+export const AddEntry = ({ text, description, date, tagIDs, type, projectID, addedProgress}) => {
   let actionObj = { type: ADD_ENTRY, payload: { text, description, date, tagIDs, type } }
   if (projectID) actionObj.payload.projectID = projectID
+  if (addedProgress) actionObj.payload.addedProgress = addedProgress
   let entryObj = actionObj.payload
-  if (parseInt(minutesProgress) > 0) entryObj.seconds = parseInt(minutesProgress) * 60 
   return (dispatch) => {
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)
     .push(entryObj)

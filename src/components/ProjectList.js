@@ -57,7 +57,7 @@ class ProjectList extends React.Component {
   }
 
   renderProgressBar (project) {
-    let percentComplete = (project.hoursLogged) / (project.hoursGoal)
+    let percentComplete = (project.progressCurrent) / (project.progressTarget)
     if (project.complete) {
       return (
         <View style={{alignSelf: 'stretch', flexDirection: 'row', backgroundColor: colors.main, alignItems: 'center', borderRadius: 20}}>
@@ -68,7 +68,6 @@ class ProjectList extends React.Component {
         </View>
       )
     }
-    if (!project.timed) return null
 
     switch (percentComplete) {
       case 0:
@@ -107,17 +106,17 @@ class ProjectList extends React.Component {
   }
 
   renderRow (project) {
-    const formattedHoursLogged = parseFloat(project.hoursLogged.toFixed(1))
+    const formattedProgress = parseFloat(project.progressCurrent.toFixed(1))
     return (
       <TouchableOpacity activeOpacity={0.8} onPress={() => this.handleSelect(project)}>
         <View style={{marginBottom: 20, backgroundColor: 'white', flex: 1, flexDirection: 'column', borderBottomWidth: 1, borderColor: '#eee'}}>
-          <View style={{marginLeft: 10, marginRight: 10}}>{this.renderProgressBar(project)}</View>
+          <View style={{marginLeft: 10, marginRight: 10}}>{project.hasProgress && this.renderProgressBar(project)}</View>
           <View style={{padding: 10, backgroundColor: 'white', marginLeft: 10, marginRight: 10, paddingBottom: 30}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <View style={{alignItems: 'center', marginTop: -4, paddingRight: 4, width: 25}}><Text>{project.type ? typeMap[project.type] : typeMap['enterprise']}</Text></View>
               <View style={{flex: 1}}><Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text></View>
             </View>
-            {project.timed && <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedHoursLogged}/{project.hoursGoal} hours</Text>}
+            <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedProgress}/{project.progressTarget} {project.progressUnits}</Text>
           </View>
         </View>
       </TouchableOpacity>

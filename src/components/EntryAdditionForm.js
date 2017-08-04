@@ -35,7 +35,7 @@ import {
 class EntryAdditionForm extends React.Component {
   constructor (props) {
     super()
-    this.state = {text: '', ran: false, newTags: false, minutesProgress: '', project: null, openModal: false}
+    this.state = {text: '', description: '', ran: false, newTags: false, project: null, openModal: false}
   }
 
   componentWillMount () {
@@ -61,6 +61,7 @@ class EntryAdditionForm extends React.Component {
   }
 
   onButtonPress () {
+    console.log(parseInt(this.state.addedProgress), 'addedP')
     const tagsFromInput = this.extractTagsFromInput()
     const oldTags = Object.values(this.props.tags)
     const oldTagTitles = oldTags.map(tag => tag.text)
@@ -73,15 +74,15 @@ class EntryAdditionForm extends React.Component {
 
     let noteObj = {
       text: this.state.text.replace(/\r?\n|\r/, ''),
-      description: this.state.description.replace(/\r?\n|\r/, ''),
+      description: this.state.description ? this.state.description.replace(/\r?\n|\r/, '') : '',
       date: new Date().getTime(),
       tagIDs: allTagIDs,
       type: this.props.entryType,
     }
-    noteObj.projectID = this.state.hasProject ? this.state.project.uid : null
+    noteObj.projectID = this.state.project ? this.state.project.uid : null
     newTagObjs.forEach(this.props.AddTag)
-    if (this.state.project && this.props.entryType === 'progress') this.props.ProjectUpdateProgress(this.state.project.uid, this.state.minutesProgress)
-    if (parseInt(this.state.minutesProgress) > 0) noteObj.minutesProgress = parseInt(this.state.minutesProgress)
+    if (this.state.project && this.props.entryType === 'progress' && this.state.project.hasProgress) this.props.ProjectUpdateProgress(this.state.project.uid, this.state.addedProgress)
+    if (parseInt(this.state.addedProgress) > 0) noteObj.addedProgress = parseInt(this.state.addedProgress)
     this.props.AddEntry(noteObj)
   }
 
@@ -92,7 +93,7 @@ class EntryAdditionForm extends React.Component {
     text.split('').forEach(char => {
       if (isNum(char)) newText.push(char)
     })
-    this.setState({ minutesProgress: newText.join('') })
+    this.setState({ addedProgress: newText.join('') })
   }
 
   displayProjects () {
@@ -193,21 +194,23 @@ class EntryAdditionForm extends React.Component {
             <View style={{flex: 1, alignSelf: 'stretch', height: 300, paddingLeft: 10, borderBottomWidth: 5, borderColor: colors.main, paddingRight: 10, backgroundColor: '#eee'}}>
               <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{backgroundColor: 'white'}} />
             </View>}
-            {this.props.entryType === 'progress' && 
+            {(this.props.entryType === 'progress' && 
+            this.state.project && 
+            this.state.project.hasProgress) && 
             <View style={{alignItems: 'center', padding: 10, paddingBottom: 15, alignSelf: 'stretch', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
               <TextInput
-                placeholder={'How many minutes of progress?'}
+                placeholder={`How many ${this.state.project.progressUnits}?`}
                 keyboardType='numeric'
                 maxLength={10}
                 multiline
                 autoFocus={this.props.entryType === 'progress'}
                 onChangeText={(text) => this.onChanged(text)}
                 style={{fontSize: 20, textAlign: 'center', color: 'white', flex: 1}}
-                value={this.state.minutesProgress}
+                value={this.state.addedProgress}
               />
-              {this.state.minutesProgress > 0 && <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
-                <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>min</Text>
-              </View>}
+              <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+                <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>{this.state.project.progressUnits}</Text>
+              </View>
             </View>}
             <View style={{alignSelf: 'stretch', padding: 20, paddingBottom: 5}}>
               <TextInput

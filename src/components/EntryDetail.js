@@ -2,15 +2,15 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Text, View, Keyboard, TouchableWithoutFeedback, TouchableOpacity, TextInput, StyleSheet, Image, ListView } from 'react-native'
 import { EntryUpdate, EntrySave, EntryDelete, ProjectUpdateProgress } from '../actions'
-import { colors, borderlessImageMap, darkColorMap, imageMap, typeMap } from '../utilities'
+import { colors, borderlessImageMap, darkColorMap, imageMap, typeMap, getProjectByID } from '../utilities'
 import moment from 'moment'
 import _ from 'lodash'
 
 class EntryDetail extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {edited: false, text: props.entry.text, description: props.entry.description}
-    if (this.props.entry.type === 'progress') this.state.minutesProgress = props.entry.minutesProgress
+    this.state = {edited: false, text: props.entry.text, description: props.entry.description, projectID: props.entry.projectID}
+    if (this.props.entry.type === 'progress') this.state.addedProgress = props.entry.addedProgress
   }
 
   componentWillMount () {
@@ -35,7 +35,7 @@ class EntryDetail extends React.Component {
   }
 
   handleSave () {
-    this.props.EntryUpdate({...this.props.entry, text: this.state.text, description: this.state.description, minutesProgress: this.state.minutesProgress || 0}, this.props.location)
+    this.props.EntryUpdate({...this.props.entry, text: this.state.text, description: this.state.description, addedProgress: this.state.addedProgress || 0}, this.props.location)
   }
 
   handleDelete () {
@@ -68,6 +68,8 @@ class EntryDetail extends React.Component {
   }
 
   render () {
+    let project
+    if (this.props.entry.projectID) project = getProjectByID(this.props.entry.projectID, this.props.projects)
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
@@ -76,8 +78,8 @@ class EntryDetail extends React.Component {
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Image source={borderlessImageMap.whiteprojects} style={{width: 20, height: 20, marginRight: 5}} />
                       <Text style={{color: 'white', fontWeight: 'bold'}}>
-                        {this.state.project ? this.state.project.title.substr(0,20) : 'Select a project'}
-                        {(this.state.project && this.state.project.title.length > 20) ? '...' : ''}
+                        {this.state.projectID ? project.title.substr(0,20) : 'Select a project'}
+                        {(this.state.projectID && project.title.length > 20) ? '...' : ''}
                       </Text>
                       <Text style={{color: 'white', fontWeight: 'bold', marginLeft: 3}}>{'\u25BE'}</Text>
                   </View>
@@ -104,23 +106,21 @@ class EntryDetail extends React.Component {
               </TouchableOpacity>
               <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{backgroundColor: 'white'}} />
             </View>}
-            {this.props.entry.type === 'progress' && 
-            <View style={{alignItems: 'center', padding: 10, paddingBottom: 15, alignSelf: 'stretch', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
-              <TextInput
-                placeholder={'How many minutes of progress?'}
-                keyboardType='numeric'
-                maxLength={10}
-                multiline
-                autoFocus={this.props.entry.type === 'progress'}
-                onChangeText={(text) => this.handleTextChange(text, 'minutesProgress')}
-                style={{fontSize: 20, textAlign: 'center', color: 'white', flex: 1}}
-                value={this.state.minutesProgress}
-              />
-              {this.state.minutesProgress > 0 && <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
-                <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>min</Text>
-              </View>}
+            {(this.props.entry.type === 'progress' && 
+            project && 
+            project.hasProgress) && 
+            <View style={{alignItems: 'center', padding: 10, paddingBottom: 15, alignSelf: 'stretch', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.1)', flex: 1}}>
+              <View style={{alignItems: 'center', justifyContent: 'center', flex: 2}}>
+                <Text style={{color: 'white', fontSize: 25}}>
+                  {this.state.addedProgress}
+                </Text>
+              </View>
+              <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+                <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>{project.progressUnits}</Text>
+              </View>
             </View>}
           <View style={styles.entryTextContainer}>
+            <View style={{alignItems: 'flex-start'}}><Image source={imageMap[this.props.entry.type]} style={{width: 40, height: 40, marginBottom: 5, marginTop: 5, marginLeft: 5}} /></View>
             <TextInput editable style={styles.entryText} multiline value={this.state.text} placeholder={'Enter text here'} onChangeText={(val) => this.handleTextChange(val, 'text')} />
             <TextInput editable style={styles.entryDescription} multiline value={this.state.description} placeholder={'Enter additional details here'} onChangeText={(val) => this.handleTextChange(val, 'description')} />
           </View>

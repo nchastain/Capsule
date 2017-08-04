@@ -9,14 +9,24 @@ import {
   PROJECT_COMPLETE
 } from './types'
 
-export const ProjectAdd = ({ title, hoursGoal, timed, type }) => {
+export const ProjectAdd = ({ title, type, hasProgress, progressCurrent, progressTarget, progressUnits }) => {
   // const { currentUser } = firebase.auth()
   let currentDate = new Date()
-  let hoursGoalInt = timed ? parseInt(hoursGoal) : null
+  let parsedProgressTarget = parseInt(progressTarget) || 0
+  let parsedProgressCurrent = parseInt(progressCurrent) || 0
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries`)
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects`)
-      .push({ title, time: currentDate.getTime(), hoursGoal: hoursGoalInt, timed, type, hoursLogged: 0, complete: false })
+      .push({ 
+        title,
+        type,
+        time: currentDate.getTime(),
+        progressCurrent: parsedProgressCurrent,
+        progressTarget: parsedProgressTarget,
+        progressUnits,
+        hasProgress,
+        complete: false
+      })
       .then(() => {
         dispatch({ type: PROJECT_ADD })
         Actions.ProjectList({ type: 'reset' })
@@ -39,11 +49,12 @@ export const ProjectComplete = (id) => {
   }
 }
 
-export const ProjectUpdateProgress = (id, minutes) => {
-  let formattedMinutes = parseInt(minutes)
+export const ProjectUpdateProgress = (id, progress) => {
+  let formattedProgress = parseInt(progress)
+  console.log(id, progress)
   return (dispatch) => {
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}/hoursLogged`)
-    .transaction((data) => data + formattedMinutes / 60)
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}/progressCurrent`)
+    .transaction((data) => data + formattedProgress)
     .then(() => {
       dispatch({ type: PROJECT_UPDATE_PROGRESS })
     })
