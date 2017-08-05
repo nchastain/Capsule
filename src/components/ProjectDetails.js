@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Switch } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { ProjectClear, ProjectComplete } from '../actions'
@@ -9,7 +9,7 @@ import moment from 'moment'
 class ProjectDetails extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {complete: false}
+    this.state = {complete: props.project.complete}
   }
 
   componentWillReceiveProps (nextProps) {
@@ -23,9 +23,27 @@ class ProjectDetails extends React.Component {
   }
 
   handleProjectComplete () {
-    this.setState({complete: true}, () => {
-      this.props.ProjectComplete(this.props.project.uid)
+    this.setState({complete: !this.state.complete}, () => {
+      this.props.ProjectComplete(this.props.project.uid, this.state.complete)
     })
+  }
+
+  buildCompleteButton () {
+    if (!this.props.project.hasProgress) {
+      return (
+      <View style={{flexDirection: 'row', alignItems: 'center', alignSelf: 'stretch', justifyContent: 'flex-end', marginBottom: 10, marginTop: 15}}>
+        <Text style={{color: colors.lightAccent, paddingRight: 10}}>
+          Complete? 
+        </Text>
+        <Switch
+          value={this.state.complete}
+          style={{backgroundColor: 'white', borderRadius: 20}}
+          onValueChange={() => this.handleProjectComplete()}
+          onTintColor={colors.lightAccent}
+        />
+      </View>
+      )
+    }
   }
 
   render () {
@@ -35,21 +53,19 @@ class ProjectDetails extends React.Component {
     const createReadableDate = (date) => moment(new Date(date)).format('MM/DD/YYYY')
     return (
       <View style={styles.container}>
-        <View style={{backgroundColor: colors.main, alignSelf: 'stretch'}}>
-          <View style={{margin: 10, marginRight: 5, alignItems: 'flex-end', alignSelf: 'stretch'}}>
-            <TouchableOpacity onPress={() => this.handleProjectComplete()} style={this.props.project.complete ? {} : styles.statusButton }>
-              {this.props.project.complete
-              ? <Image source={borderlessImageMap.complete} style={{height: 40, width: 50, resizeMode: 'contain', marginTop: 0}} />
-              : <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>mark complete</Text>}
-            </TouchableOpacity>
-          </View>
+        <View style={{backgroundColor: colors.main, alignSelf: 'stretch', paddingBottom: 10, paddingTop: 20}}>
           {this.props.project.timed && <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.progressTarget} {this.props.project.progressUnits}</Text>}
           <Text
-            style={styles.welcome}
+            style={styles.projectTitle}
           >
             {this.props.project.type ? typeMap[this.props.project.type] : typeMap.enterprise } {this.props.project.title}
           </Text>
         </View>
+        {!this.props.project.hasProgress && <View style={{alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.2)'}}>
+        <View style={{justifyContent: 'flex-end', alignSelf: 'flex-end', flexDirection: 'row', padding: 10, paddingTop: 0}}>
+          {this.buildCompleteButton()}
+        </View>
+        </View>}
         <ScrollView style={styles.projectEntriesContainer} >{projectEntries.map((entry, idx) => 
           <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.ProjectEntryDetail({entry, location: 'project'})} key={idx}>
             <View style={{borderRadius: 10, flexDirection: 'row', marginBottom: 10, padding: 20, paddingLeft: 10, paddingRight: 15, backgroundColor: 'white', alignItems: 'center'}}>
@@ -75,7 +91,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: colors.lightAccent,
+    backgroundColor: colors.main,
     paddingBottom: 50,
   },
   statusButton: {
@@ -104,8 +120,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center'
   },
-  welcome: {
-    fontSize: 22,
+  projectTitle: {
+    fontSize: 18,
     textAlign: 'center',
     paddingBottom: 10,
     color: 'rgba(0,0,0,0.5)',

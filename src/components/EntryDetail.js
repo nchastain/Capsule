@@ -132,7 +132,7 @@ class EntryDetail extends React.Component {
             </View>
             <TouchableOpacity onPress={() => this.handleDelete()} style={{flex: 1, alignItems: 'flex-end'}}>
               <View style={[styles.entryTypeButton, {}]}>
-                <Image source={borderlessImageMap.trash6} style={[styles.entryTypeImage, {width: 30, height: 33}]} />
+                <Image source={borderlessImageMap.trash6} style={[styles.en=tryTypeImage, {width: 30, height: 33}]} />
               </View>
             </TouchableOpacity>
           </View>

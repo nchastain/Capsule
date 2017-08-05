@@ -41,9 +41,9 @@ export const ProjectSelect = (project) => {
   }
 }
 
-export const ProjectComplete = (id) => {
+export const ProjectComplete = (id, status) => {
   firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}`)
-  .update({ complete: true })
+  .update({ complete: status })
   return (dispatch) => {
     dispatch({ type: PROJECT_COMPLETE })
   }

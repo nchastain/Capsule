@@ -35,9 +35,9 @@ class ProjectAddForm extends React.Component {
       title: this.state.title,
       type: this.state.activeType,
       hasProgress: this.state.hasProgress,
-      progressCurrent: this.state.progressCurrent,
-      progressTarget: this.state.progressTarget,
-      progressUnits: this.state.progressUnits
+      progressCurrent: this.state.hasProgress ? this.state.progressCurrent : null,
+      progressTarget: this.state.hasProgress ? this.state.progressTarget : null,
+      progressUnits: this.state.hasProgress ? this.state.progressUnits : null
     })
   }
 
@@ -75,22 +75,31 @@ class ProjectAddForm extends React.Component {
     )
   }
 
+  calculateTitleSize () {
+    switch (true) {
+      case (this.state.title.length > 25): return 18
+      case (this.state.title.length > 15): return 25
+      case (this.state.title.length < 15): return 30
+    }
+  }
+
   render () {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <View style={{alignItems: 'center', marginTop: 20, alignSelf: 'stretch'}}>
+          <View style={{alignItems: 'center', marginTop: 20, padding: 10, alignSelf: 'stretch'}}>
             <TextInput
               placeholder='Add a project title'
               value={this.state.title}
+              multiline
               onChangeText={value => this.setState({title: value})}
-              style={{textAlign: 'center', fontSize: 30, fontWeight: 'bold', height: 50, marginBottom: 5, color: colors.lightAccent, width: Dimensions.get('window').width}}
+              style={{textAlign: 'center', fontSize: this.calculateTitleSize(), fontWeight: 'bold', marginBottom: 5, color: colors.lightAccent }}
             />
           </View>
           <View style={{marginTop: 20}}>
 
           </View>
-          <View style={{justifyContent: 'space-between', alignItems: 'center', alignSelf: 'stretch', flexDirection: 'row', marginLeft: 25, marginRight: 25}}>
+          <View style={{justifyContent: 'space-between', alignItems: 'center', alignSelf: 'stretch', flexDirection: 'row', marginLeft: 25, marginRight: 25, paddingBottom: 15}}>
             <Text style={{color: colors.lightAccent}}>
               Track progress for this project? 
             </Text>

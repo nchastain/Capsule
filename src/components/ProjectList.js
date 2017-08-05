@@ -116,7 +116,7 @@ class ProjectList extends React.Component {
               <View style={{alignItems: 'center', marginTop: -4, paddingRight: 4, width: 25}}><Text>{project.type ? typeMap[project.type] : typeMap['enterprise']}</Text></View>
               <View style={{flex: 1}}><Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text></View>
             </View>
-            <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedProgress}/{project.progressTarget} {project.progressUnits}</Text>
+            {project.hasProgress && <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedProgress}/{project.progressTarget} {project.progressUnits}</Text>}
           </View>
         </View>
       </TouchableOpacity>
