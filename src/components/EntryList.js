@@ -5,15 +5,18 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  Image
+  Image,
+  TouchableHighlight
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { colors, borderlessImageMap } from '../utilities'
-import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect } from '../actions'
+import Swipeable from 'react-native-swipeable'
+import { colors, borderlessImageMap, imageMap } from '../utilities'
+import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect, EntryDelete } from '../actions'
 import _ from 'lodash'
 import EntryListItem from './EntryListItem'
+
 
 class EntryList extends React.Component {
   findTagByID (id) {
@@ -126,4 +129,4 @@ const mapStateToProps = state => {
   return { entries, projects, project, notes, tags }
 }
 
-export default connect(mapStateToProps, { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect })(EntryList)
+export default connect(mapStateToProps, { NotesFetch, EntriesFetch, EntryDelete, ProjectsFetch, TagsFetch, TagSelect })(EntryList)

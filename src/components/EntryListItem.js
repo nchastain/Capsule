@@ -1,26 +1,56 @@
 import React from 'react'
-import { TouchableOpacity, View, Image, Text, StyleSheet } from 'react-native'
+import { TouchableOpacity, View, Image, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import moment from 'moment'
+import Swipeable from 'react-native-swipeable'
 import { Actions } from 'react-native-router-flux'
-import { imageMap, colors } from '../utilities'
+import { EntryDelete } from '../actions'
+import { imageMap, colors, borderlessImageMap } from '../utilities'
+import { connect } from 'react-redux'
 
-const EntryListItem = ({ entry, hasDate }) => (
-  <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.DayEntryDetail({entry: entry, title: entry.text, location: 'today'})}>
-    <View style={styles.dayEntryList}>
-      <View style={styles.dayEntryRow}>
-        <View style={styles.entryIconContainer}>
-          <Image source={imageMap[entry.type]} style={styles.entryIcon} />
-        </View>
-        <View style={styles.dayEntryTextContainer}>
-          <Text style={styles.entryText}>
-            {entry.text}
-          </Text>
-        </View>
-        {dateOrNav(hasDate, entry)}
-      </View>
-    </View>
-  </TouchableOpacity>
-)
+class EntryListItem extends React.Component {
+
+  handleDelete () {
+    console.log(this.props.entry)
+    this.props.EntryDelete({uid: this.props.entry.uid})
+  }
+
+  render() {
+    const deleteButton = () => {
+      return [
+        <TouchableHighlight 
+        style={{backgroundColor: '#D0021B', flexDirection: 'row', alignSelf: 'stretch', flex: 1, alignItems: 'center'}}
+        onPress={this.handleDelete.bind(this)}
+        >
+          <Image source={borderlessImageMap.trash6} style={{width: 28, height: 30, marginLeft: 18}} />
+        </TouchableHighlight>
+      ]
+    }
+    return (
+      <Swipeable
+        rightButtons={deleteButton()}
+        rightButtonWidth={60}
+        onRightActionRelease={this.handleDelete.bind(this)}
+        rightActionActivationDistance={200}
+      >
+        <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.DayEntryDetail({entry: this.props.entry, title: this.props.entry.text, location: 'today'})}>
+          <View style={styles.dayEntryList}>
+            <View style={styles.dayEntryRow}>
+              <View style={styles.entryIconContainer}>
+                <Image source={imageMap[this.props.entry.type]} style={styles.entryIcon} />
+              </View>
+              <View style={styles.dayEntryTextContainer}>
+                <Text style={styles.entryText}>
+                  {this.props.entry.text}
+                </Text>
+              </View>
+              {dateOrNav(this.props.hasDate, this.props.entry)}
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Swipeable>
+    )
+  }
+}
 
 const dateOrNav = (hasDate, entry) => (
   hasDate
@@ -85,4 +115,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default EntryListItem
+export default connect(null, { EntryDelete })(EntryListItem)

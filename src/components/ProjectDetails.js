@@ -1,15 +1,16 @@
 import React from 'react'
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Switch } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Switch, TextInput } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
-import { ProjectClear, ProjectComplete } from '../actions'
+import { ProjectClear, ProjectComplete, ProjectUpdate, ProjectDelete, EntryDelete } from '../actions'
 import { secondsToString, colors, borderlessImageMap, typeMap } from '../utilities'
 import moment from 'moment'
+import _ from 'lodash'
 
 class ProjectDetails extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {complete: props.project.complete}
+    this.state = {complete: props.project.complete, title: props.project.title}
   }
 
   componentWillReceiveProps (nextProps) {
@@ -26,6 +27,18 @@ class ProjectDetails extends React.Component {
     this.setState({complete: !this.state.complete}, () => {
       this.props.ProjectComplete(this.props.project.uid, this.state.complete)
     })
+  }
+
+  handleTextChange (val) {
+    this.setState({edited: val.length > 0, title: val}, function() {
+      this.props.ProjectUpdate(this.props.project.uid, 'title', this.state.title)
+    })
+  }
+
+  handleDelete (projectEntries) {
+    this.props.ProjectDelete(this.props.project.uid)
+    const entryIDs = projectEntries.map(entry => entry.uid)
+    entryIDs.forEach((entryID) => this.props.EntryDelete({uid: entryID}))
   }
 
   buildCompleteButton () {
@@ -53,13 +66,23 @@ class ProjectDetails extends React.Component {
     const createReadableDate = (date) => moment(new Date(date)).format('MM/DD/YYYY')
     return (
       <View style={styles.container}>
-        <View style={{backgroundColor: colors.main, alignSelf: 'stretch', paddingBottom: 10, paddingTop: 20}}>
-          {this.props.project.timed && <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.progressTarget} {this.props.project.progressUnits}</Text>}
-          <Text
-            style={styles.projectTitle}
-          >
-            {this.props.project.type ? typeMap[this.props.project.type] : typeMap.enterprise } {this.props.project.title}
-          </Text>
+        <View style={{alignSelf: 'stretch', paddingBottom: 10, paddingTop: 20}}>
+          {this.props.project.hasProgress && <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.progressTarget} {this.props.project.progressUnits}</Text>}
+            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={[styles.projectTitle, {textAlign: 'right', width: 30, paddingLeft: 10}]}>
+              {this.props.project.type ? typeMap[this.props.project.type] : typeMap.enterprise }
+            </Text>
+            <View style={{flex: 1}}>
+            <TextInput
+              editable
+              style={[styles.projectTitle, {marginLeft: -10}]}
+              multiline
+              value={this.state.title}
+              placeholder={'Enter project title here'}
+              onChangeText={(val) => this.handleTextChange(val)} 
+            />
+            </View>
+            </View>
         </View>
         {!this.props.project.hasProgress && <View style={{alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.2)'}}>
         <View style={{justifyContent: 'flex-end', alignSelf: 'flex-end', flexDirection: 'row', padding: 10, paddingTop: 0}}>
@@ -80,6 +103,13 @@ class ProjectDetails extends React.Component {
           ).reverse()}
           <View style={{height: 40}} />
         </ScrollView>
+        <View style={{flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', padding: 15, position: 'absolute', left: 0, right: 0, bottom: 50, alignSelf: 'stretch', justifyContent: 'space-between'}}>
+            <TouchableOpacity onPress={() => this.handleDelete(projectEntries)} style={{flex: 1, alignItems: 'flex-end'}}>
+              <View style={[styles.entryTypeButton, {}]}>
+                <Image source={borderlessImageMap.trash6} style={[styles.entryTypeImage, {width: 30, height: 33}]} />
+              </View>
+            </TouchableOpacity>
+          </View>
       </View>
     )
   }
@@ -161,8 +191,11 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => {
-  const { project, entries } = state
+  const entries = _.map(state.entries, (val, uid) => {
+    return { ...val, uid }
+  })
+  const { project } = state
   return { project, entries }
 }
 
-export default connect(mapStateToProps, { ProjectClear, ProjectComplete })(ProjectDetails);
+export default connect(mapStateToProps, { ProjectClear, ProjectComplete, ProjectUpdate, ProjectDelete, EntryDelete })(ProjectDetails);

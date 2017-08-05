@@ -61,7 +61,6 @@ class EntryAdditionForm extends React.Component {
   }
 
   onButtonPress () {
-    console.log(parseInt(this.state.addedProgress), 'addedP')
     const tagsFromInput = this.extractTagsFromInput()
     const oldTags = Object.values(this.props.tags)
     const oldTagTitles = oldTags.map(tag => tag.text)

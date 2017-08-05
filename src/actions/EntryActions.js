@@ -75,7 +75,7 @@ export const EntryDelete = ({ uid }, location) => {
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${uid}`)  
       .remove()
       .then(() => {
-        location === 'today' ? Actions.Today({ type: 'reset' }) : Actions.EntryList({ type: 'reset'})
+        location === 'today' ? Actions.Today({ type: 'reset' }) : location ? Actions.EntryList({ type: 'reset'}) : null
       })
   }
 }

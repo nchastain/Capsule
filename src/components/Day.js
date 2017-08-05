@@ -11,6 +11,7 @@ import {
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import Swipeable from 'react-native-swipeable'
 import DateHeader from './DateHeader'
 import EntryListItem from './EntryListItem'
 import { imageMap, colors } from '../utilities'
@@ -70,16 +71,16 @@ class Day extends React.Component {
           <Image source={imageMap.inbox} style={styles.inboxImage} />
         </View>
         <Text style={styles.emptyMessageText}>
-          Click + to add something{'\n'}to the day's capsule.
+          Click  <Image source={imageMap.addIcon} style={{height: 20, width: 20, backgroundColor: 'white', borderRadius: 11}} />  to add something{'\n'}to the day's capsule.
         </Text>
       </View>
     )
   }
 
-  createDateText () {
+  createDateText (dayInput) {
     return (
       <Text style={styles.dateText}>
-        {moment(this.state.activeDay).format('MMMM Do, YYYY')}
+        {moment(dayInput).format('MMMM Do, YYYY')}
       </Text>
     )
   }
@@ -107,16 +108,16 @@ class Day extends React.Component {
     else if (direction === 'left') this.setState({activeDay: moment(this.state.activeDay).subtract(1, 'days')})
     else if (direction === 'right') this.setState({activeDay: moment(this.state.activeDay).add(1, 'days')})
   }
-
-  buildHero () {
-    const picRandomizer = (day) => moment(day).unix()
-    const isToday = () => moment(new Date(this.state.activeDay)).get('date') === moment(new Date()).get('date')
-    const heroSource = `https://placeimg.com/${this.deviceWidth * picRandomizer(this.state.activeDay)}/${100 * picRandomizer(this.state.activeDay)}/nature`
+  
+  buildDayHero(dayInput) {
+    const picRandomizer = (dayInput) => moment(dayInput).unix()
+    const isToday = () => moment(new Date(dayInput)).get('date') === moment(new Date()).get('date')
+    const heroSource = `https://placeimg.com/${this.deviceWidth * picRandomizer(dayInput)}/${100 * picRandomizer(dayInput)}/nature`
     return (
       <View style={styles.heroContainer}>
         <Image source={{uri: heroSource}} style={[styles.heroImage, {width: this.deviceWidth}]} />
         <View style={[styles.opacityContainer, {width: this.deviceWidth}]} />
-        <View>{this.createDateText()}</View>
+        <View>{this.createDateText(dayInput)}</View>
         <TouchableOpacity activeOpacity={0.2} onPress={() => this.handleDayNavigation('left', isToday())} style={[styles.heroNavigationIconContainer, {left: 10}]}>
           <Image source={imageMap.left} style={styles.heroNavigationIcon} />
         </TouchableOpacity>
@@ -124,6 +125,34 @@ class Day extends React.Component {
           <Image source={imageMap.right} style={[styles.heroNavigationIcon, {opacity: isToday() ? 0.2 : 1}]} />
         </TouchableOpacity>
       </View>
+    )
+  }
+
+  buildHeroContainer () {
+    const picRandomizer = (day) => moment(day).unix()
+    const isToday = () => moment(new Date(this.state.activeDay)).get('date') === moment(new Date()).get('date')
+    const heroSource = `https://placeimg.com/${this.deviceWidth * picRandomizer(this.state.activeDay)}/${100 * picRandomizer(this.state.activeDay)}/nature`
+    return (
+      <Swipeable
+        leftContent={this.buildDayHero(this.state.activeDay.subtract(1, 'days'))}
+        rightContent={!isToday() && this.buildDayHero(this.state.activeDay.add(1, 'days'))}
+        onLeftActionRelease={() => this.handleDayNavigation('left', isToday())}
+        onRightActionRelease={() => this.handleDayNavigation('right', isToday())}
+        rightActionActivationDistance={this.deviceWidth / 2}
+        leftActionActivationDistance={this.deviceWidth / 2}
+      >
+        <View style={styles.heroContainer}>
+          <Image source={{uri: heroSource}} style={[styles.heroImage, {width: this.deviceWidth}]} />
+          <View style={[styles.opacityContainer, {width: this.deviceWidth}]} />
+          <View>{this.createDateText(this.state.activeDay)}</View>
+          <TouchableOpacity activeOpacity={0.2} onPress={() => this.handleDayNavigation('left', isToday())} style={[styles.heroNavigationIconContainer, {left: 10}]}>
+            <Image source={imageMap.left} style={styles.heroNavigationIcon} />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={isToday() ? 1 : 0.2} onPress={() => this.handleDayNavigation('right', isToday())} style={[styles.heroNavigationIconContainer, {right: 10}]}>
+            <Image source={imageMap.right} style={[styles.heroNavigationIcon, {opacity: isToday() ? 0.2 : 1}]} />
+          </TouchableOpacity>
+        </View>
+      </Swipeable>
     )
   }
 
@@ -136,7 +165,7 @@ class Day extends React.Component {
         <View style={styles.logoheader}>
           <Image style={styles.logoImage} source={imageMap.logo} />
         </View>
-        {this.buildHero()}
+        {this.buildHeroContainer()}
         {dayEntries.length === 0 ? this.buildEmptyContainer() : this.buildContainer(dayEntries)}
       </View>
     )

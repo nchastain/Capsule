@@ -46,6 +46,7 @@ export const imageMap = {
   logo: require('.././assets/logo.png'),
   inbox: require('.././assets/inbox.png'),
   down: require('.././assets/down.png'),
+  addIcon: require('.././assets/addiconsolid.png'),
 }
 
 export const borderlessImageMap = {

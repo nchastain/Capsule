@@ -128,7 +128,7 @@ class TabBar extends Component {
         <View style={styles.addIconOuter}>
           <View style={{height: 80, width: 80, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}>
             <TouchableOpacity onPress={() => this.setState({showModal: !this.state.showModal})}>
-              <Image source={require('.././assets/addiconsolid.png')} style={{width: 64, height: 64, resizeMode: 'contain'}} />
+              <Image source={imageMap.addIcon} style={{width: 64, height: 64, resizeMode: 'contain'}} />
             </TouchableOpacity>
           </View>
         </View>

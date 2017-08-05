@@ -5,8 +5,9 @@ import {
   PROJECTS_FETCH_SUCCESS,
   PROJECT_CLEAR,
   PROJECT_UPDATE_PROGRESS,
+  PROJECT_UPDATE,
   PROJECT_SELECT,
-  PROJECT_COMPLETE
+  PROJECT_COMPLETE,
 } from './types'
 
 export const ProjectAdd = ({ title, type, hasProgress, progressCurrent, progressTarget, progressUnits }) => {
@@ -51,13 +52,33 @@ export const ProjectComplete = (id, status) => {
 
 export const ProjectUpdateProgress = (id, progress) => {
   let formattedProgress = parseInt(progress)
-  console.log(id, progress)
   return (dispatch) => {
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}/progressCurrent`)
     .transaction((data) => data + formattedProgress)
     .then(() => {
       dispatch({ type: PROJECT_UPDATE_PROGRESS })
     })
+  }
+}
+
+export const ProjectUpdate = (id, field, val) => {
+  return (dispatch) => {
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}`)
+    .update({[field]: val})
+    return (dispatch) => {
+      dispatch ({ type: PROJECT_UPDATE })
+    }
+  }
+}
+
+export const ProjectDelete = (id) => {
+  return () => {
+    // firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}`)  
+      .remove()
+      .then(() => {
+        Actions.ProjectList()
+      })
   }
 }
 
