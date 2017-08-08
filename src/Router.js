@@ -13,6 +13,7 @@ import TagDetails from './components/TagDetails'
 import EntryList from './components/EntryList'
 import AllGrid from './components/AllGrid'
 import TypeList from './components/TypeList'
+import Calendar from './components/Calendar'
 
 const DayTabIcon = ({ selected, title }) => {
   return (
@@ -85,6 +86,7 @@ const RouterComponent = () => {
             <Scene key='TagDetailsDay' component={TagDetails} title='Tag Details' />
             <Scene key='EntryAdditionForm' component={EntryAdditionForm} hideNavBar={false} />
             <Scene key='DayEntryDetail' component={EntryDetail} title='Entry Detail' hideNavBar={false} />
+            <Scene key='Calendar' component={Calendar} title='Calendar' hideNavBar={false} />
           </Scene>
 
           {/* Tab and its scenes */}

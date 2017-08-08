@@ -69,7 +69,15 @@ export const borderlessImageMap = {
   allstatus: require('.././assets/allstatus.png'),
   nowstatus: require('.././assets/nowstatus.png'),
   donestatus: require('.././assets/donestatus.png'),
+  fullcalendar: require('.././assets/fullcalendar.png')
 }
+
+// `https://placeimg.com/${this.deviceWidth * picRandomizer(this.state.activeDay)}/${100 * picRandomizer(this.state.activeDay)}/nature`
+
+export const bannerImages = [
+  require('.././assets/hero1.jpg'),
+  require('.././assets/hero2.jpg')
+]
 
 export const lightColorMap = {
   note: '#8AC3FB',

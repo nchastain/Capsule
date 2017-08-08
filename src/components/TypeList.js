@@ -7,14 +7,22 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  Keyboard
 } from 'react-native'
 import EntryListItem from './EntryListItem'
+import Search from 'react-native-search-box'
 import { borderlessImageMap, colors } from '../utilities'
 
 class TypeList extends React.Component {
+  constructor() {
+    super()
+    this.state = {searchTerm: ''}
+  }
+
   displayEntries () {
-    const typeEntries = this.props.entries.filter(entry => entry.type === this.props.entryType)
+    let typeEntries = this.props.entries.filter(entry => entry.type === this.props.entryType)
+    typeEntries = typeEntries.filter(entry => entry.text.indexOf(this.state.searchTerm) !== -1)
     return (
       <View style={styles.innerContainer}>
         <ScrollView contentContainerStyle={styles.container}>
@@ -28,8 +36,18 @@ class TypeList extends React.Component {
 
   render () {
     return (
-      <View style={styles.outerContainer}>
-        {this.displayEntries()}
+      <View style={{flex: 1, alignSelf: 'stretch', paddingTop: 64}}>
+        <Search 
+          ref='search_box' 
+          onChangeText={(val) => this.setState({searchTerm: val})} 
+          afterSearch={() => Keyboard.dismiss()} 
+          backgroundColor='#eee'
+          titleCancelColor={colors.main}
+          onDelete={() => this.setState({searchTerm: ''})}
+        />
+        <View style={styles.outerContainer}>
+          {this.displayEntries()}
+        </View>
       </View>
     )
   }
@@ -68,7 +86,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingTop: 64,
     backgroundColor: colors.main,
   },
   text: {

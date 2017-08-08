@@ -6,7 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  Keyboard
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -15,10 +16,16 @@ import Swipeable from 'react-native-swipeable'
 import { colors, borderlessImageMap, imageMap } from '../utilities'
 import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect, EntryDelete } from '../actions'
 import _ from 'lodash'
+import Search from 'react-native-search-box';
 import EntryListItem from './EntryListItem'
 
 
 class EntryList extends React.Component {
+  constructor() {
+    super()
+    this.state = {searchTerm: ''}
+  }
+
   findTagByID (id) {
     let tagObj = this.props.tags ? Object.values(this.props.tags).filter(tagObj => tagObj.id === id)[0] : {text: ''}
     return tagObj
@@ -48,10 +55,23 @@ class EntryList extends React.Component {
   }
  
   render () {
-    const entries = this.props.entries ? Object.values(this.props.entries) : []
+    let that = this
+    let entries = this.props.entries ? Object.values(this.props.entries) : []
+    entries = entries.filter(entry => entry.text.indexOf(that.state.searchTerm) !== -1)
     return (
       <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main, paddingTop: 64}}>
+        <Search 
+          ref='search_box' 
+          onChangeText={(val) => this.setState({searchTerm: val})} 
+          afterSearch={() => Keyboard.dismiss()} 
+          backgroundColor='#eee'
+          titleCancelColor={colors.main}
+        />
         <ScrollView contentContainerStyle={styles.container}>
+          {entries.length === 0 && 
+            <View style={{backgroundColor: 'white', padding: 20}}>
+              <Text style={{color: colors.main}}>No entries found for that search</Text>
+            </View>}
           {entries.map((entry, idx) => (
             <EntryListItem entry={entry} hasDate key={idx} />
           )).reverse()}

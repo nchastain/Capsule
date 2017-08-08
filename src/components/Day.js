@@ -14,16 +14,16 @@ import moment from 'moment'
 import Swipeable from 'react-native-swipeable'
 import DateHeader from './DateHeader'
 import EntryListItem from './EntryListItem'
-import { imageMap, colors } from '../utilities'
+import { imageMap, borderlessImageMap, bannerImages, colors } from '../utilities'
 import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect } from '../actions'
 import _ from 'lodash'
 
 class Day extends React.Component {
   constructor (props) {
     super(props)
-    this.deviceWidth = Dimensions.get('window').width
-    this.deviceHeight = Dimensions.get('window').height
-    this.state = {activeDay: moment()}
+    let deviceWidth = Dimensions.get('window').width
+    let deviceHeight = Dimensions.get('window').height
+    this.state = {activeDay: props.activeDay || moment(), deviceWidth, deviceHeight }
   }
 
   componentWillMount () {
@@ -34,8 +34,10 @@ class Day extends React.Component {
   }
 
   onLayout (evt) {
-    this.deviceHeight = evt.nativeEvent.layout.height
-    this.deviceWidth = evt.nativeEvent.layout.width
+    this.setState({
+      deviceHeight: evt.nativeEvent.layout.height,
+      deviceWidth: evt.nativeEvent.layout.width
+    })
   }
 
   buildDayEntries (entries) {
@@ -112,11 +114,11 @@ class Day extends React.Component {
   buildDayHero(dayInput) {
     const picRandomizer = (dayInput) => moment(dayInput).unix()
     const isToday = () => moment(new Date(dayInput)).get('date') === moment(new Date()).get('date')
-    const heroSource = `https://placeimg.com/${this.deviceWidth * picRandomizer(dayInput)}/${100 * picRandomizer(dayInput)}/nature`
+    const heroSource = `https://placeimg.com/${667 * picRandomizer(dayInput)}/${100 * picRandomizer(dayInput)}/nature`
     return (
       <View style={styles.heroContainer}>
-        <Image source={{uri: heroSource}} style={[styles.heroImage, {width: this.deviceWidth}]} />
-        <View style={[styles.opacityContainer, {width: this.deviceWidth}]} />
+        <Image source={{uri: heroSource}} style={[styles.heroImage, {width: 667}]} />
+        <View style={[styles.opacityContainer, {width: 667}]} />
         <View>{this.createDateText(dayInput)}</View>
         <TouchableOpacity activeOpacity={0.2} onPress={() => this.handleDayNavigation('left', isToday())} style={[styles.heroNavigationIconContainer, {left: 10}]}>
           <Image source={imageMap.left} style={styles.heroNavigationIcon} />
@@ -131,7 +133,7 @@ class Day extends React.Component {
   buildHeroContainer () {
     const picRandomizer = (day) => moment(day).unix()
     const isToday = () => moment(new Date(this.state.activeDay)).get('date') === moment(new Date()).get('date')
-    const heroSource = `https://placeimg.com/${this.deviceWidth * picRandomizer(this.state.activeDay)}/${100 * picRandomizer(this.state.activeDay)}/nature`
+    const heroSource = `https://placeimg.com/${667 * picRandomizer(this.state.activeDay)}/${100 * picRandomizer(this.state.activeDay)}/nature`
     return (
       <Swipeable
         leftContent={this.buildDayHero(this.state.activeDay.subtract(1, 'days'))}
@@ -142,8 +144,8 @@ class Day extends React.Component {
         leftActionActivationDistance={this.deviceWidth / 2}
       >
         <View style={styles.heroContainer}>
-          <Image source={{uri: heroSource}} style={[styles.heroImage, {width: this.deviceWidth}]} />
-          <View style={[styles.opacityContainer, {width: this.deviceWidth}]} />
+          <Image source={{uri: heroSource}} style={[styles.heroImage, {width: 667}]} />
+          <View style={[styles.opacityContainer, {width: 667}]} />
           <View>{this.createDateText(this.state.activeDay)}</View>
           <TouchableOpacity activeOpacity={0.2} onPress={() => this.handleDayNavigation('left', isToday())} style={[styles.heroNavigationIconContainer, {left: 10}]}>
             <Image source={imageMap.left} style={styles.heroNavigationIcon} />
@@ -165,6 +167,11 @@ class Day extends React.Component {
         <View style={styles.logoheader}>
           <Image style={styles.logoImage} source={imageMap.logo} />
         </View>
+          <View style={{position: 'absolute', top: 32, right: 8, flex: 1}}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.Calendar()}>
+            <Image source={borderlessImageMap.fullcalendar} style={{height: 26, width: 35, resizeMode: 'contain'}} />
+            </TouchableOpacity>
+          </View>
         {this.buildHeroContainer()}
         {dayEntries.length === 0 ? this.buildEmptyContainer() : this.buildContainer(dayEntries)}
       </View>
