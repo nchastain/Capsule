@@ -8,6 +8,7 @@ import {
   ENTRY_SAVE_SUCCESS,
   ENTRY_CLEAR
 } from './types'
+import { DayEntryAdd } from './DayActions'
 
 export const EntryUpdate = (entry, location) => {
   return (dispatch) => {
@@ -25,9 +26,11 @@ export const AddEntry = ({ text, description, date, tagIDs, type, projectID, add
   if (projectID) actionObj.payload.projectID = projectID
   if (addedProgress) actionObj.payload.addedProgress = addedProgress
   let entryObj = actionObj.payload
+  let newRef = firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`).push()
+  let entryID = newRef.key
+  DayEntryAdd(entryID, date)
   return (dispatch) => {
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)
-    .push(entryObj)
+    newRef.set(entryObj)
     .then(() => {
       dispatch(actionObj)
       Actions.Today()

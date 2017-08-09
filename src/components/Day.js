@@ -15,7 +15,7 @@ import Swipeable from 'react-native-swipeable'
 import DateHeader from './DateHeader'
 import EntryListItem from './EntryListItem'
 import { imageMap, borderlessImageMap, bannerImages, colors } from '../utilities'
-import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect } from '../actions'
+import { NotesFetch, EntriesFetch, ProjectsFetch, DaysFetch, TagsFetch, TagSelect } from '../actions'
 import _ from 'lodash'
 
 class Day extends React.Component {
@@ -73,7 +73,7 @@ class Day extends React.Component {
           <Image source={imageMap.inbox} style={styles.inboxImage} />
         </View>
         <Text style={styles.emptyMessageText}>
-          Click  <Image source={imageMap.addIcon} style={{height: 20, width: 20, backgroundColor: 'white', borderRadius: 11}} />  to add something{'\n'}to the day's capsule.
+          Click  <Image source={imageMap.addIcon} style={{height: 26, width: 26, backgroundColor: 'white', borderWidth: 2, borderColor: 'white', borderRadius: 13}} />  to add something{'\n'}to the day's capsule.
         </Text>
       </View>
     )
@@ -99,7 +99,7 @@ class Day extends React.Component {
     const that = this
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <DateHeader deviceWidth={that.deviceWidth} label='TODAY' day={that.state.activeDay} />
+        <DateHeader deviceWidth={this.state.deviceWidth} label='TODAY' day={that.state.activeDay} />
         {this.buildDayEntries(dayEntries)}
       </ScrollView>
     )
@@ -114,11 +114,11 @@ class Day extends React.Component {
   buildDayHero(dayInput) {
     const picRandomizer = (dayInput) => moment(dayInput).unix()
     const isToday = () => moment(new Date(dayInput)).get('date') === moment(new Date()).get('date')
-    const heroSource = `https://placeimg.com/${667 * picRandomizer(dayInput)}/${100 * picRandomizer(dayInput)}/nature`
+    const heroSource = `https://placeimg.com/${667 * picRandomizer(dayInput)}/${100 * picRandomizer(dayInput)}`
     return (
       <View style={styles.heroContainer}>
-        <Image source={{uri: heroSource}} style={[styles.heroImage, {width: 667}]} />
-        <View style={[styles.opacityContainer, {width: 667}]} />
+        <Image source={{uri: heroSource}} style={styles.heroImage} />
+        <View style={styles.opacityContainer} />
         <View>{this.createDateText(dayInput)}</View>
         <TouchableOpacity activeOpacity={0.2} onPress={() => this.handleDayNavigation('left', isToday())} style={[styles.heroNavigationIconContainer, {left: 10}]}>
           <Image source={imageMap.left} style={styles.heroNavigationIcon} />
@@ -133,19 +133,19 @@ class Day extends React.Component {
   buildHeroContainer () {
     const picRandomizer = (day) => moment(day).unix()
     const isToday = () => moment(new Date(this.state.activeDay)).get('date') === moment(new Date()).get('date')
-    const heroSource = `https://placeimg.com/${667 * picRandomizer(this.state.activeDay)}/${100 * picRandomizer(this.state.activeDay)}/nature`
+    const heroSource = `https://placeimg.com/${667 * picRandomizer(this.state.activeDay)}/${100 * picRandomizer(this.state.activeDay)}`
     return (
       <Swipeable
         leftContent={this.buildDayHero(this.state.activeDay.subtract(1, 'days'))}
         rightContent={!isToday() && this.buildDayHero(this.state.activeDay.add(1, 'days'))}
         onLeftActionRelease={() => this.handleDayNavigation('left', isToday())}
         onRightActionRelease={() => this.handleDayNavigation('right', isToday())}
-        rightActionActivationDistance={this.deviceWidth / 2}
-        leftActionActivationDistance={this.deviceWidth / 2}
+        rightActionActivationDistance={150}
+        leftActionActivationDistance={150}
       >
         <View style={styles.heroContainer}>
-          <Image source={{uri: heroSource}} style={[styles.heroImage, {width: 667}]} />
-          <View style={[styles.opacityContainer, {width: 667}]} />
+          <Image source={{uri: heroSource}} style={styles.heroImage} />
+          <View style={styles.opacityContainer} />
           <View>{this.createDateText(this.state.activeDay)}</View>
           <TouchableOpacity activeOpacity={0.2} onPress={() => this.handleDayNavigation('left', isToday())} style={[styles.heroNavigationIconContainer, {left: 10}]}>
             <Image source={imageMap.left} style={styles.heroNavigationIcon} />
@@ -284,12 +284,16 @@ const styles = StyleSheet.create({
     marginTop: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'stretch'
   },
   heroImage: {
     position: 'absolute',
     left: 0,
+    right: 0,
     top: 0,
     height: 100,
+    width: 667,
+    alignSelf: 'stretch',
   },
   heroNavigationIcon: {
     width: 25,
@@ -327,11 +331,14 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   opacityContainer: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.3)',
     position: 'absolute',
     left: 0,
+    right: 0,
     top: 0,
     height: 100,
+    width: 1000,
+    alignSelf: 'stretch'
   },
   topBar: {
     paddingBottom: 5,
@@ -366,4 +373,4 @@ const mapStateToProps = state => {
   return { entries, projects, project, notes, tags }
 }
 
-export default connect(mapStateToProps, { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect })(Day)
+export default connect(mapStateToProps, { NotesFetch, EntriesFetch, ProjectsFetch, DaysFetch, TagsFetch, TagSelect })(Day)

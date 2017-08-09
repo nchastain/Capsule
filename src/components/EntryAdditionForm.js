@@ -20,7 +20,8 @@ import {
   AddTag,
   TagsFetch,
   AddEntry,
-  ProjectUpdateProgress
+  ProjectUpdateProgress,
+  AddDayEntry
 } from '../actions'
 import {
   darkColorMap,
