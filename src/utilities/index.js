@@ -37,6 +37,51 @@ export const isToday = (day) => moment(new Date(day)).get('date') === moment(new
 
 export const getProjectByID = (ID, projects) => projects.filter(obj => obj.uid === ID)[0]
 
+export const getImageForDay = (day) => {
+  return dayImageMap[moment(day).format('D')]
+}
+
+const dayImageMap = {
+  1: require('.././assets/dayImages/1.jpeg'),
+  2: require('.././assets/dayImages/2.jpeg'),
+  3: require('.././assets/dayImages/3.jpeg'),
+  4: require('.././assets/dayImages/4.jpeg'),
+  5: require('.././assets/dayImages/5.jpeg'),
+  6: require('.././assets/dayImages/6.jpeg'),
+  7: require('.././assets/dayImages/7.jpeg'),
+  8: require('.././assets/dayImages/8.jpeg'),
+  9: require('.././assets/dayImages/9.jpeg'),
+  10: require('.././assets/dayImages/10.jpeg'),
+  11: require('.././assets/dayImages/11.jpeg'),
+  12: require('.././assets/dayImages/12.jpeg'),
+  13: require('.././assets/dayImages/13.jpeg'),
+  14: require('.././assets/dayImages/14.jpeg'),
+  15: require('.././assets/dayImages/15.jpeg'),
+  16: require('.././assets/dayImages/16.jpeg'),
+  17: require('.././assets/dayImages/17.jpeg'),
+  18: require('.././assets/dayImages/18.jpeg'),
+  19: require('.././assets/dayImages/19.jpeg'),
+  20: require('.././assets/dayImages/20.jpeg'),
+  21: require('.././assets/dayImages/21.jpeg'),
+  22: require('.././assets/dayImages/22.jpeg'),
+  23: require('.././assets/dayImages/23.jpeg'),
+  24: require('.././assets/dayImages/24.jpeg'),
+  25: require('.././assets/dayImages/25.jpeg'),
+  26: require('.././assets/dayImages/26.jpeg'),
+  27: require('.././assets/dayImages/27.jpeg'),
+  28: require('.././assets/dayImages/28.jpeg'),
+  29: require('.././assets/dayImages/29.jpeg'),
+  30: require('.././assets/dayImages/30.jpeg'),
+  31: require('.././assets/dayImages/31.jpeg'),
+}
+
+export const getEntriesForDay = (days, entries, day) => {
+  const entriesArr = entries ? Object.values(entries) : []
+  const allDayEntries = (Object.keys(days).length > 0 && days[day]) ? Object.keys(days[day].entries) : []
+  const trueDayEntries = allDayEntries.length > 0 ? allDayEntries.filter(dayObj => days[day].entries[dayObj]) : []
+  return entriesArr.length > 0 ? entriesArr.filter(entry => trueDayEntries.indexOf(entry.uid) !== -1) : []
+}
+
 export const imageMap = {
   note: require('.././assets/note.png'),
   experience: require('.././assets/experience.png'),

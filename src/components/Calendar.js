@@ -2,9 +2,39 @@ import React from 'react'
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import moment from 'moment'
-import { colors, borderlessImageMap, imageMap, hexToRGB } from '../utilities'
+import { connect } from 'react-redux'
+import _ from 'lodash'
+import { colors, borderlessImageMap, imageMap, hexToRGB, getEntriesForDay, getImageForDay } from '../utilities'
 
 class Calendar extends React.Component {
+  
+  buildDayHero (dayInput) {
+    const heroSource = getImageForDay(dayInput)
+    const numDayEntries = getEntriesForDay(this.props.days, this.props.entries, moment(dayInput).format('MMDDYYYY')).length
+    return (
+      <View style={styles.heroContainer}>
+        <TouchableOpacity
+          activeOpacity={0.8} 
+          style={{flex: 1, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}
+          onPress={() => Actions.Today({activeDay: moment(dayInput)})}
+        >
+          <Image source={heroSource} style={[styles.heroImage, {width: 667}]} />
+          <View style={[styles.opacityContainer, {width: 667}]} />
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch'}}>
+            <Text style={styles.weekday}>
+              {buildWeekday(dayInput)}
+            </Text>
+            {createDateText(dayInput)}
+            {numDayEntries !== 0 && <View style={styles.entriesContainer}>
+              <Text style={styles.entryText}>{numDayEntries} {numDayEntries === 1 ? 'entry' : 'entries'}</Text>
+            </View>}
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+
   render() {
     const picRandomizer = (dayInput) => moment(dayInput).unix()
     const heroSource = (day) => `https://placeimg.com/${667 * picRandomizer(day)}/${100 * picRandomizer(day)}/nature`
@@ -15,7 +45,7 @@ class Calendar extends React.Component {
     }
 
     const daysMap = daysOfYear.map(date => (
-      <View style={{alignSelf: 'stretch'}} key={date}>{buildDayHero(date)}</View>
+      <View style={{alignSelf: 'stretch'}} key={date}>{this.buildDayHero(date)}</View>
     ))
     
     return (
@@ -24,32 +54,6 @@ class Calendar extends React.Component {
       </ScrollView>
     )
   }
-}
-
-const buildDayHero = (dayInput) => {
-  const picRandomizer = (dayInput) => moment(dayInput).unix()
-  const heroSource = `https://placeimg.com/${667 * picRandomizer(dayInput)}/${100 * picRandomizer(dayInput)}`
-  return (
-    <View style={styles.heroContainer}>
-      <TouchableOpacity
-        activeOpacity={0.8} 
-        style={{flex: 1, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}
-        onPress={() => Actions.Today({activeDay: moment(dayInput)})}
-      >
-        <Image source={{uri: heroSource}} style={[styles.heroImage, {width: 667}]} />
-        <View style={[styles.opacityContainer, {width: 667}]} />
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch'}}>
-          <Text style={styles.weekday}>
-            {buildWeekday(dayInput)}
-          </Text>
-          {createDateText(dayInput)}
-          <View style={styles.entriesContainer}>
-            <Text style={styles.entryText}>9 entries</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    </View>
-  )
 }
 
 const buildWeekday = (dayInput) => {
@@ -122,5 +126,12 @@ const styles = {
   }
 }
 
+const mapStateToProps = state => {
+  const { days } = state
+  const entries = _.map(state.entries, (val, uid) => {
+    return { ...val, uid }
+  })
+  return { entries, days }
+}
 
-export default Calendar
+export default connect(mapStateToProps)(Calendar)

@@ -14,7 +14,8 @@ import moment from 'moment'
 import Swipeable from 'react-native-swipeable'
 import DateHeader from './DateHeader'
 import EntryListItem from './EntryListItem'
-import { imageMap, borderlessImageMap, bannerImages, colors } from '../utilities'
+import DayHero from './DayHero'
+import { imageMap, borderlessImageMap, bannerImages, colors, getEntriesForDay, getImageForDay } from '../utilities'
 import { NotesFetch, EntriesFetch, ProjectsFetch, DaysFetch, TagsFetch, TagSelect } from '../actions'
 import _ from 'lodash'
 
@@ -119,14 +120,31 @@ class Day extends React.Component {
   }
   
   buildDayHero(dayInput) {
-    const picRandomizer = (dayInput) => moment(dayInput).unix()
     const isToday = () => moment(new Date(dayInput)).get('date') === moment(new Date()).get('date')
-    const heroSource = `https://placeimg.com/${667 * picRandomizer(dayInput)}/${100 * picRandomizer(dayInput)}`
+    const heroSource = getImageForDay(dayInput)
     return (
       <View style={styles.heroContainer}>
-        <Image source={{uri: heroSource}} style={styles.heroImage} />
+        <Image source={heroSource} style={styles.heroImage} />
         <View style={styles.opacityContainer} />
         <View>{this.createDateText(dayInput)}</View>
+        <TouchableOpacity activeOpacity={0.2} style={[styles.heroNavigationIconContainer, {left: 10}]}>
+          <Image source={imageMap.left} style={styles.heroNavigationIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={isToday() ? 1 : 0.2} style={[styles.heroNavigationIconContainer, {right: 10}]}>
+          <Image source={imageMap.right} style={[styles.heroNavigationIcon, {opacity: isToday() ? 0.2 : 1}]} />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  buildHeroContainer () {
+    const isToday = () => moment(new Date(this.state.activeDay)).get('date') === moment(new Date()).get('date')
+    const heroSource = getImageForDay(this.state.activeDay)
+    return (
+      <View style={styles.heroContainer}>
+        <Image source={heroSource} style={styles.heroImage} />
+        <View style={styles.opacityContainer} />
+        <View>{this.createDateText(this.state.activeDay)}</View>
         <TouchableOpacity activeOpacity={0.2} onPress={() => this.handleDayNavigation('left', isToday())} style={[styles.heroNavigationIconContainer, {left: 10}]}>
           <Image source={imageMap.left} style={styles.heroNavigationIcon} />
         </TouchableOpacity>
@@ -137,39 +155,8 @@ class Day extends React.Component {
     )
   }
 
-  buildHeroContainer () {
-    const picRandomizer = (day) => moment(day).unix()
-    const isToday = () => moment(new Date(this.state.activeDay)).get('date') === moment(new Date()).get('date')
-    const heroSource = `https://placeimg.com/${667 * picRandomizer(this.state.activeDay)}/${100 * picRandomizer(this.state.activeDay)}`
-    return (
-      <Swipeable
-        leftContent={this.buildDayHero(this.state.activeDay.subtract(1, 'days'))}
-        rightContent={!isToday() && this.buildDayHero(this.state.activeDay.add(1, 'days'))}
-        onLeftActionRelease={() => this.handleDayNavigation('left', isToday())}
-        onRightActionRelease={() => this.handleDayNavigation('right', isToday())}
-        rightActionActivationDistance={150}
-        leftActionActivationDistance={150}
-      >
-        <View style={styles.heroContainer}>
-          <Image source={{uri: heroSource}} style={styles.heroImage} />
-          <View style={styles.opacityContainer} />
-          <View>{this.createDateText(this.state.activeDay)}</View>
-          <TouchableOpacity activeOpacity={0.2} onPress={() => this.handleDayNavigation('left', isToday())} style={[styles.heroNavigationIconContainer, {left: 10}]}>
-            <Image source={imageMap.left} style={styles.heroNavigationIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={isToday() ? 1 : 0.2} onPress={() => this.handleDayNavigation('right', isToday())} style={[styles.heroNavigationIconContainer, {right: 10}]}>
-            <Image source={imageMap.right} style={[styles.heroNavigationIcon, {opacity: isToday() ? 0.2 : 1}]} />
-          </TouchableOpacity>
-        </View>
-      </Swipeable>
-    )
-  }
-
   render () {
-    const entriesArr = this.props.entries ? Object.values(this.props.entries) : []
-    const fromActiveDay = (date) => moment(new Date(date)).get('date') === moment(new Date(this.state.activeDay)).get('date')
-    const dayEntries = entriesArr.filter(entry => fromActiveDay(entry.date))
-    console.log(this.props.days[moment(this.state.activeDay).format('MMDDYYYY')].entries)
+    let dayEntries = getEntriesForDay(this.props.days, this.props.entries, moment(this.state.activeDay).format('MMDDYYYY'))
     return (
       <View style={styles.fullContainer}>
         <View style={styles.logoheader}>
