@@ -31,6 +31,7 @@ class Day extends React.Component {
     this.props.EntriesFetch()
     this.props.ProjectsFetch()
     this.props.TagsFetch()
+    this.props.DaysFetch()
   }
 
   onLayout (evt) {
@@ -107,8 +108,14 @@ class Day extends React.Component {
 
   handleDayNavigation (direction, isToday) {
     if (isToday && direction === 'right') return null
-    else if (direction === 'left') this.setState({activeDay: moment(this.state.activeDay).subtract(1, 'days')})
-    else if (direction === 'right') this.setState({activeDay: moment(this.state.activeDay).add(1, 'days')})
+    else if (direction === 'left') {
+      this.setState({activeDay: moment(this.state.activeDay).subtract(1, 'days')}, function() {
+        console.log('get last day')
+      })
+    }
+    else if (direction === 'right') {
+      this.setState({activeDay: moment(this.state.activeDay).add(1, 'days')})
+    }
   }
   
   buildDayHero(dayInput) {
@@ -162,6 +169,7 @@ class Day extends React.Component {
     const entriesArr = this.props.entries ? Object.values(this.props.entries) : []
     const fromActiveDay = (date) => moment(new Date(date)).get('date') === moment(new Date(this.state.activeDay)).get('date')
     const dayEntries = entriesArr.filter(entry => fromActiveDay(entry.date))
+    console.log(this.props.days[moment(this.state.activeDay).format('MMDDYYYY')].entries)
     return (
       <View style={styles.fullContainer}>
         <View style={styles.logoheader}>
@@ -276,7 +284,7 @@ const styles = StyleSheet.create({
   fullContainer: {
     flex: 1,
     alignSelf: 'stretch',
-    backgroundColor: colors.main
+    backgroundColor: colors.main,
   },
   heroContainer: {
     height: 100,
@@ -366,11 +374,11 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => {
-  const { projects, project, notes, tags } = state
+  const { projects, project, notes, tags, days } = state
   const entries = _.map(state.entries, (val, uid) => {
     return { ...val, uid }
   })
-  return { entries, projects, project, notes, tags }
+  return { entries, projects, project, notes, tags, days }
 }
 
 export default connect(mapStateToProps, { NotesFetch, EntriesFetch, ProjectsFetch, DaysFetch, TagsFetch, TagSelect })(Day)

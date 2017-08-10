@@ -21,7 +21,7 @@ import {
   TagsFetch,
   AddEntry,
   ProjectUpdateProgress,
-  AddDayEntry
+  DayEntryAdd
 } from '../actions'
 import {
   darkColorMap,
@@ -79,11 +79,13 @@ class EntryAdditionForm extends React.Component {
       tagIDs: allTagIDs,
       type: this.props.entryType,
     }
+    let noteID = uuid.v4()
     noteObj.projectID = this.state.project ? this.state.project.uid : null
     newTagObjs.forEach(this.props.AddTag)
     if (this.state.project && this.props.entryType === 'progress' && this.state.project.hasProgress) this.props.ProjectUpdateProgress(this.state.project.uid, this.state.addedProgress)
     if (parseInt(this.state.addedProgress) > 0) noteObj.addedProgress = parseInt(this.state.addedProgress)
-    this.props.AddEntry(noteObj)
+    this.props.AddEntry(noteObj, noteID)
+    this.props.DayEntryAdd(noteID, new Date())
   }
 
   onChanged (text) {
@@ -270,4 +272,4 @@ const mapStateToProps = state => {
   return { tags, projects }
 }
 
-export default connect(mapStateToProps, { NoteAdd, AddTag, AddEntry, TagsFetch, ProjectUpdateProgress })(EntryAdditionForm)
+export default connect(mapStateToProps, { NoteAdd, AddTag, AddEntry, DayEntryAdd, TagsFetch, ProjectUpdateProgress })(EntryAdditionForm)

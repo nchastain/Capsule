@@ -7,6 +7,7 @@ import ProjectReducer from './ProjectReducer'
 import NotesReducer from './NotesReducer'
 import TagReducer from './TagReducer'
 import TagsReducer from './TagsReducer'
+import DaysReducer from './DaysReducer'
 
 export default combineReducers({
   auth: AuthReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
   project: ProjectReducer,
   notes: NotesReducer,
   tag: TagReducer,
-  tags: TagsReducer
+  tags: TagsReducer,
+  days: DaysReducer
 })

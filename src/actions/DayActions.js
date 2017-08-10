@@ -8,19 +8,15 @@ import moment from 'moment'
 
 export const DayEntryAdd = (entryID, day) => {
   const formattedDate = moment(day).format('MMDDYYYY')
-  console.log(entryID, formattedDate)
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/days`)
-      .push({ 
-        [formattedDate]: 167
-      })
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/days/${formattedDate}/entries`).child(entryID)
+    .set(true)
   }
 }
 
 export const DaysFetch = () => {
   // const { currentUser } = firebase.auth()
-
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries`)
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/days`)

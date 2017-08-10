@@ -21,14 +21,12 @@ export const EntryUpdate = (entry, location) => {
   }
 }
 
-export const AddEntry = ({ text, description, date, tagIDs, type, projectID, addedProgress}) => {
+export const AddEntry = ({ text, description, date, tagIDs, type, projectID, addedProgress}, noteID) => {
   let actionObj = { type: ADD_ENTRY, payload: { text, description, date, tagIDs, type } }
   if (projectID) actionObj.payload.projectID = projectID
   if (addedProgress) actionObj.payload.addedProgress = addedProgress
   let entryObj = actionObj.payload
-  let newRef = firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`).push()
-  let entryID = newRef.key
-  DayEntryAdd(entryID, date)
+  let newRef = firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${noteID}`)
   return (dispatch) => {
     newRef.set(entryObj)
     .then(() => {

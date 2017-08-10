@@ -15,11 +15,11 @@ class Calendar extends React.Component {
     }
 
     const daysMap = daysOfYear.map(date => (
-      <View style={{alignSelf: 'stretch'}}>{buildDayHero(date)}</View>
+      <View style={{alignSelf: 'stretch'}} key={date}>{buildDayHero(date)}</View>
     ))
     
     return (
-      <ScrollView style={{backgroundColor: colors.main}} contentContainerStyle={{marginTop: 64, paddingBottom: 150, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
+      <ScrollView style={{backgroundColor: '#eee'}} contentContainerStyle={{marginTop: 64, paddingBottom: 150, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
         {daysMap}
       </ScrollView>
     )
