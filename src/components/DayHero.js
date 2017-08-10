@@ -1,8 +1,7 @@
-//nav, entryCount - both will be boolean props, default to false
-
 import React from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import { colors, getEntriesForDay, getImageForDay, imageMap } from '../utilities'
+import { colors, getEntriesForDay, getImageForDay, imageMap, hexToRGB } from '../utilities'
+import { Actions } from 'react-native-router-flux'
 
 import moment from 'moment'
 
@@ -16,30 +15,38 @@ class DayHero extends React.Component {
     )
   }
 
-  handleDayNavigation (direction, isToday) {
-    if (isToday && direction === 'right') return null
-    else if (direction === 'left') {
-      this.setState({activeDay: moment(this.state.activeDay).subtract(1, 'days')}, function() {
-      })
-    }
-    else if (direction === 'right') {
-      this.setState({activeDay: moment(this.state.activeDay).add(1, 'days')})
-    }
+  buildWeekday () {
+    if (moment(new Date()).get('date') === moment(this.props.day).get('date')) return 'TODAY'
+    else if (moment(new Date()).subtract(1, 'd').get('date') === moment(this.props.day).get('date')) return 'YESTERDAY'
+    else return moment(this.props.day).format('dddd').toUpperCase()
   }
 
   render() {
     const isToday = () => moment(new Date(this.props.day)).get('date') === moment(new Date()).get('date')
+    const numDayEntries = getEntriesForDay(this.props.days, this.props.entries, moment(this.props.day).format('MMDDYYYY')).length
     return (
       <View style={styles.heroContainer}>
-        <Image source={getImageForDay(this.props.day)} style={styles.heroImage} />
-        <View style={styles.opacityContainer} />
-        <View>{this.createDateText(this.props.day)}</View>
-        {this.props.nav && <TouchableOpacity onPress={() => this.handleDayNavigation('left', isToday())} activeOpacity={0.2} style={[styles.heroNavigationIconContainer, {left: 10}]}>
-          <Image source={imageMap.left} style={styles.heroNavigationIcon} />
-        </TouchableOpacity>}
-        {this.props.nav && <TouchableOpacity onPress={() => this.handleDayNavigation('right', isToday())} activeOpacity={isToday() ? 1 : 0.2} style={[styles.heroNavigationIconContainer, {right: 10}]}>
-          <Image source={imageMap.right} style={[styles.heroNavigationIcon, {opacity: isToday() ? 0.2 : 1}]} />
-        </TouchableOpacity>}
+        <TouchableOpacity
+          activeOpacity={this.props.calendar ? 0.8 : 1} 
+          style={{flex: 1, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}
+          onPress={() => this.props.calendar ? Actions.Today({activeDay: moment(this.props.day)}) : undefined}
+        >
+          <Image source={getImageForDay(this.props.day)} style={styles.heroImage} />
+          <View style={styles.opacityContainer} />
+          {this.props.calendar && <Text style={styles.weekday}>
+            {this.buildWeekday(this.props.day)}
+          </Text>}
+          <View>{this.createDateText(this.props.day)}</View>
+          {numDayEntries !== 0 && this.props.calendar && <View style={styles.entriesContainer}>
+            <Text style={styles.entryText}>{numDayEntries} {numDayEntries === 1 ? 'entry' : 'entries'}</Text>
+          </View>}
+          {this.props.nav && <TouchableOpacity onPress={() => this.props.handleDayNavigation('left', isToday())} activeOpacity={0.2} style={[styles.heroNavigationIconContainer, {left: 10}]}>
+            <Image source={imageMap.left} style={styles.heroNavigationIcon} />
+          </TouchableOpacity>}
+          {this.props.nav && <TouchableOpacity onPress={() => this.props.handleDayNavigation('right', isToday())} activeOpacity={isToday() ? 1 : 0.2} style={[styles.heroNavigationIconContainer, {right: 10}]}>
+            <Image source={imageMap.right} style={[styles.heroNavigationIcon, {opacity: isToday() ? 0.2 : 1}]} />
+          </TouchableOpacity>}
+        </TouchableOpacity>
       </View>
     )
   }
@@ -50,6 +57,21 @@ const styles = {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 30,
+  },
+  entriesContainer: {
+    marginTop: 2,
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: hexToRGB(colors.main, 0.5),
+    padding: 5,
+    borderRadius: 15,
+  },
+  entryText: {
+    paddingLeft: 5,
+    paddingRight: 5,
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 10
   },
   heroContainer: {
     height: 100,
@@ -87,6 +109,11 @@ const styles = {
     width: 1000,
     alignSelf: 'stretch'
   },
+  weekday: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold'
+  }
 }
 
 export default DayHero

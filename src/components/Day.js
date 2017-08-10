@@ -111,48 +111,11 @@ class Day extends React.Component {
     if (isToday && direction === 'right') return null
     else if (direction === 'left') {
       this.setState({activeDay: moment(this.state.activeDay).subtract(1, 'days')}, function() {
-        console.log('get last day')
       })
     }
     else if (direction === 'right') {
       this.setState({activeDay: moment(this.state.activeDay).add(1, 'days')})
     }
-  }
-  
-  buildDayHero(dayInput) {
-    const isToday = () => moment(new Date(dayInput)).get('date') === moment(new Date()).get('date')
-    const heroSource = getImageForDay(dayInput)
-    return (
-      <View style={styles.heroContainer}>
-        <Image source={heroSource} style={styles.heroImage} />
-        <View style={styles.opacityContainer} />
-        <View>{this.createDateText(dayInput)}</View>
-        <TouchableOpacity activeOpacity={0.2} style={[styles.heroNavigationIconContainer, {left: 10}]}>
-          <Image source={imageMap.left} style={styles.heroNavigationIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={isToday() ? 1 : 0.2} style={[styles.heroNavigationIconContainer, {right: 10}]}>
-          <Image source={imageMap.right} style={[styles.heroNavigationIcon, {opacity: isToday() ? 0.2 : 1}]} />
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
-  buildHeroContainer () {
-    const isToday = () => moment(new Date(this.state.activeDay)).get('date') === moment(new Date()).get('date')
-    const heroSource = getImageForDay(this.state.activeDay)
-    return (
-      <View style={styles.heroContainer}>
-        <Image source={heroSource} style={styles.heroImage} />
-        <View style={styles.opacityContainer} />
-        <View>{this.createDateText(this.state.activeDay)}</View>
-        <TouchableOpacity activeOpacity={0.2} onPress={() => this.handleDayNavigation('left', isToday())} style={[styles.heroNavigationIconContainer, {left: 10}]}>
-          <Image source={imageMap.left} style={styles.heroNavigationIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={isToday() ? 1 : 0.2} onPress={() => this.handleDayNavigation('right', isToday())} style={[styles.heroNavigationIconContainer, {right: 10}]}>
-          <Image source={imageMap.right} style={[styles.heroNavigationIcon, {opacity: isToday() ? 0.2 : 1}]} />
-        </TouchableOpacity>
-      </View>
-    )
   }
 
   render () {
@@ -167,7 +130,7 @@ class Day extends React.Component {
             <Image source={borderlessImageMap.fullcalendar} style={{height: 26, width: 35, resizeMode: 'contain'}} />
             </TouchableOpacity>
           </View>
-        {this.buildHeroContainer()}
+        <DayHero nav day={this.state.activeDay} days={this.props.days} entries={this.props.entries} handleDayNavigation={this.handleDayNavigation.bind(this)} />
         {dayEntries.length === 0 ? this.buildEmptyContainer() : this.buildContainer(dayEntries)}
       </View>
     )
@@ -272,32 +235,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch',
     backgroundColor: colors.main,
-  },
-  heroContainer: {
-    height: 100,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    marginTop: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'stretch'
-  },
-  heroImage: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 100,
-    width: 667,
-    alignSelf: 'stretch',
-  },
-  heroNavigationIcon: {
-    width: 25,
-    height: 25
-  },
-  heroNavigationIconContainer: {
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   inboxImage: {
     height: 50,
