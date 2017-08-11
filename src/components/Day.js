@@ -6,7 +6,9 @@ import {
   ScrollView,
   Image,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal,
+  TouchableWithoutFeedback
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -15,7 +17,7 @@ import Swipeable from 'react-native-swipeable'
 import DateHeader from './DateHeader'
 import EntryListItem from './EntryListItem'
 import DayHero from './DayHero'
-import { imageMap, borderlessImageMap, bannerImages, colors, getEntriesForDay, getImageForDay } from '../utilities'
+import { imageMap, descriptionMap, borderlessImageMap, bannerImages, colors, getEntriesForDay, getImageForDay, isToday } from '../utilities'
 import { NotesFetch, EntriesFetch, ProjectsFetch, DaysFetch, TagsFetch, TagSelect } from '../actions'
 import _ from 'lodash'
 
@@ -24,7 +26,7 @@ class Day extends React.Component {
     super(props)
     let deviceWidth = Dimensions.get('window').width
     let deviceHeight = Dimensions.get('window').height
-    this.state = {activeDay: props.activeDay || moment(), deviceWidth, deviceHeight }
+    this.state = {activeDay: props.activeDay || moment(), deviceWidth, deviceHeight, showModal: false }
   }
 
   componentWillMount () {
@@ -53,16 +55,28 @@ class Day extends React.Component {
     return tagObj
   }
 
+  goToAddForm(type) {
+    this.setState({showModal: !this.state.showModal}, function() {
+      Actions.EntryAdditionForm({entryType: type, title: `Add ${type}`, day: this.state.activeDay})
+    })
+  }
+
+  createAddFormLink(type) {
+    return (
+      <TouchableOpacity onPress={() => this.goToAddForm(type)} style={{flex: 1, alignSelf: 'stretch'}}>
+        <View style={styles.tabContainer}>
+          <Image source={imageMap[type]} style={{width: 40, height: 40, marginRight: 10, resizeMode: 'contain'}} />
+          <View>
+            <Text style={[styles.tabText, {flex: 1}]}>Add {descriptionMap[type]}</Text>
+            <Text style={{flex: 1, color: colors.main}}>{moment(this.state.activeDay).format('MMMM Do, YYYY')}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
   handleHashtagLookup (tag) {
     this.props.TagSelect(tag)
-  }
-
-  addProgress () {
-    Actions.EntryAdditionForm({entryType: 'progress'})
-  }
-
-  addNote () {
-    Actions.EntryAdditionForm({entryType: 'note'})
   }
 
   displayEmptyMessage () {
@@ -72,10 +86,10 @@ class Day extends React.Component {
           Nothing here yet.
         </Text>
         <View style={styles.inboxImageContainer}>
-          <Image source={imageMap.inbox} style={styles.inboxImage} />
+          <Image source={imageMap.addIcon} style={styles.addImage} />
         </View>
         <Text style={styles.emptyMessageText}>
-          Click  <Image source={imageMap.addIcon} style={{height: 26, width: 26, backgroundColor: 'white', borderWidth: 2, borderColor: 'white', borderRadius: 13}} />  to add something{'\n'}to the day's capsule.
+          Click here to add something{'\n'}to the day's capsule.
         </Text>
       </View>
     )
@@ -92,7 +106,9 @@ class Day extends React.Component {
   buildEmptyContainer () {
     return (
       <View style={[styles.emptyMessage, {marginBottom: (this.deviceHeight - 120) / 4}]}>
-        {this.displayEmptyMessage()}
+        <TouchableOpacity onPress={() => this.setState({showModal: true})}>
+          {this.displayEmptyMessage()}
+        </TouchableOpacity>
       </View>
     )
   }
@@ -103,6 +119,7 @@ class Day extends React.Component {
       <ScrollView contentContainerStyle={styles.container}>
         <DateHeader deviceWidth={this.state.deviceWidth} label='TODAY' day={that.state.activeDay} />
         {this.buildDayEntries(dayEntries)}
+        {dayEntries.length !== 0 && !isToday(this.state.activeDay) && this.buildAddMore()}
       </ScrollView>
     )
   }
@@ -116,6 +133,21 @@ class Day extends React.Component {
     else if (direction === 'right') {
       this.setState({activeDay: moment(this.state.activeDay).add(1, 'days')})
     }
+  }
+
+  buildAddMore () {
+    return (
+      <View style={styles.addMore}>
+        <TouchableOpacity onPress={() => this.setState({showModal: true})}>
+          <View style={{alignSelf: 'stretch', flex: 1, justifyContent: 'center', flexDirection: 'row', alignItems: 'center', padding: 5}}>
+            <Image source={imageMap.addIcon} style={{height: 26, width: 26, backgroundColor: 'white', borderRadius: 13, borderWidth: 1, borderColor: 'white'}} />
+            <Text style={[styles.emptyMessageText, {paddingLeft: 10, paddingRight: 10, fontSize: 13}]}>
+              Click here to add something to the day's capsule.
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
   }
 
   render () {
@@ -132,6 +164,30 @@ class Day extends React.Component {
           </View>
         <DayHero nav day={this.state.activeDay} days={this.props.days} entries={this.props.entries} handleDayNavigation={this.handleDayNavigation.bind(this)} />
         {dayEntries.length === 0 ? this.buildEmptyContainer() : this.buildContainer(dayEntries)}
+        <Modal
+          visible={this.state.showModal}
+          animationType={'fade'}
+          transparent
+        >
+            <TouchableWithoutFeedback onPress={() => this.setState({showModal: !this.state.showModal})}>
+              <View style={styles.addLinkContainer}>
+                <View style={styles.addLinkInner}>
+                  {this.createAddFormLink('journal')}
+                  {this.createAddFormLink('milestone')}
+                  {this.createAddFormLink('view')}
+                  {this.createAddFormLink('experience')}
+                  {this.createAddFormLink('habit')}
+                  {this.createAddFormLink('progress')}
+                  {this.createAddFormLink('note')}
+                </View>
+                  <View style={styles.downIconContainer}>
+                    <TouchableOpacity onPress={() => this.setState({showModal: !this.state.showModal})}>
+                      <Image source={imageMap.down} style={styles.downArrow} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+            </TouchableWithoutFeedback>
+        </Modal>
       </View>
     )
   }
@@ -197,6 +253,39 @@ const styles = StyleSheet.create({
     color: 'lightgray',
     fontSize: 18
   },
+  addLinkContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 30,
+    paddingBottom: 55,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  addLinkInner: {
+    flex: 1,
+    backgroundColor: '#eee',
+    borderRadius: 10,
+    alignSelf: 'stretch',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    padding: 20,
+  },
+  downIconContainer: {
+    position: 'absolute',
+    bottom: 0,
+    height: 80,
+    width: 80,
+    backgroundColor: '#eee',
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  downArrow: {
+    width: 65,
+    height: 65,
+    resizeMode: 'contain'
+  },
   entryDurationContainer: {
     width: 100,
     alignItems: 'flex-start',
@@ -221,10 +310,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.1)'
   },
+  addMore: {
+    alignSelf: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.1)',
+  },
   emptyMessageText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'center',
   },
   entryDuration: {
@@ -236,9 +334,14 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: colors.main,
   },
-  inboxImage: {
-    height: 50,
+  addImage: {
+    height: 70,
     resizeMode: 'contain',
+    backgroundColor: 'white', 
+    borderRadius: 35,
+    borderWidth: 5,
+    borderColor: 'white',
+    width: 70,
   },
   inboxImageContainer: {
     alignItems: 'center',
@@ -271,6 +374,24 @@ const styles = StyleSheet.create({
     height: 100,
     width: 1000,
     alignSelf: 'stretch'
+  },
+  tabContainer: {
+    padding: 15,
+    paddingLeft: 10,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: 'lightgray',
+    borderRadius: 10,
+    alignSelf: 'stretch',
+    shadowOffset: { width: 2,  height: 2},
+    shadowColor: '#555',
+    shadowOpacity: 0.3
+  },
+  tabText: {
+    fontSize: 14,
+    color: '#555',
+    fontWeight: 'bold',
   },
   topBar: {
     paddingBottom: 5,

@@ -31,6 +31,7 @@ import {
   colors,
   typeMap
 } from '../utilities'
+import moment from 'moment'
 
 
 class EntryAdditionForm extends React.Component {
@@ -62,6 +63,7 @@ class EntryAdditionForm extends React.Component {
   }
 
   onButtonPress () {
+    console.log(moment(this.props.day).format('MMDDYYYY'))
     const tagsFromInput = this.extractTagsFromInput()
     const oldTags = Object.values(this.props.tags)
     const oldTagTitles = oldTags.map(tag => tag.text)
@@ -75,7 +77,7 @@ class EntryAdditionForm extends React.Component {
     let noteObj = {
       text: this.state.text.replace(/\r?\n|\r/, ''),
       description: this.state.description ? this.state.description.replace(/\r?\n|\r/, '') : '',
-      date: new Date().getTime(),
+      date: this.props.day ? moment(this.props.day).format('MMDDYYYY') : moment().format('MMDDYYYY'),
       tagIDs: allTagIDs,
       type: this.props.entryType,
     }
@@ -85,7 +87,7 @@ class EntryAdditionForm extends React.Component {
     if (this.state.project && this.props.entryType === 'progress' && this.state.project.hasProgress) this.props.ProjectUpdateProgress(this.state.project.uid, this.state.addedProgress)
     if (parseInt(this.state.addedProgress) > 0) noteObj.addedProgress = parseInt(this.state.addedProgress)
     this.props.AddEntry(noteObj, noteID)
-    this.props.DayEntryAdd(noteID, new Date())
+    this.props.DayEntryAdd(noteID, noteObj.date)
   }
 
   onChanged (text) {

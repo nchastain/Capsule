@@ -10,7 +10,6 @@ import { connect } from 'react-redux'
 class EntryListItem extends React.Component {
 
   handleDelete () {
-    console.log(this.props.entry)
     this.props.EntryDelete({uid: this.props.entry.uid})
   }
 
@@ -55,7 +54,7 @@ class EntryListItem extends React.Component {
 const dateOrNav = (hasDate, entry) => (
   hasDate
   ? <View style={{alignItems: 'flex-end', flex: 1}}>
-      <Text style={{color: colors.main, textAlign: 'right'}}>{moment(new Date(entry.date)).format('MMM DD')}</Text>
+      <Text style={{color: colors.main, textAlign: 'right'}}>{moment.unix(entry.date).format('MMM DD')}</Text>
     </View>
   : <View style={styles.entryNavContainer}>
       <Text style={styles.entryNavIcon}>></Text>

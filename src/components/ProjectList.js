@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, ListView, TouchableWithoutFeedback, Image } from 'react-native'
 import { ProjectsFetch, ProjectSelect } from '../actions'
-import { colors, borderlessImageMap, typeMap } from '../utilities'
+import { colors, borderlessImageMap, typeMap, hexToRGB } from '../utilities'
 
 class ProjectList extends React.Component {
   constructor () {
@@ -133,7 +133,7 @@ class ProjectList extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-        <View style={{flexDirection: 'column', width: 70, backgroundColor: colors.lightAccent, alignItems: 'center', justifyContent: 'space-between', paddingBottom: 60}}>
+        <View style={{flexDirection: 'column', width: 70, backgroundColor: hexToRGB(colors.main, 0.4), alignItems: 'center', justifyContent: 'space-between', paddingBottom: 60}}>
           <View style={{alignItems: 'center'}}>
             <View><Text style={{color: 'rgba(0,0,0,0.3)', fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 10, paddingTop: 10}}>TYPE</Text></View>
             <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'all'}, () => this.createDataSource(this.props))}>

@@ -7,10 +7,9 @@ import {
 import moment from 'moment'
 
 export const DayEntryAdd = (entryID, day) => {
-  const formattedDate = moment(day).format('MMDDYYYY')
   return (dispatch) => {
     // firebase.database().ref(`/users/${currentUser.uid}/entries`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/days/${formattedDate}/entries`).child(entryID)
+    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/days/${day}/entries`).child(entryID)
     .set(true)
   }
 }
