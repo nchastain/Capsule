@@ -2,7 +2,6 @@ import React from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { colors, getEntriesForDay, getImageForDay, imageMap, hexToRGB } from '../utilities'
 import { Actions } from 'react-native-router-flux'
-
 import moment from 'moment'
 
 class DayHero extends React.Component {
@@ -56,7 +55,7 @@ const styles = {
   dateText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 25,
   },
   entriesContainer: {
     marginTop: 2,

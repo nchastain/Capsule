@@ -127,7 +127,7 @@ class EntryDetail extends React.Component {
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', padding: 15, position: 'absolute', left: 0, right: 0, bottom: 50, alignSelf: 'stretch', justifyContent: 'space-between'}}>
             <View style={[styles.dateContainer, {flex: 1, alignItems: 'flex-start'}]}>
               <Text style={styles.date}>
-                {moment(new Date(this.props.entry.date)).format('MM/DD/YYYY')}
+                {moment.unix(this.props.entry.date).format('MM/DD/YYYY')}
               </Text>
             </View>
             <TouchableOpacity onPress={() => this.handleDelete()} style={{flex: 1, alignItems: 'flex-end'}}>

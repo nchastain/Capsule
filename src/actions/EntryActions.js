@@ -28,12 +28,11 @@ export const AddEntry = ({ text, description, date, tagIDs, type, projectID, add
   if (addedProgress) actionObj.payload.addedProgress = addedProgress
   let entryObj = actionObj.payload
   let newRef = firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${noteID}`)
-  console.log(moment(date).format('MMDDYYYY'))
   return (dispatch) => {
     newRef.set(entryObj)
     .then(() => {
       dispatch(actionObj)
-      Actions.Today()
+      Actions.Today({activeDay: moment.unix(date)})
     })
   }
 }

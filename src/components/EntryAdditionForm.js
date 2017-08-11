@@ -63,7 +63,6 @@ class EntryAdditionForm extends React.Component {
   }
 
   onButtonPress () {
-    console.log(moment(this.props.day).format('MMDDYYYY'))
     const tagsFromInput = this.extractTagsFromInput()
     const oldTags = Object.values(this.props.tags)
     const oldTagTitles = oldTags.map(tag => tag.text)
@@ -77,7 +76,7 @@ class EntryAdditionForm extends React.Component {
     let noteObj = {
       text: this.state.text.replace(/\r?\n|\r/, ''),
       description: this.state.description ? this.state.description.replace(/\r?\n|\r/, '') : '',
-      date: this.props.day ? moment(this.props.day).format('MMDDYYYY') : moment().format('MMDDYYYY'),
+      date: this.props.day ? moment(this.props.day).unix() : moment().unix(),
       tagIDs: allTagIDs,
       type: this.props.entryType,
     }
