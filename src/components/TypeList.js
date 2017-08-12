@@ -20,9 +20,18 @@ class TypeList extends React.Component {
     this.state = {searchTerm: ''}
   }
 
+  meetsSearchCriteria (entry) {
+    let hasMatchingTag, hasMatchingTitle
+    if (entry.tags) {
+      hasMatchingTag = Object.keys(entry.tags).filter(tag => entry.tags[tag].indexOf(this.state.searchTerm.toLowerCase()) !== -1).length > 0
+    }
+    hasMatchingTitle = entry.text.indexOf(this.state.searchTerm) !== -1
+    return hasMatchingTag || hasMatchingTitle
+  }
+
   displayEntries () {
     let typeEntries = this.props.entries.filter(entry => entry.type === this.props.entryType)
-    typeEntries = typeEntries.filter(entry => entry.text.indexOf(this.state.searchTerm) !== -1)
+    typeEntries = typeEntries.filter(entry => this.meetsSearchCriteria(entry))
     return (
       <View style={styles.innerContainer}>
         <ScrollView contentContainerStyle={styles.container}>

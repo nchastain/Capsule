@@ -35,6 +35,15 @@ class EntryList extends React.Component {
     this.props.TagSelect(tag)
   }
 
+  meetsSearchCriteria (entry) {
+    let hasMatchingTag, hasMatchingTitle
+    if (entry.tags) {
+      hasMatchingTag = Object.keys(entry.tags).filter(tag => entry.tags[tag].indexOf(this.state.searchTerm.toLowerCase()) !== -1).length > 0
+    }
+    hasMatchingTitle = entry.text.indexOf(this.state.searchTerm) !== -1
+    return hasMatchingTag || hasMatchingTitle
+  }
+
   displayEmptyMessage () {
     return (
       <View>
@@ -57,7 +66,7 @@ class EntryList extends React.Component {
   render () {
     let that = this
     let entries = this.props.entries ? Object.values(this.props.entries) : []
-    entries = entries.filter(entry => entry.text.indexOf(that.state.searchTerm) !== -1)
+    entries = entries.filter(entry => this.meetsSearchCriteria(entry))
     return (
       <View style={{flex: 1, alignSelf: 'stretch', backgroundColor: colors.main, paddingTop: 64}}>
         <Search 

@@ -44,6 +44,14 @@ class EntryListItem extends React.Component {
               </View>
               {dateOrNav(this.props.hasDate, this.props.entry)}
             </View>
+            {this.props.entry.tags 
+                    && Object.keys(this.props.entry.tags).length > 0
+                    && <View style={{paddingRight: 10, paddingBottom: 5, flexDirection: 'row', justifyContent: 'flex-end', alignSelf: 'stretch'}}>{Object.keys(this.props.entry.tags).map(tag => 
+                      <View style={{marginLeft: 10}} key={tag}>
+                        <Text style={{color: colors.main, fontSize: 10, fontWeight: 'bold'}}>{this.props.entry.tags[tag]}</Text>
+                      </View>
+                    )}</View>
+                  }
           </View>
         </TouchableOpacity>
       </Swipeable>
@@ -65,7 +73,7 @@ const styles = StyleSheet.create({
   dayEntryList: {
     backgroundColor: 'white',
     justifyContent: 'space-between',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     padding: 5,
     borderBottomWidth: 1,
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   entryNavContainer: {
-    flex: 1,
+    flex: 0.5,
     alignItems: 'flex-end'
   },
   entryNavIcon: {

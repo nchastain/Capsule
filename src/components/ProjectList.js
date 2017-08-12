@@ -21,6 +21,15 @@ class ProjectList extends React.Component {
     this.createDataSource(nextProps.projects)
   }
 
+  meetsSearchCriteria (project) {
+    let hasMatchingTag, hasMatchingTitle
+    if (project.tags) {
+      hasMatchingTag = Object.keys(project.tags).filter(tag => project.tags[tag].indexOf(this.state.searchTerm.toLowerCase()) !== -1).length > 0
+    }
+    hasMatchingTitle = project.title.indexOf(this.state.searchTerm) !== -1
+    return hasMatchingTag || hasMatchingTitle
+  }
+
   createDataSource (projects) {
     let filteredProjects = projects ? projects : []
     switch (this.state.activeStatus) {
@@ -33,7 +42,7 @@ class ProjectList extends React.Component {
       default:
         break
     }
-    filteredProjects = filteredProjects.filter(project => project.title.indexOf(this.state.searchTerm) !== -1)
+    filteredProjects = filteredProjects.filter(project => this.meetsSearchCriteria(project))
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
@@ -106,6 +115,16 @@ class ProjectList extends React.Component {
             </View>
             {project.hasProgress && <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedProgress}/{project.progressTarget} {project.progressUnits}</Text>}
           </View>
+          <View style={{paddingRight: 10, paddingBottom: 10, alignSelf: 'stretch', justifyContent: 'flex-end', flexDirection: 'row', flex: 1}}>
+            {project.tags
+              && Object.keys(project.tags).length > 0
+              && Object.keys(project.tags).map(tag => 
+                <View key={tag} style={{padding: 5, paddingLeft: 10, paddingRight: 10, borderRadius: 10, marginLeft: 5}}>
+                  <Text style={{color: colors.main, fontWeight: 'bold', fontSize: 10}}>{project.tags[tag]}</Text>
+                </View>
+              )
+            }
+          </View>
         </View>
       </TouchableOpacity>
     )
@@ -126,6 +145,7 @@ class ProjectList extends React.Component {
           afterSearch={() => Keyboard.dismiss()} 
           backgroundColor={colors.lightAccent}
           titleCancelColor={colors.main}
+          placeholder='Search'
         />
         <View style={{flexDirection: 'column', backgroundColor: hexToRGB(colors.main, 0.4), padding: 10, paddingTop: 5, alignItems: 'center', justifyContent: 'space-between'}}>
           <View style={{alignItems: 'center', flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'space-between'}}>
