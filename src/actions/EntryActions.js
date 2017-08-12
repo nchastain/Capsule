@@ -17,7 +17,9 @@ export const EntryUpdate = (entry, location) => {
       .set(entry)
       .then(() => {
         dispatch({ type: ENTRY_SAVE_SUCCESS })
-        location === 'today' ? Actions.Today({ type: 'reset' }) : Actions.EntryList({ type: 'reset'})
+        if (location !== 'no-redirect') {
+          location === 'today' ? Actions.Today({ type: 'reset' }) : Actions.EntryList({ type: 'reset'})
+        }
       })
   }
 }

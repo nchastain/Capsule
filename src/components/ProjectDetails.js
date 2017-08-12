@@ -3,14 +3,15 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Switch, Te
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { ProjectClear, ProjectComplete, ProjectUpdate, ProjectDelete, EntryDelete } from '../actions'
-import { secondsToString, colors, borderlessImageMap, typeMap, hexToRGB } from '../utilities'
+import { secondsToString, colors, borderlessImageMap, typeMap, hexToRGB, formatTags } from '../utilities'
 import moment from 'moment'
 import _ from 'lodash'
+import TagInput from 'react-native-tag-input'
 
 class ProjectDetails extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {complete: props.project.complete, title: props.project.title}
+    this.state = {complete: props.project.complete, title: props.project.title, tags: props.project.tags || []}
   }
 
   componentWillReceiveProps (nextProps) {
@@ -59,13 +60,35 @@ class ProjectDetails extends React.Component {
     }
   }
 
+  onChangeTags (tags) {
+    this.setState({ tags: formatTags(tags) }, () => {
+      this.props.ProjectUpdate(this.props.project.uid, 'tags', this.state.tags)
+    })
+  }
+
   render () {
+    const inputProps = {
+      keyboardType: 'default',
+      placeholder: (this.state.tags && this.state.tags.length > 0) ? '' : 'Enter tags separated by spaces',
+    }
     const entriesArr = Object.values(this.props.entries) || []
     const projectEntries = entriesArr.filter(entry => entry.projectID === this.props.project.uid)
     const formattedHoursLogged = this.props.progressCurrent === 0 ? 0 : parseFloat(this.props.project.progressCurrent.toFixed(1))
     const createReadableDate = (date) => moment(new Date(date)).format('MM/DD/YYYY')
     return (
       <View style={styles.container}>
+                                  <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start'}}>
+        <View style={{height: 60, alignSelf: 'stretch', paddingLeft: 10, paddingRight: 30, paddingTop: 10, alignItems: 'center', justifyContent: 'flex-start', flex: 0.5}}>
+            <TagInput
+              value={this.state.tags}
+              onChange={this.onChangeTags.bind(this)}
+              tagColor={colors.lightAccent}
+              tagTextColor={colors.main}
+              inputProps={inputProps}
+              numberOfLines={2}
+            />
+          </View>
+      </View>
         <View style={{alignSelf: 'stretch', paddingBottom: 10, paddingTop: 20}}>
           {this.props.project.hasProgress && <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.progressTarget} {this.props.project.progressUnits}</Text>}
             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
@@ -100,11 +123,6 @@ class ProjectDetails extends React.Component {
         ).reverse()}
         <View style={{height: 40}} />
       </ScrollView>
-      <View style={{flexDirection: 'row', backgroundColor: hexToRGB(colors.lightAccent, 0.8), padding: 15, position: 'absolute', left: 0, right: 0, bottom: 110, alignSelf: 'stretch', justifyContent: 'flex-start'}}>
-        {that.props.project.tags && that.props.project.tags.map(tag => <View key={tag} style={{backgroundColor: colors.main, padding: 5, borderRadius: 5, marginRight: 5}}>
-          <Text style={{color: 'white'}}>{tag}</Text>
-        </View>)}
-      </View>
       <View style={{flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', padding: 15, position: 'absolute', left: 0, right: 0, bottom: 50, alignSelf: 'stretch', justifyContent: 'space-between'}}>
         <TouchableOpacity onPress={() => this.handleDelete(projectEntries)} style={{flex: 1, alignItems: 'flex-end'}}>
           <View style={[styles.entryTypeButton, {}]}>
@@ -119,12 +137,15 @@ class ProjectDetails extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 60,
+    flex: 0.5, 
+    alignSelf: 'stretch',
+    paddingTop: 0,
+    marginTop: 64,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: colors.main,
-    paddingBottom: 50,
+    backgroundColor: colors.main, 
+
+    paddingBottom: 0,
   },
   statusButton: {
     padding: 10,
@@ -162,7 +183,6 @@ const styles = StyleSheet.create({
   projectEntriesContainer: {
     paddingLeft: 10,
     paddingRight: 10,
-    paddingTop: 10,
     alignSelf: 'stretch',
     backgroundColor: 'rgba(0,0,0,0.5)'
   },

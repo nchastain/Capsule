@@ -2,14 +2,15 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Text, View, Keyboard, TouchableWithoutFeedback, TouchableOpacity, TextInput, StyleSheet, Image, ListView } from 'react-native'
 import { EntryUpdate, EntrySave, EntryDelete, ProjectUpdateProgress } from '../actions'
-import { colors, borderlessImageMap, darkColorMap, imageMap, typeMap, getProjectByID, hexToRGB } from '../utilities'
+import { colors, borderlessImageMap, darkColorMap, imageMap, typeMap, getProjectByID, hexToRGB, formatTags } from '../utilities'
 import moment from 'moment'
+import TagInput from 'react-native-tag-input'
 import _ from 'lodash'
 
 class EntryDetail extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {edited: false, text: props.entry.text, description: props.entry.description, projectID: props.entry.projectID}
+    this.state = {edited: false, text: props.entry.text, description: props.entry.description, projectID: props.entry.projectID, tags: props.entry.tags || []}
     if (this.props.entry.type === 'progress') this.state.addedProgress = props.entry.addedProgress
   }
 
@@ -42,8 +43,14 @@ class EntryDetail extends React.Component {
     this.props.EntryDelete({uid: this.props.entry.uid}, this.props.location)
   }
 
-    handleSelect (project) {
+  handleSelect (project) {
     this.setState({ project, openModal: false })
+  }
+
+  onChangeTags (tags) {
+    this.setState({ tags: formatTags(tags) }, () => {
+      this.props.EntryUpdate({...this.props.entry, tags: this.state.tags}, 'no-redirect')
+    })
   }
 
   renderRow (project) {
@@ -68,6 +75,10 @@ class EntryDetail extends React.Component {
   }
 
   render () {
+    const inputProps = {
+      keyboardType: 'default',
+      placeholder: (this.state.tags && this.state.tags.length > 0) ? '' : 'Enter tags separated by spaces',
+    }
     let project
     let that = this
     if (this.props.entry.projectID) project = getProjectByID(this.props.entry.projectID, this.props.projects)
@@ -98,6 +109,18 @@ class EntryDetail extends React.Component {
                   </TouchableOpacity>}
                 </View>
             </View>
+                    <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start'}}>
+        <View style={{height: 50, alignSelf: 'stretch', paddingLeft: 10, paddingRight: 30, paddingTop: 10, alignItems: 'center', justifyContent: 'flex-start', flex: 0.5}}>
+            <TagInput
+              value={this.state.tags}
+              onChange={this.onChangeTags.bind(this)}
+              tagColor={colors.lightAccent}
+              tagTextColor={colors.main}
+              inputProps={inputProps}
+              numberOfLines={2}
+            />
+          </View>
+      </View>
             {this.state.openModal &&
             <View style={{flex: 1, alignSelf: 'stretch', flex: 8, paddingLeft: 10, borderBottomWidth: 5, borderColor: colors.main, paddingRight: 10, backgroundColor: '#eee'}}>
               <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({project: null, openModal: false})}>
@@ -121,12 +144,11 @@ class EntryDetail extends React.Component {
               </View>
             </View>}
           <View style={styles.entryTextContainer}>
-            <View style={{alignItems: 'flex-start'}}><Image source={imageMap[this.props.entry.type]} style={{width: 40, height: 40, marginBottom: 5, marginTop: 5, marginLeft: 5}} /></View>
-            <TextInput editable style={styles.entryText} multiline value={this.state.text} placeholder={'Enter text here'} onChangeText={(val) => this.handleTextChange(val, 'text')} />
+            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+              <Image source={imageMap[this.props.entry.type]} style={{width: 40, height: 40, marginBottom: 5, marginRight: 5}} />
+              <TextInput editable style={[styles.entryText, {flex: 1}]} multiline value={this.state.text} placeholder={'Enter text here'} onChangeText={(val) => this.handleTextChange(val, 'text')} />
+            </View>
             <TextInput editable style={styles.entryDescription} multiline value={this.state.description} placeholder={'Enter additional details here'} onChangeText={(val) => this.handleTextChange(val, 'description')} />
-          </View>
-          <View style={{flexDirection: 'row', backgroundColor: hexToRGB(colors.lightAccent, 0.8), padding: 15, position: 'absolute', left: 0, right: 0, bottom: 110, alignSelf: 'stretch', justifyContent: 'flex-start'}}>
-            {that.props.entry.tags && that.props.entry.tags.map(tag => <View key={tag} style={{backgroundColor: colors.main, padding: 5, borderRadius: 5, marginRight: 5}}><Text style={{color: 'white'}}>{tag}</Text></View>)}
           </View>
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', padding: 15, position: 'absolute', left: 0, right: 0, bottom: 50, alignSelf: 'stretch', justifyContent: 'space-between'}}>
             <View style={[styles.dateContainer, {flex: 1, alignItems: 'flex-start'}]}>
