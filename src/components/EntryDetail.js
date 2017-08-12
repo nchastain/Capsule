@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Text, View, Keyboard, TouchableWithoutFeedback, TouchableOpacity, TextInput, StyleSheet, Image, ListView } from 'react-native'
 import { EntryUpdate, EntrySave, EntryDelete, ProjectUpdateProgress } from '../actions'
-import { colors, borderlessImageMap, darkColorMap, imageMap, typeMap, getProjectByID } from '../utilities'
+import { colors, borderlessImageMap, darkColorMap, imageMap, typeMap, getProjectByID, hexToRGB } from '../utilities'
 import moment from 'moment'
 import _ from 'lodash'
 
@@ -69,6 +69,7 @@ class EntryDetail extends React.Component {
 
   render () {
     let project
+    let that = this
     if (this.props.entry.projectID) project = getProjectByID(this.props.entry.projectID, this.props.projects)
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -123,6 +124,9 @@ class EntryDetail extends React.Component {
             <View style={{alignItems: 'flex-start'}}><Image source={imageMap[this.props.entry.type]} style={{width: 40, height: 40, marginBottom: 5, marginTop: 5, marginLeft: 5}} /></View>
             <TextInput editable style={styles.entryText} multiline value={this.state.text} placeholder={'Enter text here'} onChangeText={(val) => this.handleTextChange(val, 'text')} />
             <TextInput editable style={styles.entryDescription} multiline value={this.state.description} placeholder={'Enter additional details here'} onChangeText={(val) => this.handleTextChange(val, 'description')} />
+          </View>
+          <View style={{flexDirection: 'row', backgroundColor: hexToRGB(colors.lightAccent, 0.8), padding: 15, position: 'absolute', left: 0, right: 0, bottom: 110, alignSelf: 'stretch', justifyContent: 'flex-start'}}>
+            {that.props.entry.tags && that.props.entry.tags.map(tag => <View key={tag} style={{backgroundColor: colors.main, padding: 5, borderRadius: 5, marginRight: 5}}><Text style={{color: 'white'}}>{tag}</Text></View>)}
           </View>
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', padding: 15, position: 'absolute', left: 0, right: 0, bottom: 50, alignSelf: 'stretch', justifyContent: 'space-between'}}>
             <View style={[styles.dateContainer, {flex: 1, alignItems: 'flex-start'}]}>

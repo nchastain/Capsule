@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Switch, Te
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { ProjectClear, ProjectComplete, ProjectUpdate, ProjectDelete, EntryDelete } from '../actions'
-import { secondsToString, colors, borderlessImageMap, typeMap } from '../utilities'
+import { secondsToString, colors, borderlessImageMap, typeMap, hexToRGB } from '../utilities'
 import moment from 'moment'
 import _ from 'lodash'
 
@@ -86,28 +86,33 @@ class ProjectDetails extends React.Component {
           {this.buildCompleteButton()}
         </View>
         </View>}
-        <ScrollView style={styles.projectEntriesContainer} >{projectEntries.map((entry, idx) => 
-          <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.ProjectEntryDetail({entry, location: 'project'})} key={idx}>
-            <View style={{borderRadius: 10, flexDirection: 'row', marginBottom: 10, padding: 20, paddingLeft: 10, paddingRight: 15, backgroundColor: 'white', alignItems: 'center'}}>
-              <View style={{marginRight: 10, width: 30}}><Image source={borderlessImageMap[entry.type]} style={{width: 30, height: 30}} /></View>
-              <View style={[styles.projectEntry, styles.descriptionContainer, {flex: 2}]}>
-                <Text style={[(!entry.text || entry.text.length === 0) && {color: 'rgba(0,0,0,0.3)'}, {fontSize: 12, fontWeight: 'bold', color: 'rgba(0,0,0,0.7)'}]}>{entry.text && entry.text.length > 0 ? entry.text : '(No description)'}</Text>
-                {entry.seconds > 0 && <Text style={styles.timeString}>{secondsToString(entry.seconds)}</Text>}
-              </View>
-              <View style={[styles.projectEntry, styles.dateStringContainer, {alignItems: 'flex-end', width: 50}]}><Text style={styles.timeString}>{createReadableDate(entry.date)}</Text></View>
+      <ScrollView style={styles.projectEntriesContainer} >{projectEntries.map((entry, idx) => 
+        <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.ProjectEntryDetail({entry, location: 'project'})} key={idx}>
+          <View style={{borderRadius: 10, flexDirection: 'row', marginBottom: 10, padding: 20, paddingLeft: 10, paddingRight: 15, backgroundColor: 'white', alignItems: 'center'}}>
+            <View style={{marginRight: 10, width: 30}}><Image source={borderlessImageMap[entry.type]} style={{width: 30, height: 30}} /></View>
+            <View style={[styles.projectEntry, styles.descriptionContainer, {flex: 2}]}>
+              <Text style={[(!entry.text || entry.text.length === 0) && {color: 'rgba(0,0,0,0.3)'}, {fontSize: 12, fontWeight: 'bold', color: 'rgba(0,0,0,0.7)'}]}>{entry.text && entry.text.length > 0 ? entry.text : '(No description)'}</Text>
+              {entry.seconds > 0 && <Text style={styles.timeString}>{secondsToString(entry.seconds)}</Text>}
             </View>
-          </TouchableOpacity>
-          ).reverse()}
-          <View style={{height: 40}} />
-        </ScrollView>
-        <View style={{flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', padding: 15, position: 'absolute', left: 0, right: 0, bottom: 50, alignSelf: 'stretch', justifyContent: 'space-between'}}>
-            <TouchableOpacity onPress={() => this.handleDelete(projectEntries)} style={{flex: 1, alignItems: 'flex-end'}}>
-              <View style={[styles.entryTypeButton, {}]}>
-                <Image source={borderlessImageMap.trash6} style={[styles.entryTypeImage, {width: 30, height: 33}]} />
-              </View>
-            </TouchableOpacity>
+            <View style={[styles.projectEntry, styles.dateStringContainer, {alignItems: 'flex-end', width: 50}]}><Text style={styles.timeString}>{createReadableDate(entry.date)}</Text></View>
           </View>
+        </TouchableOpacity>
+        ).reverse()}
+        <View style={{height: 40}} />
+      </ScrollView>
+      <View style={{flexDirection: 'row', backgroundColor: hexToRGB(colors.lightAccent, 0.8), padding: 15, position: 'absolute', left: 0, right: 0, bottom: 110, alignSelf: 'stretch', justifyContent: 'flex-start'}}>
+        {that.props.project.tags && that.props.project.tags.map(tag => <View key={tag} style={{backgroundColor: colors.main, padding: 5, borderRadius: 5, marginRight: 5}}>
+          <Text style={{color: 'white'}}>{tag}</Text>
+        </View>)}
       </View>
+      <View style={{flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', padding: 15, position: 'absolute', left: 0, right: 0, bottom: 50, alignSelf: 'stretch', justifyContent: 'space-between'}}>
+        <TouchableOpacity onPress={() => this.handleDelete(projectEntries)} style={{flex: 1, alignItems: 'flex-end'}}>
+          <View style={[styles.entryTypeButton, {}]}>
+            <Image source={borderlessImageMap.trash6} style={[styles.entryTypeImage, {width: 30, height: 33}]} />
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
     )
   }
 }

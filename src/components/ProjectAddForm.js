@@ -12,7 +12,7 @@ import {
 import { ProjectAdd, ProjectClear } from '../actions'
 import TagInput from 'react-native-tag-input'
 import { connect } from 'react-redux'
-import { colors } from '../utilities'
+import { colors, hexToRGB, formatTags } from '../utilities'
 
 class ProjectAddForm extends React.Component {
   constructor () {
@@ -31,9 +31,20 @@ class ProjectAddForm extends React.Component {
     this.props.ProjectClear()
   }
 
+  formatTags (tags) {
+    return tags.map(function(tag) {
+      if (tag.indexOf('#') === -1) {
+        return tag.split('').shift('#').join('')
+      }
+      return tag
+    })
+  }
+
   handleAddProject () {
+    const formattedTags = 
     this.props.ProjectAdd({
       title: this.state.title,
+      tags: formatTags(this.state.tags),
       hasProgress: this.state.hasProgress,
       progressCurrent: this.state.hasProgress ? this.state.progressCurrent : null,
       progressTarget: this.state.hasProgress ? this.state.progressTarget : null,
@@ -78,13 +89,13 @@ class ProjectAddForm extends React.Component {
   }
 
   onChangeTags (tags) {
-    this.setState({ tags })
+    this.setState({ tags: formatTags(tags) })
   }
 
   render () {
     const inputProps = {
       keyboardType: 'default',
-      placeholder: 'email',
+      placeholder: 'Enter tags separated by spaces',
       autoFocus: true,
     }
     return (
@@ -109,14 +120,17 @@ class ProjectAddForm extends React.Component {
             <Switch value={this.state.hasProgress} style={{backgroundColor: 'white', borderRadius: 20}} onValueChange={() => this.setState({hasProgress: !this.state.hasProgress})} onTintColor={colors.lightAccent} />
           </View>
           {this.state.hasProgress && this.buildProgressContainer()}
-          <TagInput
-            value={this.state.tags}
-            onChange={this.onChangeTags.bind(this)}
-            tagColor="blue"
-            tagTextColor="white"
-            inputProps={inputProps}
-            numberOfLines={2}
-          />
+          <View style={{height: 100, alignSelf: 'stretch', paddingLeft: 30, paddingRight: 30, alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={{fontWeight: 'bold', color: hexToRGB('#FFFFFF', 0.5)}}>Tags</Text>
+            <TagInput
+              value={this.state.tags}
+              onChange={this.onChangeTags.bind(this)}
+              tagColor={colors.lightAccent}
+              tagTextColor={colors.main}
+              inputProps={inputProps}
+              numberOfLines={2}
+            />
+          </View>
           <View style={styles.addProjectButton}>
             <Text
               style={styles.addText}

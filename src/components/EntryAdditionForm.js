@@ -29,15 +29,18 @@ import {
   imageMap,
   borderlessImageMap,
   colors,
-  typeMap
+  typeMap,
+  hexToRGB,
+  formatTags
 } from '../utilities'
+import TagInput from 'react-native-tag-input'
 import moment from 'moment'
 
 
 class EntryAdditionForm extends React.Component {
   constructor (props) {
     super()
-    this.state = {text: '', description: '', ran: false, newTags: false, project: null, openModal: false}
+    this.state = {text: '', description: '', ran: false, newTags: false, project: null, openModal: false, tags: []}
   }
 
   componentWillMount () {
@@ -62,8 +65,18 @@ class EntryAdditionForm extends React.Component {
     return newTags ? newTags.map(tag => tag.replace('#', '')) : []
   }
 
+  onChangeTags (tags) {
+    this.setState({ tags: formatTags(tags) })
+  }
+
   onButtonPress () {
     const tagsFromInput = this.extractTagsFromInput()
+    const tags = this.state.tags.map(function(tag) {
+      if (tag.indexOf('#') === -1) {
+        return tag.split('').shift('#').join('')
+      }
+      return tag
+    })
     const oldTags = Object.values(this.props.tags)
     const oldTagTitles = oldTags.map(tag => tag.text)
     const tagMatches = oldTags.filter(tag => tagsFromInput.indexOf(tag.text) !== -1)
@@ -79,6 +92,7 @@ class EntryAdditionForm extends React.Component {
       date: this.props.day ? moment(this.props.day).unix() : moment().unix(),
       tagIDs: allTagIDs,
       type: this.props.entryType,
+      tags: formatTags(this.state.tags)
     }
     let noteID = uuid.v4()
     noteObj.projectID = this.state.project ? this.state.project.uid : null
@@ -168,6 +182,12 @@ class EntryAdditionForm extends React.Component {
       }
     })
 
+    const inputProps = {
+      keyboardType: 'default',
+      placeholder: 'Enter tags separated by spaces',
+      autoFocus: true,
+    }
+
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView style={{backgroundColor: colors.main}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
@@ -225,7 +245,7 @@ class EntryAdditionForm extends React.Component {
                 onChangeText={value => this.setState({text: value})}
               ><Text>{parts}</Text></TextInput>
             </View>
-            <View style={{alignSelf: 'stretch', padding: 20, paddingTop: 0, height: 250}}>
+            <View style={{alignSelf: 'stretch', padding: 20, paddingTop: 0, height: 150}}>
               <TextInput
                 placeholder={`Additional details (optional)`}
                 numberOfLines={10}
@@ -234,6 +254,17 @@ class EntryAdditionForm extends React.Component {
                 onChangeText={value => this.setState({description: value})}
               ><Text>{this.state.description}</Text></TextInput>
             </View>
+            <View style={{height: 100, alignSelf: 'stretch', paddingLeft: 30, paddingRight: 30, alignItems: 'center', justifyContent: 'center'}}>
+              <Text style={{fontWeight: 'bold', color: hexToRGB('#FFFFFF', 0.5)}}>Tags</Text>
+              <TagInput
+                value={this.state.tags}
+                onChange={this.onChangeTags.bind(this)}
+                tagColor={colors.lightAccent}
+                tagTextColor={colors.main}
+                inputProps={inputProps}
+                numberOfLines={2}
+              />
+          </View>
         </ScrollView>
       </TouchableWithoutFeedback>
     )

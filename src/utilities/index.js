@@ -82,6 +82,18 @@ export const getEntriesForDay = (days, entries, day) => {
   return entriesArr.length > 0 ? entriesArr.filter(entry => trueDayEntries.indexOf(entry.uid) !== -1) : []
 }
 
+export const formatTags = (tags) => {
+  return tags.map(function(tag) {
+    if (tag.indexOf('#') === -1) {
+      let newTag = tag
+      newTag = newTag.split('')
+      newTag.unshift('#')
+      return newTag.join('')
+    }
+    return tag
+  })
+}
+
 export const imageMap = {
   note: require('.././assets/note.png'),
   experience: require('.././assets/experience.png'),
