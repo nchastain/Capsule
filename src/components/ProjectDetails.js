@@ -69,9 +69,6 @@ class ProjectDetails extends React.Component {
         <View style={{alignSelf: 'stretch', paddingBottom: 10, paddingTop: 20}}>
           {this.props.project.hasProgress && <Text style={[styles.timeStyle, {color: colors.lightAccent}]}>{formattedHoursLogged}/{this.props.project.progressTarget} {this.props.project.progressUnits}</Text>}
             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={[styles.projectTitle, {textAlign: 'right', width: 30, paddingLeft: 10}]}>
-              {this.props.project.type ? typeMap[this.props.project.type] : typeMap.enterprise }
-            </Text>
             <View style={{flex: 1}}>
             <TextInput
               editable

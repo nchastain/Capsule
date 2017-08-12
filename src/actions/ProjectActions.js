@@ -10,7 +10,7 @@ import {
   PROJECT_COMPLETE,
 } from './types'
 
-export const ProjectAdd = ({ title, type, hasProgress, progressCurrent, progressTarget, progressUnits }) => {
+export const ProjectAdd = ({ title, hasProgress, progressCurrent, progressTarget, progressUnits }) => {
   // const { currentUser } = firebase.auth()
   let currentDate = new Date()
   let parsedProgressTarget = parseInt(progressTarget) || 0
@@ -20,7 +20,6 @@ export const ProjectAdd = ({ title, type, hasProgress, progressCurrent, progress
     firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects`)
       .push({ 
         title,
-        type,
         time: currentDate.getTime(),
         progressCurrent: parsedProgressCurrent,
         progressTarget: parsedProgressTarget,

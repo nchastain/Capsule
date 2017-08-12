@@ -1,55 +1,44 @@
 import React from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { View, Text, TouchableOpacity, ListView, TouchableWithoutFeedback, Image } from 'react-native'
+import { View, Text, TouchableOpacity, ListView, TouchableWithoutFeedback, Image, Keyboard } from 'react-native'
 import { ProjectsFetch, ProjectSelect } from '../actions'
 import { colors, borderlessImageMap, typeMap, hexToRGB } from '../utilities'
+import Search from 'react-native-search-box'
 
 class ProjectList extends React.Component {
   constructor () {
     super()
-    this.state = {activeStatus: 'all', activeType: 'all'}
+    this.state = {activeStatus: 'all', searchTerm: '', projectCount: 0}
   }
+
   componentWillMount () {
     this.props.ProjectsFetch()
-    this.createDataSource(this.props)
+    if (this.props.projects) this.createDataSource(this.props.projects)
   }
 
   componentWillReceiveProps (nextProps) {
-    this.createDataSource(nextProps)
+    this.createDataSource(nextProps.projects)
   }
 
-  createDataSource ({ projects }) {
-    let filteredProjects = projects
+  createDataSource (projects) {
+    let filteredProjects = projects ? projects : []
     switch (this.state.activeStatus) {
       case 'current':
-        filteredProjects = projects.filter(project => !project.complete)
+        filteredProjects = filteredProjects.filter(project => !project.complete)
         break
       case 'complete':
-        filteredProjects = projects.filter(project => project.complete)
+        filteredProjects = filteredProjects.filter(project => project.complete)
         break
       default:
         break
     }
-
-    switch (this.state.activeType) {
-      case 'education':
-        filteredProjects = filteredProjects.filter(project => project.type === 'education') || []
-        break
-      case 'art':
-        filteredProjects = filteredProjects.filter(project => project.type === 'art') || []
-        break
-      case 'enterprise':
-        filteredProjects = filteredProjects.filter(project => project.type === 'enterprise') || []
-        break
-      default:
-        break
-    }
-
+    filteredProjects = filteredProjects.filter(project => project.title.indexOf(this.state.searchTerm) !== -1)
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
-    this.setState({dataSource: ds.cloneWithRows(filteredProjects.sort((a, b) => b.time - a.time))})
+
+    this.setState({projectCount: filteredProjects.length, dataSource: ds.cloneWithRows(filteredProjects.sort((a, b) => b.time - a.time))})
   }
 
   handleSelect (project) {
@@ -113,7 +102,6 @@ class ProjectList extends React.Component {
           <View style={{marginLeft: 10, marginRight: 10}}>{project.hasProgress && this.renderProgressBar(project)}</View>
           <View style={{padding: 10, backgroundColor: 'white', marginLeft: 10, marginRight: 10, paddingBottom: 30}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={{alignItems: 'center', marginTop: -4, paddingRight: 4, width: 25}}><Text>{project.type ? typeMap[project.type] : typeMap['enterprise']}</Text></View>
               <View style={{flex: 1}}><Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text></View>
             </View>
             {project.hasProgress && <Text style={{color: colors.lightAccent, fontWeight: 'bold', fontSize: 14}}>{formattedProgress}/{project.progressTarget} {project.progressUnits}</Text>}
@@ -123,59 +111,52 @@ class ProjectList extends React.Component {
     )
   }
 
-  checkActiveType (typeName, status) {
-    const statusOrType = status ? this.state.activeStatus : this.state.activeType
-    return statusOrType === typeName
-    ? status ? {borderColor: colors.main, backgroundColor: 'white', borderWidth: 5} : {borderColor: colors.main, borderWidth: 5, borderRadius: 25, backgroundColor: 'white'}
-    : {}
+  checkActiveType (status) {
+    return this.state.activeStatus === status ? {backgroundColor: colors.main, borderRadius: 10} : {backgroundColor: 'transparent', borderRadius: 10}
   }
 
   render () {
+    let projects = []
+    if (this.props.projects) projects = this.props.projects
     return (
       <View style={styles.container}>
-        <View style={{flexDirection: 'column', width: 70, backgroundColor: hexToRGB(colors.main, 0.4), alignItems: 'center', justifyContent: 'space-between', paddingBottom: 60}}>
-          <View style={{alignItems: 'center'}}>
-            <View><Text style={{color: 'rgba(0,0,0,0.3)', fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 10, paddingTop: 10}}>TYPE</Text></View>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'all'}, () => this.createDataSource(this.props))}>
-              <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('all')]}>
-                <Image source={borderlessImageMap.allstatus} style={{height: 8, resizeMode: 'contain'}} />
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'art'}, () => this.createDataSource(this.props))}>
-              <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('art')]}>
-                <Text style={{fontSize: 15, textAlign: 'center'}}>🎨</Text>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'education'}, () => this.createDataSource(this.props))}>
-              <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('education')]}>
-                <Text style={{fontSize: 15, textAlign: 'center'}}>📚</Text>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'enterprise'}, () => this.createDataSource(this.props))}>
-              <View style={[{width: 50, height: 50, marginBottom: 0, alignItems: 'center', justifyContent: 'center', overflow: 'hidden'}, this.checkActiveType('enterprise')]}>
-                <Text style={{fontSize: 15, textAlign: 'center', marginTop: -5, marginRight: -2}}>💼</Text>
-              </View>
-            </TouchableWithoutFeedback>
+        <Search 
+          ref='search_box' 
+          onChangeText={(val) => this.setState({searchTerm: val}, () => this.createDataSource(projects))} 
+          afterSearch={() => Keyboard.dismiss()} 
+          backgroundColor={colors.lightAccent}
+          titleCancelColor={colors.main}
+        />
+        <View style={{flexDirection: 'column', backgroundColor: hexToRGB(colors.main, 0.4), padding: 10, paddingTop: 5, alignItems: 'center', justifyContent: 'space-between'}}>
+          <View style={{alignItems: 'center', flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'space-between'}}>
+            <View style={{flexDirection: 'row'}}>
+              <TouchableWithoutFeedback onPress={() => this.setState({activeStatus: 'all'}, () => this.createDataSource(projects))}>
+                <View style={styles.filterContainer}>
+                  <View style={[{alignItems: 'center', justifyContent: 'center', padding: 5}, this.checkActiveType('all')]}>
+                    <Text style={this.state.activeStatus === 'all' ? styles.activeStatusText: styles.statusText}>all</Text>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => this.setState({activeStatus: 'current', activeType: this.state.activeType}, () => this.createDataSource(projects))}>
+                <View style={styles.filterContainer}>
+                  <View style={[{alignItems: 'center', justifyContent: 'center', padding: 5}, this.checkActiveType('current')]}>
+                    <Text style={this.state.activeStatus === 'current' ? styles.activeStatusText : styles.statusText}>current</Text>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => this.setState({activeStatus: 'complete', activeType: this.state.activeType}, () => this.createDataSource(projects))}>
+                <View style={styles.filterContainer}>
+                  <View style={[{alignItems: 'center', justifyContent: 'center', padding: 5}, this.checkActiveType('complete')]}>
+                    <Text style={this.state.activeStatus === 'complete' ? styles.activeStatusText : styles.statusText}>complete</Text>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+            {this.state.projectCount > 4 && <View style={{alignItems: 'center', justifyContent: 'center', paddingRight: 5}}>
+              <Text style={{textAlign: 'right', color: colors.main, fontWeight: 'bold'}}>{this.state.projectCount} project{this.state.projectCount === 1 ? '' : 's'}</Text>
+            </View>}
           </View>
 
-          <View style={{alignItems: 'center'}}>
-            <View><Text style={{color: 'rgba(0,0,0,0.3)', fontWeight: 'bold', fontSize: 12, textAlign: 'center', paddingBottom: 10}}>STATUS</Text></View>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeStatus: 'all', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
-              <View style={styles.filterContainer}>
-                <View style={[{alignItems: 'center', justifyContent: 'center', borderRadius: 25, height: 50, width: 50}, this.checkActiveType('all', true)]}><Image source={borderlessImageMap.allstatus} style={[{height: 8, resizeMode: 'contain'}]} /></View>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeStatus: 'current', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
-              <View style={styles.filterContainer}>
-                <View style={[{alignItems: 'center', justifyContent: 'center', borderRadius: 25, height: 50, width: 50}, this.checkActiveType('current', true)]}><Image source={borderlessImageMap.nowstatus} style={[{height: 8, resizeMode: 'contain'}]} /></View>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => this.setState({activeStatus: 'complete', activeType: this.state.activeType}, () => this.createDataSource(this.props))}>
-              <View style={styles.filterContainer}>
-                <View style={[{alignItems: 'center', justifyContent: 'center', borderRadius: 25, height: 50, width: 50}, this.checkActiveType('complete', true)]}><Image source={borderlessImageMap.donestatus} style={[{height: 8, resizeMode: 'contain'}]} /></View>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
         </View>
         <View style={{flexDirection: 'column', flex: 1}}>
           <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{paddingBottom: 70, backgroundColor: 'white', paddingTop: 20}} />
@@ -195,6 +176,18 @@ const styles = {
     padding: 10,
     backgroundColor: 'white',
   },
+  statusText: {
+    fontWeight: 'bold',
+    paddingRight: 5,
+    paddingLeft: 5,
+    color: colors.main,
+  },
+  activeStatusText: {
+    color: 'white',
+    fontWeight: 'bold',
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
   filterContainer: {
     alignItems: 'center',
   },
@@ -204,7 +197,7 @@ const styles = {
     paddingRight: 10,
     borderBottomWidth: 1,
     borderColor: '#eee',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -307,7 +300,7 @@ const styles = {
     flex: 1,
     marginTop: 64,
     backgroundColor: 'white',
-    flexDirection: 'row',
+    flexDirection: 'column',
   }
 }
 

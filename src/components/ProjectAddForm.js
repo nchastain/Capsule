@@ -10,6 +10,7 @@ import {
   Dimensions
 } from 'react-native'
 import { ProjectAdd, ProjectClear } from '../actions'
+import TagInput from 'react-native-tag-input'
 import { connect } from 'react-redux'
 import { colors } from '../utilities'
 
@@ -18,11 +19,11 @@ class ProjectAddForm extends React.Component {
     super()
     this.state = {
       title: '',
-      activeType: 'enterprise',
       hasProgress: true,
       progressCurrent: '0',
       progressTarget: '100',
-      progressUnits: 'hours'
+      progressUnits: 'hours',
+      tags: []
     }
   }
 
@@ -33,18 +34,11 @@ class ProjectAddForm extends React.Component {
   handleAddProject () {
     this.props.ProjectAdd({
       title: this.state.title,
-      type: this.state.activeType,
       hasProgress: this.state.hasProgress,
       progressCurrent: this.state.hasProgress ? this.state.progressCurrent : null,
       progressTarget: this.state.hasProgress ? this.state.progressTarget : null,
       progressUnits: this.state.hasProgress ? this.state.progressUnits : null
     })
-  }
-
-  checkActiveType (typeName) {
-    return this.state.activeType === typeName
-    ? {borderColor: 'white', borderWidth: 5, borderRadius: 25, backgroundColor: 'rgba(0,0,0,0.5)'}
-    : {}
   }
 
   buildProgressContainer () {
@@ -83,7 +77,16 @@ class ProjectAddForm extends React.Component {
     }
   }
 
+  onChangeTags (tags) {
+    this.setState({ tags })
+  }
+
   render () {
+    const inputProps = {
+      keyboardType: 'default',
+      placeholder: 'email',
+      autoFocus: true,
+    }
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
@@ -106,26 +109,14 @@ class ProjectAddForm extends React.Component {
             <Switch value={this.state.hasProgress} style={{backgroundColor: 'white', borderRadius: 20}} onValueChange={() => this.setState({hasProgress: !this.state.hasProgress})} onTintColor={colors.lightAccent} />
           </View>
           {this.state.hasProgress && this.buildProgressContainer()}
-          <View style={{flexDirection: 'row', marginLeft: 15, marginRight: 10, padding: 10, paddingTop: 0, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch'}}>
-            <View style={{flex: 4}}><Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>Select project type</Text></View>
-            <View style={{flexDirection: 'row', justifyContent: 'flex-end', flex: 1}}>
-              <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'enterprise'})}>
-                <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('enterprise')]}>
-                  <Text style={{fontSize: 15, textAlign: 'center', marginTop: -4}}>💼</Text>
-                </View>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'art'})}>
-                <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('art')]}>
-                  <Text style={{fontSize: 15, textAlign: 'center', marginTop: -1}}>🎨</Text>
-                </View>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={() => this.setState({activeType: 'education'})}>
-                <View style={[{width: 50, height: 50, alignItems: 'center', justifyContent: 'center'}, this.checkActiveType('education')]}>
-                  <Text style={{fontSize: 15, textAlign: 'center'}}>📚</Text>
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </View>
+          <TagInput
+            value={this.state.tags}
+            onChange={this.onChangeTags.bind(this)}
+            tagColor="blue"
+            tagTextColor="white"
+            inputProps={inputProps}
+            numberOfLines={2}
+          />
           <View style={styles.addProjectButton}>
             <Text
               style={styles.addText}
