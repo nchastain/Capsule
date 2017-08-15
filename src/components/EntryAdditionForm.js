@@ -185,7 +185,6 @@ class EntryAdditionForm extends React.Component {
     const inputProps = {
       keyboardType: 'default',
       placeholder: 'Enter tags separated by spaces',
-      autoFocus: true,
     }
 
     return (

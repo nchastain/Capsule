@@ -4,28 +4,48 @@ import { Actions } from 'react-native-router-flux'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import { colors, borderlessImageMap, imageMap, hexToRGB, getEntriesForDay, getImageForDay } from '../utilities'
+import {
+  colors,
+  borderlessImageMap,
+  imageMap,
+  hexToRGB,
+  getEntriesForDay,
+  getImageForDay
+} from '../utilities'
 import DayHero from './DayHero'
 
 class Calendar extends React.Component {
   
   constructor () {
     super()
-    this.state = {activeMonth: moment().month(), activeYear: moment().year()}
+    this.state = {
+      activeMonth: moment().month(),
+      activeYear: moment().year()
+    }
   }
 
   handleMonthNav (direction) {
     if (direction === 'forward' && this.state.activeMonth === 11) {
-      this.setState({activeMonth: 0, activeYear: this.state.activeYear + 1})
+      this.setState({
+        activeMonth: 0, 
+        activeYear: this.state.activeYear + 1
+      })
     }
     else if (direction === 'back' && this.state.activeMonth === 0) {
-      this.setState({activeMonth: 11, activeYear: this.state.activeYear - 1})
+      this.setState({
+        activeMonth: 11,
+        activeYear: this.state.activeYear - 1
+      })
     }
     else if (direction === 'forward') {
-      this.setState({activeMonth: this.state.activeMonth + 1})
+      this.setState({
+        activeMonth: this.state.activeMonth + 1
+      })
     }
     else {
-      this.setState({activeMonth: this.state.activeMonth - 1})
+      this.setState({
+        activeMonth: this.state.activeMonth - 1
+      })
     }
   }
 
@@ -49,26 +69,30 @@ class Calendar extends React.Component {
     }
 
     const daysMap = daysInMonth().map(date => (
-      <View style={{alignSelf: 'stretch'}} key={date}>
+      <View style={styles.dayContainer} key={date}>
         <DayHero day={date} calendar entries={this.props.entries} days={this.props.days} />
       </View>
     )).reverse()
 
     return (
-      <View style={{flex: 1}}>
-        <ScrollView style={{backgroundColor: '#eee', flex: 1}} contentContainerStyle={{marginTop: 64, paddingTop: 50, paddingBottom: 150, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
+      <View style={styles.pageContainer}>
+        <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer}>
           {daysMap}
         </ScrollView>
-        <View style={{position: 'absolute', top: 64, left: 0, right: 0, height: 50, backgroundColor: hexToRGB(colors.main, 0.9), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 15, paddingRight: 15}}>
+        <View style={styles.calendarContainer}>
           <TouchableOpacity onPress={() => this.handleMonthNav('back')}>
-            <Image source={imageMap.left} style={{height: 25, width: 25}} />
+            <Image source={imageMap.left} style={styles.navIcoh} />
           </TouchableOpacity>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold', paddingLeft: 10, paddingRight: 5}}>{moment(new Date(this.state.activeYear, this.state.activeMonth, 1)).format('MMMM')}</Text>
-            <Text style={{color: colors.lightAccent, fontSize: 20, fontWeight: 'bold', paddingRight: 10}}>{this.state.activeYear}</Text> 
+          <View style={styles.activeTimeNote}>
+            <Text style={styles.activeMonthLabel}>
+              {moment(new Date(this.state.activeYear, this.state.activeMonth, 1)).format('MMMM')}
+            </Text>
+            <Text style={styles.activeYearLabel}>
+              {this.state.activeYear}
+            </Text>
           </View>
           <TouchableOpacity onPress={() => this.handleMonthNav('forward')}>
-            <Image source={imageMap.right} style={{height: 25, width: 25}} />      
+            <Image source={imageMap.right} style={styles.navIcon} />      
           </TouchableOpacity>
         </View>
       </View>
@@ -77,6 +101,46 @@ class Calendar extends React.Component {
 }
 
 const styles = {
+  activeMonthLabel: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingLeft: 10,
+    paddingRight: 5
+  },
+  activeTimeNote: {
+    flexDirection: 'row'
+  },
+  activeYearLabel: {
+    color: colors.lightAccent,
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingRight: 10
+  },
+  calendarContainer: {
+    position: 'absolute',
+    top: 64,
+    left: 0,
+    right: 0,
+    height: 50,
+    backgroundColor: hexToRGB(colors.main, 0.9),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 15,
+    paddingRight: 15
+  },
+  contentContainer: {
+    marginTop: 64,
+    paddingTop: 50,
+    paddingBottom: 150,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  dayContainer: {
+    alignSelf: 'stretch'
+  },
   monthText: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -85,6 +149,17 @@ const styles = {
   monthsContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  navIcon: {
+    height: 25,
+    width: 25
+  },
+  pageContainer: {
+    flex: 1
+  },
+  scrollContainer: {
+    backgroundColor: '#eee',
+    flex: 1
   },
   tabText: {
     fontSize: 18,

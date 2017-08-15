@@ -44,14 +44,15 @@ class EntryListItem extends React.Component {
               </View>
               {dateOrNav(this.props.hasDate, this.props.entry)}
             </View>
-            {this.props.entry.tags 
-                    && Object.keys(this.props.entry.tags).length > 0
-                    && <View style={{paddingRight: 10, paddingBottom: 5, flexDirection: 'row', justifyContent: 'flex-end', alignSelf: 'stretch'}}>{Object.keys(this.props.entry.tags).map(tag => 
-                      <View style={{marginLeft: 10}} key={tag}>
-                        <Text style={{color: colors.main, fontSize: 10, fontWeight: 'bold'}}>{this.props.entry.tags[tag]}</Text>
-                      </View>
-                    )}</View>
-                  }
+            {this.props.hasDate
+              && this.props.entry.tags 
+              && Object.keys(this.props.entry.tags).length > 0
+              && <View style={{paddingRight: 10, paddingBottom: 5, flexDirection: 'row', justifyContent: 'flex-end', alignSelf: 'stretch'}}>{Object.keys(this.props.entry.tags).map(tag => 
+                <View style={{marginLeft: 10}} key={tag}>
+                  <Text style={{color: colors.main, fontSize: 10, fontWeight: 'bold'}}>{this.props.entry.tags[tag]}</Text>
+                </View>
+              )}</View>
+            }
           </View>
         </TouchableOpacity>
       </Swipeable>
@@ -64,9 +65,14 @@ const dateOrNav = (hasDate, entry) => (
   ? <View style={{alignItems: 'flex-end', flex: 1}}>
       <Text style={{color: colors.main, textAlign: 'right'}}>{moment.unix(entry.date).format('MMM DD')}</Text>
     </View>
-  : <View style={styles.entryNavContainer}>
-      <Text style={styles.entryNavIcon}>></Text>
-    </View>
+  : <View style={{flex: 1}}>{entry.tags 
+      && Object.keys(entry.tags).length > 0
+      && <View style={{paddingRight: 5, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>{Object.keys(entry.tags).map(tag => 
+        <View style={{marginLeft: 10}} key={tag}>
+          <Text style={{color: colors.main, fontSize: 10, fontWeight: 'bold'}}>{entry.tags[tag]}</Text>
+        </View>
+      )}</View>
+    }</View>
 )
 
 const styles = StyleSheet.create({

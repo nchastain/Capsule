@@ -16,33 +16,46 @@ class DayHero extends React.Component {
 
   buildWeekday () {
     if (moment(new Date()).get('date') === moment(this.props.day).get('date')) return 'TODAY'
-    else if (moment(new Date()).subtract(1, 'd').get('date') === moment(this.props.day).get('date')) return 'YESTERDAY'
-    else return moment(this.props.day).format('dddd').toUpperCase()
+    if (moment(new Date()).subtract(1, 'd').get('date') === moment(this.props.day).get('date')) return 'YESTERDAY'
+    return moment(this.props.day).format('dddd').toUpperCase()
   }
 
   render() {
-    const isToday = () => moment(new Date(this.props.day)).get('date') === moment(new Date()).get('date')
-    const numDayEntries = getEntriesForDay(this.props.days, this.props.entries, moment(this.props.day).format('MMDDYYYY')).length
+    const { days, entries, day, calendar, nav } = this.props
+    const isToday = () => moment(new Date(day)).get('date') === moment(new Date()).get('date')
+    const numDayEntries = getEntriesForDay(days, entries, moment(day).format('MMDDYYYY')).length
     return (
       <View style={styles.heroContainer}>
         <TouchableOpacity
-          activeOpacity={this.props.calendar ? 0.8 : 1} 
-          style={{flex: 1, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}
-          onPress={() => this.props.calendar ? Actions.Today({activeDay: moment(this.props.day)}) : undefined}
+          activeOpacity={calendar ? 0.8 : 1} 
+          style={styles.outerContainer}
+          onPress={() => calendar ? Actions.Today({activeDay: moment(day)}) : undefined}
         >
-          <Image source={getImageForDay(this.props.day)} style={styles.heroImage} />
+          <Image source={getImageForDay(day)} style={styles.heroImage} />
           <View style={styles.opacityContainer} />
-          {this.props.calendar && <Text style={styles.weekday}>
-            {this.buildWeekday(this.props.day)}
+          {calendar && <Text style={styles.weekday}>
+            {this.buildWeekday(day)}
           </Text>}
-          <View>{this.createDateText(this.props.day)}</View>
-          {numDayEntries !== 0 && this.props.calendar && <View style={styles.entriesContainer}>
-            <Text style={styles.entryText}>{numDayEntries} {numDayEntries === 1 ? 'entry' : 'entries'}</Text>
+          <View>{this.createDateText(day)}</View>
+          {numDayEntries !== 0 && calendar && <View style={styles.entriesContainer}>
+            <Text style={styles.entryText}>
+              {numDayEntries} {numDayEntries === 1 ? 'entry' : 'entries'}
+            </Text>
           </View>}
-          {this.props.nav && <TouchableOpacity onPress={() => this.props.handleDayNavigation('left', isToday())} activeOpacity={0.2} style={[styles.heroNavigationIconContainer, {left: 10}]}>
+          {nav && 
+            <TouchableOpacity
+              onPress={() => this.props.handleDayNavigation('left', isToday())}
+              activeOpacity={0.2}
+              style={[styles.heroNavigationIconContainer, {left: 10}]}
+            >
             <Image source={imageMap.left} style={styles.heroNavigationIcon} />
           </TouchableOpacity>}
-          {this.props.nav && <TouchableOpacity onPress={() => this.props.handleDayNavigation('right', isToday())} activeOpacity={isToday() ? 1 : 0.2} style={[styles.heroNavigationIconContainer, {right: 10}]}>
+          {this.props.nav && 
+            <TouchableOpacity
+              onPress={() => this.props.handleDayNavigation('right', isToday())}
+              activeOpacity={isToday() ? 1 : 0.2}
+              style={[styles.heroNavigationIconContainer, {right: 10}]}
+            >
             <Image source={imageMap.right} style={[styles.heroNavigationIcon, {opacity: isToday() ? 0.2 : 1}]} />
           </TouchableOpacity>}
         </TouchableOpacity>
@@ -107,6 +120,12 @@ const styles = {
     height: 100,
     width: 1000,
     alignSelf: 'stretch'
+  },
+  outerContainer: {
+    flex: 1,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   weekday: {
     color: 'white',

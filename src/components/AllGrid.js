@@ -20,11 +20,24 @@ class AllGrid extends React.Component {
   goToEntryType (entryType) {
     let entries = this.props.entries ? Object.values(this.props.entries) : []
     entries = this.props.entries.filter(entry => entry.type === entryType)
-    Actions.TypeList({ entryType, entries, title: `${entryType[0].toUpperCase()}${entryType.substring(1)}${entryType !== 'progress' ? 's' : ''}`, location: 'all'})
+    Actions.TypeList({
+      entryType,
+      entries,
+      title: createCardLabel(entryType),
+      location: 'all'
+    })
   }
 
   createCardLabel (entryType) {
     return `${entryType[0].toUpperCase()}${entryType.substring(1)}${entryType !== 'progress' ? 's' : ''}`
+  }
+
+  createCardRow (entryType, side) {
+    return (
+      <View style={side === 'left' ? styles.cardLeft : {flex: 1}}>
+        {this.createCardForEntryType(entryType)}
+      </View>
+    )
   }
 
   createCardForEntryType (entryType, idx) {
@@ -33,8 +46,8 @@ class AllGrid extends React.Component {
         <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => Actions.projects()}>
           <View style={styles.entryTypeContainer}>
             <Image source={imageMap[entryType]} style={styles.entryImage} />
-            <View style={{position: 'absolute', padding: 2}}>
-              <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold', textShadowColor: '#555', textShadowOffset: {width: 1, height: 1}, backgroundColor: 'rgba(0,0,0,0)'}}>
+            <View style={styles.projectsTextContainer}>
+              <Text style={styles.projectsText}>
                 Projects
               </Text>
             </View>
@@ -46,7 +59,7 @@ class AllGrid extends React.Component {
       <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => this.goToEntryType(entryType)}>
         <View style={[styles.cardContainer, {backgroundColor: lightColorMap[entryType]}]}>
           <Image source={imageMap[entryType]} style={styles.cardImage} />
-          <View style={{position: 'absolute', padding: 2}}>
+          <View style={styles.cardLabelContainer}>
             <Text style={styles.cardLabel}>
               {this.createCardLabel(entryType)}
             </Text>
@@ -60,20 +73,20 @@ class AllGrid extends React.Component {
     return (
       <ScrollView contentContainerStyle={styles.cardOuterContainer}>
         <View style={styles.cardRow}>
-          <View style={styles.cardLeft}>{this.createCardForEntryType('experience')}</View>
-          <View style={{flex: 1}}>{this.createCardForEntryType('habit')}</View>
+          {this.createCardRow('experience', 'left')}
+          {this.createCardRow('habit', 'right')}
         </View>
         <View style={styles.cardRow}>
-          <View style={styles.cardLeft}>{this.createCardForEntryType('milestone')}</View>
-          <View style={{flex: 1}}>{this.createCardForEntryType('progress')}</View>
+          {this.createCardRow('milestone', 'left')}
+          {this.createCardRow('progress', 'right')}
         </View>
         <View style={styles.cardRow}>
-          <View style={styles.cardLeft}>{this.createCardForEntryType('note')}</View>
-          <View style={{flex: 1,}}>{this.createCardForEntryType('view')}</View>
+          {this.createCardRow('note', 'left')}
+          {this.createCardRow('view', 'right')}
         </View>
         <View style={styles.cardRow}>
-          <View style={styles.cardLeft}>{this.createCardForEntryType('journal')}</View>
-          <View style={{flex: 1}}>{this.createCardForEntryType('projects')}</View>
+          {this.createCardRow('journal', 'left')}
+          {this.createCardRow('projects', 'right')}
         </View>
       </ScrollView>
     )
@@ -88,6 +101,12 @@ const mapStateToProps = state => {
 }
 
 const styles = StyleSheet.create({
+  cardLabelContainer: {
+    flex: 1,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   entryTypeContainer: {
     height: 128,
     borderRadius: 10,
@@ -146,6 +165,18 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 10
+  },
+  projectsText: {
+    fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+    textShadowColor: '#555',
+    textShadowOffset: {width: 1, height: 1},
+    backgroundColor: 'rgba(0,0,0,0)'
+  },
+  projectsTextContainer: {
+    position: 'absolute',
+    padding: 2
   }
 })
 

@@ -109,7 +109,7 @@ class ProjectList extends React.Component {
       <TouchableOpacity activeOpacity={0.8} onPress={() => this.handleSelect(project)}>
         <View style={{marginBottom: 20, backgroundColor: 'white', flex: 1, flexDirection: 'column', borderBottomWidth: 1, borderColor: '#eee'}}>
           <View style={{marginLeft: 10, marginRight: 10}}>{project.hasProgress && this.renderProgressBar(project)}</View>
-          <View style={{padding: 10, backgroundColor: 'white', marginLeft: 10, marginRight: 10, paddingBottom: 30}}>
+          <View style={{padding: 10, backgroundColor: 'white', marginLeft: 10, marginRight: 10, paddingBottom: 15}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <View style={{flex: 1}}><Text style={{color: colors.main, fontSize: 16, fontWeight: 'bold'}}>{project.title}</Text></View>
             </View>

@@ -17,8 +17,25 @@ import Swipeable from 'react-native-swipeable'
 import DateHeader from './DateHeader'
 import EntryListItem from './EntryListItem'
 import DayHero from './DayHero'
-import { imageMap, descriptionMap, borderlessImageMap, bannerImages, colors, getEntriesForDay, getImageForDay, isToday } from '../utilities'
-import { NotesFetch, EntriesFetch, ProjectsFetch, DaysFetch, TagsFetch, TagSelect } from '../actions'
+import {
+  imageMap,
+  descriptionMap,
+  borderlessImageMap,
+  bannerImages,
+  colors,
+  getEntriesForDay,
+  getImageForDay,
+  isToday,
+  entryTypeList
+} from '../utilities'
+import { 
+  NotesFetch,
+  EntriesFetch,
+  ProjectsFetch,
+  DaysFetch,
+  TagsFetch,
+  TagSelect
+} from '../actions'
 import _ from 'lodash'
 
 class Day extends React.Component {
@@ -26,10 +43,19 @@ class Day extends React.Component {
     super(props)
     let deviceWidth = Dimensions.get('window').width
     let deviceHeight = Dimensions.get('window').height
-    this.state = {activeDay: props.activeDay || moment(), deviceWidth, deviceHeight, showModal: false }
+    this.state = {
+      activeDay: props.activeDay || moment(),
+      deviceWidth,
+      deviceHeight,
+      showModal: false
+    }
   }
 
   componentWillMount () {
+    this.loadInitialContent()
+  }
+
+  loadInitialContent () {
     this.props.NotesFetch()
     this.props.EntriesFetch()
     this.props.ProjectsFetch()
@@ -51,7 +77,9 @@ class Day extends React.Component {
   }
 
   findTagByID (id) {
-    let tagObj = this.props.tags ? Object.values(this.props.tags).filter(tagObj => tagObj.id === id)[0] : {text: ''}
+    let tagObj = this.props.tags 
+    ? Object.values(this.props.tags).filter(tagObj => tagObj.id === id)[0]
+    : {text: ''}
     return tagObj
   }
 
@@ -67,8 +95,12 @@ class Day extends React.Component {
         <View style={styles.tabContainer}>
           <Image source={imageMap[type]} style={{width: 40, height: 40, marginRight: 10, resizeMode: 'contain'}} />
           <View>
-            <Text style={[styles.tabText, {flex: 1}]}>Add {descriptionMap[type]}</Text>
-            <Text style={{flex: 1, color: colors.main}}>{moment(this.state.activeDay).format('MMMM Do, YYYY')}</Text>
+            <Text style={[styles.tabText, {flex: 1}]}>
+              Add {descriptionMap[type]}
+            </Text>
+            <Text style={{flex: 1, color: colors.main}}>
+              {moment(this.state.activeDay).format('MMMM Do, YYYY')}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -139,7 +171,7 @@ class Day extends React.Component {
     return (
       <View style={styles.addMore}>
         <TouchableOpacity onPress={() => this.setState({showModal: true})}>
-          <View style={{alignSelf: 'stretch', flex: 1, justifyContent: 'center', flexDirection: 'row', alignItems: 'center', padding: 5}}>
+          <View style={styles.postAddContainer}>
             <Image source={imageMap.addIcon} style={{height: 26, width: 26, backgroundColor: 'white', borderRadius: 13, borderWidth: 1, borderColor: 'white'}} />
             <Text style={[styles.emptyMessageText, {paddingLeft: 10, paddingRight: 10, fontSize: 13}]}>
               Click here to add something to the day's capsule.
@@ -374,6 +406,14 @@ const styles = StyleSheet.create({
     height: 100,
     width: 1000,
     alignSelf: 'stretch'
+  },
+  postAddContainer: {
+    alignSelf: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5
   },
   tabContainer: {
     padding: 15,
