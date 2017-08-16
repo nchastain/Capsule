@@ -9,6 +9,20 @@ import {
   LOGOUT_USER
 } from './types'
 
+export function auth (email, pw) {
+  return firebase.auth().createUserWithEmailAndPassword(email, pw)
+    .then(saveUser)
+}
+
+export function saveUser (user) {
+  return firebaseRef.child(`users/${user.uid}/info`)
+    .set({
+      email: user.email,
+      uid: user.uid
+    })
+    .then(() => user)
+}
+
 export const emailChanged = (text) => {
   return {
     type: EMAIL_CHANGED,
@@ -21,6 +35,16 @@ export const passwordChanged = (text) => {
     type: PASSWORD_CHANGED,
     payload: text
   }
+}
+
+export var resetPassword = (password) => {
+  var user = firebase.auth().currentUser
+
+  return user.updatePassword(password).then(function () {
+    // console.log('updated password')
+  }, function(error) {
+    // console.log('error updating password')
+  })
 }
 
 export const loginUser = ({ email, password }) => {

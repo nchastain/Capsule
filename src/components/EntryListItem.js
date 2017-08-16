@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux'
 import { EntryDelete } from '../actions'
 import { imageMap, colors, borderlessImageMap } from '../utilities'
 import { connect } from 'react-redux'
+import LazyImage from './LazyImage'
 
 class EntryListItem extends React.Component {
 

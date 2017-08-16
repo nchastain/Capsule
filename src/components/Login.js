@@ -1,9 +1,10 @@
 import React from 'react'
-import {View, Text, TextInput, Button, Image, TouchableOpacity} from 'react-native'
+import {View, Text, TextInput, Button, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ActivityIndicator} from 'react-native'
 import { colors, imageMap, hexToRGB } from '../utilities'
 import LogoBar from './LogoBar'
 import { 
-  loginUser
+  loginUser,
+  auth
 } from '../actions'
 import { connect } from 'react-redux'
 
@@ -11,19 +12,37 @@ class Login extends React.Component {
   
   constructor() {
     super()
-    this.state = {email: '', password: ''}
+    this.state = {email: '', password: '', loading: false, loginMessage: '', newUser: false}
   }
 
   handleLogin() {
-    this.props.loginUser({email: this.state.email, password: this.state.password})
+    this.setState({loading: true}, () => {
+      this.props.loginUser({email: this.state.email, password: this.state.password})
+    })
   }
 
-  render() {
-    return (
-      <View style={styles.loginContainer}>
-        <View style={styles.logoheader}>
-          <Image style={styles.logoImage} source={imageMap.whitelogo} />
-        </View>
+  handleCreateAccount() {
+    if (this.state.password !== this.state.password2) {
+      this.setState({loginMessage: 'Passwords do not match'})
+      return
+    }
+    this.setState({loading: true}, () => {
+      this.props.auth(this.state.email, this.state.password)
+    })
+  }
+
+  setErrorMsg (err) { return { loginMessage: err } }
+  
+  resetPassword () {
+    this.setState({loginMessage: 'Password reset email sent'})
+    // resetPassword(this.email.value)
+    //   .then(() => this.setState({loginMessage: `Password reset email sent to ${this.email.value}.`}))
+    //   .catch((err) => this.setState({loginMessage: `Email address not found.`}))
+  }
+
+  newOrReturning () {
+    const returningInput = (
+      <View style={{alignSelf: 'stretch'}}>
         <TextInput
           style={styles.loginFormElement}
           placeholder={'Enter e-mail'}
@@ -40,18 +59,79 @@ class Login extends React.Component {
           onPress={this.handleLogin.bind(this)}>
           <Text style={styles.loginButton}>Login</Text>
         </TouchableOpacity>
-        <View style={{flexDirection: 'row', alignSelf: 'stretch', position: 'absolute', bottom: 10, left: 0, right: 0, justifyContent: 'space-between', padding: 30}}>
-          <TouchableOpacity activeOpacity={0.8} style={{flex: 1}}><Text style={styles.loginLink}>Forgot password</Text></TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} style={{flex: 1}}><Text style={[styles.loginLink, {textAlign: 'right'}]}>Create an account</Text></TouchableOpacity>
-        </View>
+        {this.state.loading && <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 30}}>
+          <ActivityIndicator animating={this.state.loading} color='white' />
+          <Text style={{marginLeft: 10, color: 'white'}}>Loading...</Text>
+        </View>}
       </View>
+    )
+    const newInput = (
+      <View style={{alignSelf: 'stretch'}}>
+        <TextInput
+          style={styles.loginFormElement}
+          placeholder={'Enter your e-mail'}
+          onChangeText={value => this.setState({email: value})}
+        />
+        <TextInput
+          style={styles.loginFormElement}
+          placeholder={'Enter a password'}
+          secureTextEntry
+          onChangeText={value => this.setState({password: value})}
+        />
+        <TextInput
+          style={styles.loginFormElement}
+          placeholder={'Re-enter a password'}
+          secureTextEntry
+          onChangeText={value => this.setState({password2: value})}
+        />
+        <TouchableOpacity
+          style={styles.loginButtonContainer}
+          onPress={this.handleLogin.bind(this)}>
+          <Text style={styles.loginButton}>Create Account</Text>
+        </TouchableOpacity>
+      </View>
+    )
+    return this.state.newUser ? newInput : returningInput
+  }
+
+  buildMessage () {
+
+    const message = (
+      <View style={styles.messageContainer}>
+        <Text style={styles.message}>{this.state.loginMessage}</Text>
+      </View>
+    )
+
+    return this.state.loginMessage ? message : null
+  }
+
+  render() {
+    return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.loginContainer}>
+          <View style={styles.logoheader}>
+            <Image style={styles.logoImage} source={imageMap.whitelogo} />
+            {this.buildMessage()}
+          </View>
+          {this.newOrReturning()}
+          <View style={{flexDirection: 'row', alignSelf: 'stretch', position: 'absolute', bottom: 10, left: 0, right: 0, justifyContent: 'space-between', padding: 30}}>
+            {!this.state.newUser && <TouchableOpacity onPress={() => this.resetPassword()} activeOpacity={0.8} style={{flex: 1}}><Text style={styles.loginLink}>Forgot password</Text></TouchableOpacity>}
+            <TouchableOpacity onPress={() => this.setState({newUser: !this.state.newUser, loginMessage: ''})} activeOpacity={0.8} style={{flex: 1}}>
+              <Text style={[styles.loginLink, {textAlign: 'right'}]}>
+                {this.state.newUser ? 'Login' : 'Create an account'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
     )
   }
 }
 
 const styles = {
   loginContainer: {
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: 30, 
     alignItems: 'center',
     flex: 1,
     backgroundColor: colors.main,
@@ -91,6 +171,19 @@ const styles = {
     height: 50,
     resizeMode: 'contain'
   },
+  message: {
+    color: colors.main,
+    fontWeight: 'bold'
+  },
+  messageContainer: {
+    padding: 10,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 40,
+    borderRadius: 10,
+    backgroundColor: colors.lightAccent
+  }
 }
 
-export default connect(null, {loginUser})(Login)
+export default connect(null, {loginUser, auth})(Login)
