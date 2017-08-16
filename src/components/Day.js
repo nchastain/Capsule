@@ -29,7 +29,6 @@ import {
   entryTypeList
 } from '../utilities'
 import { 
-  NotesFetch,
   EntriesFetch,
   ProjectsFetch,
   DaysFetch,
@@ -56,7 +55,6 @@ class Day extends React.Component {
   }
 
   loadInitialContent () {
-    this.props.NotesFetch()
     this.props.EntriesFetch()
     this.props.ProjectsFetch()
     this.props.TagsFetch()
@@ -466,4 +464,4 @@ const mapStateToProps = state => {
   return { entries, projects, project, notes, tags, days }
 }
 
-export default connect(mapStateToProps, { NotesFetch, EntriesFetch, ProjectsFetch, DaysFetch, TagsFetch, TagSelect })(Day)
+export default connect(mapStateToProps, { EntriesFetch, ProjectsFetch, DaysFetch, TagsFetch, TagSelect })(Day)

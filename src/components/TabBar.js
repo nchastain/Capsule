@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Modal
 } from 'react-native';
+import { connect } from 'react-redux'
 import { imageMap, descriptionMap } from '../utilities'
 import Tabs from 'react-native-tabs';
 import DefaultRenderer from 'react-native-router-flux/src/DefaultRenderer';
@@ -88,10 +89,11 @@ class TabBar extends Component {
     const state = this.props.navigationState;
     const selected = state.children[state.index];
 
-    const hideTabBar = this.props.unmountScenes ||
+    let hideTabBar = this.props.unmountScenes ||
       deepestExplicitValueForKey(state, 'hideTabBar') ||
       (this.props.hideOnChildTabs && deepestExplicitValueForKey(selected, 'tabs'));
 
+    if (!this.props.auth.user) hideTabBar = true
     const contents = (
       <Tabs
         style={state.tabBarStyle}
@@ -125,13 +127,13 @@ class TabBar extends Component {
             </View>
           ) : contents)
         }
-        <View style={styles.addIconOuter}>
+        {!hideTabBar && <View style={styles.addIconOuter}>
           <View style={{height: 80, width: 80, backgroundColor: '#eee', borderRadius: 40, alignItems: 'center', justifyContent: 'center'}}>
             <TouchableOpacity onPress={() => this.setState({showModal: !this.state.showModal})}>
               <Image source={imageMap.addIcon} style={{width: 64, height: 64, resizeMode: 'contain'}} />
             </TouchableOpacity>
           </View>
-        </View>
+        </View>}
         <Modal
           visible={this.state.showModal}
           animationType={'fade'}
@@ -226,4 +228,9 @@ const styles = {
   }
 }
 
-export default TabBar;
+const mapStateToProps = state => {
+  const { auth } = state
+  return { auth }
+}
+
+export default connect(mapStateToProps)(TabBar);

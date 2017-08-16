@@ -15,6 +15,7 @@ import AllGrid from './components/AllGrid'
 import TypeList from './components/TypeList'
 import Calendar from './components/Calendar'
 import Login from './components/Login'
+import Account from './components/Account'
 
 const DayTabIcon = ({ selected, title }) => {
   return (
@@ -107,6 +108,7 @@ const RouterComponent = () => {
 
           <Scene key='all' title='Tags' icon={AllTabIcon}>
             <Scene key='AllGrid' component={AllGrid} title='All' hideNavBar />
+            <Scene key='Account' component={Account} title='Account' />
           </Scene>
 
         {/* End of Tab Container */}

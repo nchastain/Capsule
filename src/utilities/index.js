@@ -77,7 +77,7 @@ const dayImageMap = {
 
 export const getEntriesForDay = (days, entries, day) => {
   const entriesArr = entries ? Object.values(entries) : []
-  const allDayEntries = (Object.keys(days).length > 0 && days[day]) ? Object.keys(days[day].entries) : []
+  const allDayEntries = (days && Object.keys(days).length > 0 && days[day]) ? Object.keys(days[day].entries) : []
   const trueDayEntries = allDayEntries.length > 0 ? allDayEntries.filter(dayObj => days[day].entries[dayObj]) : []
   return entriesArr.length > 0 ? entriesArr.filter(entry => trueDayEntries.indexOf(entry.uid) !== -1) : []
 }
@@ -115,6 +115,7 @@ export const imageMap = {
   inbox: require('.././assets/inbox.png'),
   down: require('.././assets/down.png'),
   addIcon: require('.././assets/addiconsolid.png'),
+  user: require('.././assets/user.png'),
 }
 
 export const borderlessImageMap = {

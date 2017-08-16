@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ScrollView, Text, Dimensions, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { colors, lightColorMap, imageMap, darkColorMap } from '../utilities'
+import { colors, lightColorMap, imageMap, darkColorMap, hexToRGB } from '../utilities'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
@@ -23,7 +23,7 @@ class AllGrid extends React.Component {
     Actions.TypeList({
       entryType,
       entries,
-      title: createCardLabel(entryType),
+      title: this.createCardLabel(entryType),
       location: 'all'
     })
   }
@@ -55,6 +55,20 @@ class AllGrid extends React.Component {
         </TouchableOpacity>
       )
     }
+    if (entryType === 'account') {
+      return (
+        <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => Actions.Account()}>
+          <View style={[styles.entryTypeContainer, {backgroundColor: 'darkgrey'}]}>
+            <Image source={imageMap.user} style={styles.entryImage} />
+            <View style={styles.projectsTextContainer}>
+              <Text style={styles.projectsText}>
+                Account
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )
+    }
     return (
       <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => this.goToEntryType(entryType)}>
         <View style={[styles.cardContainer, {backgroundColor: lightColorMap[entryType]}]}>
@@ -71,7 +85,7 @@ class AllGrid extends React.Component {
 
   render () {
     return (
-      <ScrollView contentContainerStyle={styles.cardOuterContainer}>
+      <ScrollView style={{backgroundColor: colors.main}} contentContainerStyle={styles.cardOuterContainer}>
         <View style={styles.cardRow}>
           {this.createCardRow('experience', 'left')}
           {this.createCardRow('habit', 'right')}
@@ -87,6 +101,11 @@ class AllGrid extends React.Component {
         <View style={styles.cardRow}>
           {this.createCardRow('journal', 'left')}
           {this.createCardRow('projects', 'right')}
+        </View>
+        <View style={styles.cardRow}>
+          <View style={{flex: 1}}>
+            {this.createCardForEntryType('account')}
+          </View>
         </View>
       </ScrollView>
     )
@@ -108,7 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   entryTypeContainer: {
-    height: 128,
+    height: 100,
     borderRadius: 10,
     backgroundColor: '#555',
     alignSelf: 'stretch',
@@ -121,13 +140,13 @@ const styles = StyleSheet.create({
   },
   cardOuterContainer: {
     paddingTop: 30,
+    paddingBottom: 100, 
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    flex: 1,
     backgroundColor: colors.main
   },
   cardContainer: {
-    height: 128,
+    height: 100,
     borderRadius: 10,
     alignSelf: 'stretch',
     justifyContent: 'center',

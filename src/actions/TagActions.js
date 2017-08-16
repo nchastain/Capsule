@@ -14,17 +14,17 @@ export const TagSelect = (tag) => {
 }
 
 export const AddTag = (newTagObj) => {
+  const { currentUser } = firebase.auth()
   return (dispatch) => {
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/tags`)
+    firebase.database().ref(`/users/${currentUser.uid}/tags`)
       .push(newTagObj)
   }
 }
 
 export const TagsFetch = () => {
-  // const { currentUser } = firebase.auth()
+  const { currentUser } = firebase.auth()
   return (dispatch) => {
-  // firebase.database().ref(`/users/${currentUser.uid}/entries`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/tags`)
+    firebase.database().ref(`/users/${currentUser.uid}/tags`)
       .on('value', snapshot => {
         dispatch({ type: TAGS_FETCH_SUCCESS, payload: snapshot.val() })
       })

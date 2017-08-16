@@ -11,13 +11,12 @@ import {
 } from './types'
 
 export const ProjectAdd = ({ title, tags, hasProgress, progressCurrent, progressTarget, progressUnits }) => {
-  // const { currentUser } = firebase.auth()
+  const { currentUser } = firebase.auth()
   let currentDate = new Date()
   let parsedProgressTarget = parseInt(progressTarget) || 0
   let parsedProgressCurrent = parseInt(progressCurrent) || 0
   return (dispatch) => {
-    // firebase.database().ref(`/users/${currentUser.uid}/entries`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects`)
+    firebase.database().ref(`/users/${currentUser.uid}/projects`)
       .push({ 
         title,
         tags,
@@ -43,7 +42,8 @@ export const ProjectSelect = (project) => {
 }
 
 export const ProjectComplete = (id, status) => {
-  firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}`)
+  const { currentUser } = firebase.auth()
+  firebase.database().ref(`/users/${currentUser.uid}/projects/${id}`)
   .update({ complete: status })
   return (dispatch) => {
     dispatch({ type: PROJECT_COMPLETE })
@@ -52,8 +52,9 @@ export const ProjectComplete = (id, status) => {
 
 export const ProjectUpdateProgress = (id, progress) => {
   let formattedProgress = parseInt(progress)
+  const { currentUser } = firebase.auth()
   return (dispatch) => {
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}/progressCurrent`)
+    firebase.database().ref(`/users/${currentUser.uid}/projects/${id}/progressCurrent`)
     .transaction((data) => data + formattedProgress)
     .then(() => {
       dispatch({ type: PROJECT_UPDATE_PROGRESS })
@@ -62,8 +63,9 @@ export const ProjectUpdateProgress = (id, progress) => {
 }
 
 export const ProjectUpdate = (id, field, val) => {
+  const { currentUser } = firebase.auth()
   return (dispatch) => {
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}`)
+    firebase.database().ref(`/users/${currentUser.uid}/projects/${id}`)
     .update({[field]: val})
     return (dispatch) => {
       dispatch ({ type: PROJECT_UPDATE })
@@ -72,9 +74,9 @@ export const ProjectUpdate = (id, field, val) => {
 }
 
 export const ProjectDelete = (id) => {
+  const { currentUser } = firebase.auth()
   return () => {
-    // firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects/${id}`)  
+    firebase.database().ref(`/users/${currentUser.uid}/projects/${id}`)  
       .remove()
       .then(() => {
         Actions.ProjectList()
@@ -83,11 +85,10 @@ export const ProjectDelete = (id) => {
 }
 
 export const ProjectsFetch = () => {
-  // const { currentUser } = firebase.auth()
+  const { currentUser } = firebase.auth()
 
   return (dispatch) => {
-    // firebase.database().ref(`/users/${currentUser.uid}/entries`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/projects`)
+    firebase.database().ref(`/users/${currentUser.uid}/projects`)
       .on('value', snapshot => {
         dispatch({ type: PROJECTS_FETCH_SUCCESS, payload: snapshot.val() })
       })

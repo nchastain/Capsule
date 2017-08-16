@@ -12,8 +12,9 @@ import { DayEntryAdd } from './DayActions'
 import moment from 'moment'
 
 export const EntryUpdate = (entry, location) => {
+  const { currentUser } = firebase.auth()
   return (dispatch) => {
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${entry.uid}`)
+    firebase.database().ref(`/users/${currentUser.uid}/entries/${entry.uid}`)
       .set(entry)
       .then(() => {
         dispatch({ type: ENTRY_SAVE_SUCCESS })
@@ -24,12 +25,13 @@ export const EntryUpdate = (entry, location) => {
   }
 }
 
-export const AddEntry = ({ text, tags, description, date, tagIDs, type, projectID, addedProgress}, noteID) => {
-  let actionObj = { type: ADD_ENTRY, payload: { text, tags, description, date, tagIDs, type } }
+export const AddEntry = ({ text, tags, description, date, type, projectID, addedProgress}, noteID) => {
+  let actionObj = { type: ADD_ENTRY, payload: { text, tags, description, date, type } }
   if (projectID) actionObj.payload.projectID = projectID
   if (addedProgress) actionObj.payload.addedProgress = addedProgress
   let entryObj = actionObj.payload
-  let newRef = firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${noteID}`)
+  const { currentUser } = firebase.auth()
+  let newRef = firebase.database().ref(`/users/${currentUser.uid}/entries/${noteID}`)
   return (dispatch) => {
     newRef.set(entryObj)
     .then(() => {
@@ -46,11 +48,10 @@ export const EntryClear = () => {
 }
 
 export const EntriesFetch = () => {
-  // const { currentUser } = firebase.auth()
+  const { currentUser } = firebase.auth()
 
   return (dispatch) => {
-    // firebase.database().ref(`/users/${currentUser.uid}/entries`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries`)
+    firebase.database().ref(`/users/${currentUser.uid}/entries`)
       .on('value', snapshot => {
         dispatch({ type: ENTRIES_FETCH_SUCCESS, payload: snapshot.val() })
       })
@@ -58,11 +59,10 @@ export const EntriesFetch = () => {
 }
 
 export const EntrySave = ({ description, seconds, uid, projectID }) => {
-  // const { currentUser } = firebase.auth()
+  const { currentUser } = firebase.auth()
 
   return (dispatch) => {
-    // firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${uid}`)  
+    firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)  
       .set({ description, seconds, projectID })
       .then(() => {
         dispatch({ type: ENTRY_SAVE_SUCCESS })
@@ -72,11 +72,10 @@ export const EntrySave = ({ description, seconds, uid, projectID }) => {
 }
 
 export const EntryDelete = ({ uid }, location) => {
-  // const { currentUser } = firebase.auth()
+  const { currentUser } = firebase.auth()
 
   return () => {
-    // firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)
-    firebase.database().ref(`/users/dqL31pcmiIZFEoDwd03dIJVy0Ls1/entries/${uid}`)  
+    firebase.database().ref(`/users/${currentUser.uid}/entries/${uid}`)  
       .remove()
       .then(() => {
         location === 'today' ? Actions.Today({ type: 'reset' }) : location ? Actions.EntryList({ type: 'reset'}) : null

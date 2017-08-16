@@ -60,43 +60,21 @@ class EntryAdditionForm extends React.Component {
     this.setState({dataSource: ds.cloneWithRows(filteredProjects.sort((a, b) => b.time - a.time))})
   }
 
-  extractTagsFromInput () {
-    const newTags = this.state.text.match(/(\B#\S+)/g)
-    return newTags ? newTags.map(tag => tag.replace('#', '')) : []
-  }
-
   onChangeTags (tags) {
     this.setState({ tags: formatTags(tags) })
   }
 
   onButtonPress () {
-    const tagsFromInput = this.extractTagsFromInput()
-    const tags = this.state.tags.map(function(tag) {
-      if (tag.indexOf('#') === -1) {
-        return tag.split('').shift('#').join('')
-      }
-      return tag
-    })
-    const oldTags = Object.values(this.props.tags)
-    const oldTagTitles = oldTags.map(tag => tag.text)
-    const tagMatches = oldTags.filter(tag => tagsFromInput.indexOf(tag.text) !== -1)
-    const existingIDs = tagMatches.map(tag => tag.id)
-    const newTags = tagsFromInput.filter(tag => oldTagTitles.indexOf(tag) === -1)
-    const newTagObjs = newTags.map(newTag => ({ text: newTag, id: uuid.v4() }))
-    const newIDs = newTagObjs.map(newTagObj => newTagObj.id)
-    const allTagIDs = [...existingIDs, ...newIDs]
 
     let noteObj = {
       text: this.state.text.replace(/\r?\n|\r/, ''),
       description: this.state.description ? this.state.description.replace(/\r?\n|\r/, '') : '',
       date: this.props.day ? moment(this.props.day).unix() : moment().unix(),
-      tagIDs: allTagIDs,
       type: this.props.entryType,
       tags: formatTags(this.state.tags)
     }
     let noteID = uuid.v4()
     noteObj.projectID = this.state.project ? this.state.project.uid : null
-    newTagObjs.forEach(this.props.AddTag)
     if (this.state.project && this.props.entryType === 'progress' && this.state.project.hasProgress) this.props.ProjectUpdateProgress(this.state.project.uid, this.state.addedProgress)
     if (parseInt(this.state.addedProgress) > 0) noteObj.addedProgress = parseInt(this.state.addedProgress)
     this.props.AddEntry(noteObj, noteID)
@@ -193,12 +171,12 @@ class EntryAdditionForm extends React.Component {
             <View style={{marginTop: 64, alignSelf: 'stretch', flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', padding: 10, paddingRight: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <TouchableOpacity activeOpacity={0.3} onPress={() => this.setState({openModal: !this.state.openModal})}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Image source={borderlessImageMap.whiteprojects} style={{width: 20, height: 20, marginRight: 5}} />
-                      <Text style={{color: 'white', fontWeight: 'bold'}}>
+                      {this.props.projects.length > 0 && <Image source={borderlessImageMap.whiteprojects} style={{width: 20, height: 20, marginRight: 5}} />}
+                      {this.props.projects.length > 0 && <Text style={{color: 'white', fontWeight: 'bold'}}>
                         {this.state.project ? this.state.project.title.substr(0,20) : 'Select a project'}
                         {(this.state.project && this.state.project.title.length > 20) ? '...' : ''}
-                      </Text>
-                      <Text style={{color: 'white', fontWeight: 'bold', marginLeft: 3}}>{'\u25BE'}</Text>
+                      </Text>}
+                      {this.props.projects.length > 0 && <Text style={{color: 'white', fontWeight: 'bold', marginLeft: 3}}>{'\u25BE'}</Text>}
                   </View>
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.8} onPress={this.onButtonPress.bind(this)}>
@@ -253,7 +231,7 @@ class EntryAdditionForm extends React.Component {
                 onChangeText={value => this.setState({description: value})}
               ><Text>{this.state.description}</Text></TextInput>
             </View>
-            <View style={{height: 100, alignSelf: 'stretch', paddingLeft: 30, paddingRight: 30, alignItems: 'center', justifyContent: 'center'}}>
+            <View style={{height: 100, alignSelf: 'stretch', paddingLeft: 30, alignItems: 'center', justifyContent: 'center'}}>
               <Text style={{fontWeight: 'bold', color: hexToRGB('#FFFFFF', 0.5)}}>Tags</Text>
               <TagInput
                 value={this.state.tags}

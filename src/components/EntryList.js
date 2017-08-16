@@ -77,7 +77,7 @@ class EntryList extends React.Component {
           titleCancelColor={colors.main}
         />
         <ScrollView contentContainerStyle={styles.container}>
-          {entries.length === 0 && 
+          {entries.length === 0 && this.state.searchTerm.length > 0 && 
             <View style={{backgroundColor: 'white', padding: 20}}>
               <Text style={{color: colors.main}}>No entries found for that search</Text>
             </View>}

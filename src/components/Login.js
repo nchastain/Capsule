@@ -14,8 +14,8 @@ class Login extends React.Component {
     this.state = {email: '', password: ''}
   }
 
-  handleLogin(email, password) {
-    loginUser({email: this.state.email, password: this.state.password})
+  handleLogin() {
+    this.props.loginUser({email: this.state.email, password: this.state.password})
   }
 
   render() {
@@ -36,9 +36,14 @@ class Login extends React.Component {
           onChangeText={value => this.setState({password: value})}
         />
         <TouchableOpacity
-          style={styles.loginButtonContainer}>
+          style={styles.loginButtonContainer}
+          onPress={this.handleLogin.bind(this)}>
           <Text style={styles.loginButton}>Login</Text>
         </TouchableOpacity>
+        <View style={{flexDirection: 'row', alignSelf: 'stretch', position: 'absolute', bottom: 10, left: 0, right: 0, justifyContent: 'space-between', padding: 30}}>
+          <TouchableOpacity activeOpacity={0.8} style={{flex: 1}}><Text style={styles.loginLink}>Forgot password</Text></TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} style={{flex: 1}}><Text style={[styles.loginLink, {textAlign: 'right'}]}>Create an account</Text></TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -71,6 +76,11 @@ const styles = {
     color: '#eee',
     fontSize: 20,
   },
+  loginLink: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
   logoheader: {
     height: 80,
     alignItems: 'center',
@@ -83,4 +93,4 @@ const styles = {
   },
 }
 
-export default connect(null, loginUser)(Login)
+export default connect(null, {loginUser})(Login)
