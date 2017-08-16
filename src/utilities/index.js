@@ -111,6 +111,7 @@ export const imageMap = {
   left: require('.././assets/chevleft.png'),
   right: require('.././assets/chevright.png'),
   logo: require('.././assets/logo.png'),
+  whitelogo: require('.././assets/whitelogo.png'),
   inbox: require('.././assets/inbox.png'),
   down: require('.././assets/down.png'),
   addIcon: require('.././assets/addiconsolid.png'),

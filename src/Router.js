@@ -14,6 +14,7 @@ import EntryList from './components/EntryList'
 import AllGrid from './components/AllGrid'
 import TypeList from './components/TypeList'
 import Calendar from './components/Calendar'
+import Login from './components/Login'
 
 const DayTabIcon = ({ selected, title }) => {
   return (
@@ -82,7 +83,8 @@ const RouterComponent = () => {
 
           {/* Tab and its scenes */}
           <Scene key='day' title='Day' icon={DayTabIcon}>
-            <Scene key='Today' component={Day} title='Today' initial hideNavBar />
+            <Scene key='Login' component={Login} title='Login' initial hideNavBar />
+            <Scene key='Today' component={Day} title='Today' hideNavBar />
             <Scene key='TagDetailsDay' component={TagDetails} title='Tag Details' />
             <Scene key='EntryAdditionForm' component={EntryAdditionForm} hideNavBar={false} />
             <Scene key='DayEntryDetail' component={EntryDetail} title='Entry Detail' hideNavBar={false} />
