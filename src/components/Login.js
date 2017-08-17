@@ -4,8 +4,9 @@ import { colors, imageMap, hexToRGB } from '../utilities'
 import LogoBar from './LogoBar'
 import { 
   loginUser,
-  auth
+  authenticate
 } from '../actions'
+import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 class Login extends React.Component {
@@ -35,9 +36,9 @@ class Login extends React.Component {
   
   resetPassword () {
     this.setState({loginMessage: 'Password reset email sent'})
-    // resetPassword(this.email.value)
-    //   .then(() => this.setState({loginMessage: `Password reset email sent to ${this.email.value}.`}))
-    //   .catch((err) => this.setState({loginMessage: `Email address not found.`}))
+    resetPassword(this.state.email)
+      .then(() => this.setState({loginMessage: `Password reset email sent to ${this.state.email}.`}))
+      .catch((err) => this.setState({loginMessage: `Email address not found.`}))
   }
 
   newOrReturning () {
@@ -95,7 +96,6 @@ class Login extends React.Component {
   }
 
   buildMessage () {
-
     const message = (
       <View style={styles.messageContainer}>
         <Text style={styles.message}>{this.state.loginMessage}</Text>
@@ -114,9 +114,21 @@ class Login extends React.Component {
             {this.buildMessage()}
           </View>
           {this.newOrReturning()}
-          <View style={{flexDirection: 'row', alignSelf: 'stretch', position: 'absolute', bottom: 10, left: 0, right: 0, justifyContent: 'space-between', padding: 30}}>
-            {!this.state.newUser && <TouchableOpacity onPress={() => this.resetPassword()} activeOpacity={0.8} style={{flex: 1}}><Text style={styles.loginLink}>Forgot password</Text></TouchableOpacity>}
-            <TouchableOpacity onPress={() => this.setState({newUser: !this.state.newUser, loginMessage: ''})} activeOpacity={0.8} style={{flex: 1}}>
+          <View style={styles.bottomLoginLinks}>
+            {!this.state.newUser &&
+              <TouchableOpacity
+                onPress={() => this.resetPassword()}
+                activeOpacity={0.8}
+                style={{flex: 1}}
+              >
+                <Text style={styles.loginLink}>Forgot password</Text>
+              </TouchableOpacity>
+            }
+            <TouchableOpacity
+              onPress={() => this.setState({newUser: !this.state.newUser, loginMessage: ''})}
+              activeOpacity={0.8}
+              style={{flex: 1}}
+            >
               <Text style={[styles.loginLink, {textAlign: 'right'}]}>
                 {this.state.newUser ? 'Login' : 'Create an account'}
               </Text>
@@ -129,6 +141,16 @@ class Login extends React.Component {
 }
 
 const styles = {
+  bottomLoginLinks: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0,
+    justifyContent: 'space-between',
+    padding: 30
+  },
   loginContainer: {
     justifyContent: 'flex-start',
     paddingTop: 30, 
@@ -144,6 +166,7 @@ const styles = {
     backgroundColor: 'white',
     borderColor: '#eee',
     borderWidth: 1, 
+    color: colors.main,
   },
   loginButtonContainer: {
     backgroundColor: hexToRGB('#000000', 0.5),
@@ -186,4 +209,4 @@ const styles = {
   }
 }
 
-export default connect(null, {loginUser, auth})(Login)
+export default connect(null, {loginUser, authenticate})(Login)

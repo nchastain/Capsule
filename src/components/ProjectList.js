@@ -5,6 +5,7 @@ import { View, Text, TouchableOpacity, ListView, TouchableWithoutFeedback, Image
 import { ProjectsFetch, ProjectSelect } from '../actions'
 import { colors, borderlessImageMap, typeMap, hexToRGB } from '../utilities'
 import Search from 'react-native-search-box'
+import EmptyMessage from './EmptyMessage'
 
 class ProjectList extends React.Component {
   constructor () {
@@ -24,7 +25,10 @@ class ProjectList extends React.Component {
   meetsSearchCriteria (project) {
     let hasMatchingTag, hasMatchingTitle
     if (project.tags) {
-      hasMatchingTag = Object.keys(project.tags).filter(tag => project.tags[tag].indexOf(this.state.searchTerm.toLowerCase()) !== -1).length > 0
+      let tagMatches = Object.keys(project.tags).filter(tag => 
+        project.tags[tag].indexOf(this.state.searchTerm.toLowerCase()) !== -1
+      )
+      hasMatchingTag = tagMatches.length > 0
     }
     hasMatchingTitle = project.title.indexOf(this.state.searchTerm) !== -1
     return hasMatchingTag || hasMatchingTitle
@@ -179,7 +183,10 @@ class ProjectList extends React.Component {
 
         </View>
         <View style={{flexDirection: 'column', flex: 1}}>
-          <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{paddingBottom: 70, backgroundColor: 'white', paddingTop: 20}} />
+          {this.props.projects.length !== 0 
+            ? <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{paddingBottom: 70, backgroundColor: 'white', paddingTop: 20}} />
+            : <EmptyMessage messageType='projects' />
+          }
         </View>
       </View>
     )
@@ -297,7 +304,6 @@ const styles = {
   },
   completeTextStyle: {
     color: 'lightgray',
-    // textDecorationLine: 'line-through',
   },
   dateStyle: {
     fontSize: 12,

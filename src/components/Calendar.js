@@ -25,26 +25,27 @@ class Calendar extends React.Component {
   }
 
   handleMonthNav (direction) {
-    if (direction === 'forward' && this.state.activeMonth === 11) {
+    const {activeMonth, activeYear} = this.state
+    if (direction === 'forward' && activeMonth === 11) {
       this.setState({
         activeMonth: 0, 
-        activeYear: this.state.activeYear + 1
+        activeYear: activeYear + 1
       })
     }
-    else if (direction === 'back' && this.state.activeMonth === 0) {
+    else if (direction === 'back' && activeMonth === 0) {
       this.setState({
         activeMonth: 11,
-        activeYear: this.state.activeYear - 1
+        activeYear: activeYear - 1
       })
     }
     else if (direction === 'forward') {
       this.setState({
-        activeMonth: this.state.activeMonth + 1
+        activeMonth: activeMonth + 1
       })
     }
     else {
       this.setState({
-        activeMonth: this.state.activeMonth - 1
+        activeMonth: activeMonth - 1
       })
     }
   }
@@ -81,7 +82,7 @@ class Calendar extends React.Component {
         </ScrollView>
         <View style={styles.calendarContainer}>
           <TouchableOpacity onPress={() => this.handleMonthNav('back')}>
-            <Image source={imageMap.left} style={styles.navIcoh} />
+            <Image source={imageMap.left} style={styles.navIcon} />
           </TouchableOpacity>
           <View style={styles.activeTimeNote}>
             <Text style={styles.activeMonthLabel}>

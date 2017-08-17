@@ -18,6 +18,7 @@ import { NotesFetch, EntriesFetch, ProjectsFetch, TagsFetch, TagSelect, EntryDel
 import _ from 'lodash'
 import Search from 'react-native-search-box';
 import EntryListItem from './EntryListItem'
+import EmptyMessage from './EmptyMessage'
 
 
 class EntryList extends React.Component {

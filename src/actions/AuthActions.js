@@ -9,7 +9,7 @@ import {
   LOGOUT_USER
 } from './types'
 
-export function auth (email, pw) {
+export function authenticate (email, pw) {
   return firebase.auth().createUserWithEmailAndPassword(email, pw)
     .then(saveUser)
 }

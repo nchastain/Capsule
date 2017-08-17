@@ -39,8 +39,16 @@ import moment from 'moment'
 
 class EntryAdditionForm extends React.Component {
   constructor (props) {
-    super()
-    this.state = {text: '', description: '', ran: false, newTags: false, project: null, openModal: false, tags: []}
+    super(props)
+    this.state = {
+      text: '',
+      description: '',
+      ran: false,
+      newTags: false,
+      project: null,
+      openModal: false,
+      tags: []
+    }
   }
 
   componentWillMount () {
@@ -65,7 +73,6 @@ class EntryAdditionForm extends React.Component {
   }
 
   onButtonPress () {
-
     let noteObj = {
       text: this.state.text.replace(/\r?\n|\r/, ''),
       description: this.state.description ? this.state.description.replace(/\r?\n|\r/, '') : '',
@@ -75,8 +82,12 @@ class EntryAdditionForm extends React.Component {
     }
     let noteID = uuid.v4()
     noteObj.projectID = this.state.project ? this.state.project.uid : null
-    if (this.state.project && this.props.entryType === 'progress' && this.state.project.hasProgress) this.props.ProjectUpdateProgress(this.state.project.uid, this.state.addedProgress)
-    if (parseInt(this.state.addedProgress) > 0) noteObj.addedProgress = parseInt(this.state.addedProgress)
+    if (this.state.project && this.props.entryType === 'progress' && this.state.project.hasProgress) {
+      this.props.ProjectUpdateProgress(this.state.project.uid, this.state.addedProgress)
+    }
+    if (parseInt(this.state.addedProgress) > 0) {
+      noteObj.addedProgress = parseInt(this.state.addedProgress)
+    }
     this.props.AddEntry(noteObj, noteID)
     this.props.DayEntryAdd(noteID, noteObj.date)
   }
@@ -106,7 +117,7 @@ class EntryAdditionForm extends React.Component {
 
     return (
       <TouchableOpacity activeOpacity={0.8} onPress={() => this.handleSelect(project)}>
-        <View style={{backgroundColor: entryProjectID === project.uid ? colors.lightAccent : 'white', flexDirection: 'column', borderBottomWidth: 1, borderColor: '#eee', paddingTop: 15, paddingBottom: 15, paddingLeft: 15, paddingRight: 15, alignSelf: 'stretch'}}>
+        <View style={{backgroundColor: entryProjectID === project.uid? colors.lightAccent : 'white', flexDirection: 'column', borderBottomWidth: 1, borderColor: '#eee', paddingTop: 15, paddingBottom: 15, paddingLeft: 15, paddingRight: 15, alignSelf: 'stretch'}}>
           <View style={{backgroundColor: entryProjectID === project.uid ? colors.lightAccent : 'white'}}>
             <View style={{flexDirection: 'row', alignItems: 'center', alignSelf: 'stretch'}}>
               <View style={{alignItems: 'center', marginTop: -4, paddingRight: 4, width: 25}}><Text>{project.type ? typeMap[project.type] : typeMap['enterprise']}</Text></View>

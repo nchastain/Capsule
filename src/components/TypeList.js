@@ -13,6 +13,7 @@ import {
 import EntryListItem from './EntryListItem'
 import Search from 'react-native-search-box'
 import { borderlessImageMap, colors } from '../utilities'
+import EmptyMessage from './EmptyMessage'
 
 class TypeList extends React.Component {
   constructor() {
@@ -55,7 +56,7 @@ class TypeList extends React.Component {
           onDelete={() => this.setState({searchTerm: ''})}
         />
         <View style={styles.outerContainer}>
-          {this.displayEntries()}
+          {this.props.entries.length > 0 ? this.displayEntries() : <EmptyMessage />}
         </View>
       </View>
     )
@@ -71,6 +72,24 @@ const styles = StyleSheet.create({
   },
   dateText: {
     color: colors.main
+  },
+  emptyMessageContainer: {
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginTop: 30,
+    marginLeft: 30,
+    marginRight: 30,
+    padding: 10,
+    height: 220,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.1)'
+  },
+  emptyMessageText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
+    textAlign: 'center',
   },
   icon: {
     height: 45,

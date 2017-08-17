@@ -14,7 +14,6 @@ import Tabs from 'react-native-tabs';
 import DefaultRenderer from 'react-native-router-flux/src/DefaultRenderer';
 import Actions from 'react-native-router-flux/src/Actions';
 import TabbedView from 'react-native-router-flux/src/TabbedView';
-import AddModal from './AddModal'
 import { deepestExplicitValueForKey } from 'react-native-router-flux/src/Util';
 
 class TabBar extends Component {
