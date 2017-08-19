@@ -60,8 +60,8 @@ class EntryListItem extends React.Component {
             {this.props.hasDate
               && this.props.entry.tags 
               && Object.keys(this.props.entry.tags).length > 0
-              && <View style={{paddingRight: 10, paddingBottom: 5, flexDirection: 'row', justifyContent: 'flex-end', alignSelf: 'stretch'}}>{Object.keys(this.props.entry.tags).map(tag => 
-                <View style={{marginLeft: 10}} key={tag}>
+              && <View style={{paddingRight: 5, paddingBottom: 5, flexDirection: 'row', justifyContent: 'flex-end', alignSelf: 'stretch'}}>{Object.keys(this.props.entry.tags).map(tag => 
+                <View style={{marginLeft: 10, backgroundColor: '#eee', padding: 4, borderRadius: 5}} key={tag}>
                   <Text style={{color: colors.main, fontSize: 10, fontWeight: 'bold'}}>{this.props.entry.tags[tag]}</Text>
                 </View>
               )}</View>

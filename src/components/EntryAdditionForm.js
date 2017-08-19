@@ -234,14 +234,14 @@ shadowOpacity: 0.3}}>
         <View style={{alignSelf: 'stretch', padding: 20, position: 'absolute', top: 119, left: 0, right: 0, backgroundColor: hexToRGB(colors.main, 0.4), alignItems: 'flex-start', justifyContent: 'center'}}>
           <TextInput
             placeholder={`Enter title here`}
-            numberOfLines={3}
+            numberOfLines={1}
             multiline
             autoFocus={this.props.entryType !== 'progress'}
             style={{alignSelf: 'stretch', fontSize: 25, color: colors.main, fontWeight: 'bold', textAlign: 'center'}}
             onChangeText={value => this.setState({text: value})}
           ><Text>{parts}</Text></TextInput>
         </View>
-        <ScrollView style={{backgroundColor: 'white', marginTop: 204, paddingTop: 10}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
+        <ScrollView style={{backgroundColor: 'white', marginTop: 200}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
             {this.state.openModal &&
             <View style={{flex: 1, alignSelf: 'stretch', height: 300, paddingLeft: 10, borderBottomWidth: 5, borderColor: colors.main, paddingRight: 10, backgroundColor: '#eee'}}>
               <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{backgroundColor: 'white'}} />
