@@ -15,7 +15,8 @@ import {
   ScrollView,
   ListView,
   TouchableOpacity,
-  Button
+  Button,
+  Dimensions,
 } from 'react-native'
 import {
   NoteAdd,
@@ -42,7 +43,11 @@ import moment from 'moment'
 class EntryAdditionForm extends React.Component {
   constructor (props) {
     super(props)
+    let deviceWidth = Dimensions.get('window').width
+    let deviceHeight = Dimensions.get('window').height
     this.state = {
+      deviceWidth,
+      deviceHeight,
       text: '',
       description: '',
       ran: false,
@@ -140,13 +145,13 @@ class EntryAdditionForm extends React.Component {
   buildHeader (label) {
     return (
       <View style={styles.headerContainer}>
-        <View style={styles.headerDash} />
+        <View style={[styles.headerDash, {width: this.state.deviceWidth}]} />
         <View style={styles.innerHeaderContainer}>
         <Text style={styles.header}>
           {label}
         </Text>
         </View>
-        <View style={styles.headerDash} />
+        <View style={[styles.headerDash, {width: this.state.deviceWidth}]} />
       </View>
     )
   }
@@ -203,29 +208,40 @@ class EntryAdditionForm extends React.Component {
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView style={{backgroundColor: hexToRGB(colors.main, 0.8)}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
-            <View style={{marginTop: 64, alignSelf: 'stretch', flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', padding: 10, paddingRight: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                <TouchableOpacity activeOpacity={0.3} onPress={() => this.setState({openModal: !this.state.openModal})}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      {this.props.projects.length > 0 && <Image source={borderlessImageMap.whiteprojects} style={{width: 20, height: 20, marginRight: 5}} />}
-                      {this.props.projects.length > 0 && <Text style={{color: 'white', fontWeight: 'bold'}}>
-                        {this.state.project ? this.state.project.title.substr(0,20) : 'Select a project'}
-                        {(this.state.project && this.state.project.title.length > 20) ? '...' : ''}
-                      </Text>}
-                      {this.props.projects.length > 0 && <Text style={{color: 'white', fontWeight: 'bold', marginLeft: 3}}>{'\u25BE'}</Text>}
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.8} onPress={this.onButtonPress.bind(this)}>
-                  <View style={{flexDirection: 'row', padding: 5, paddingLeft: 15, paddingRight: 10, backgroundColor: darkColorMap[this.props.entryType], borderRadius: 20, alignItems: 'center', justifyContent: 'center', shadowOffset: {width: 1, height: 1},
-    shadowColor: '#555',
-    shadowOpacity: 0.3}}>
-                    <Image source={imageMap[this.props.entryType]} style={{width: 25, height: 25, marginRight: 8, marginLeft: -10}} />
-                    <Text style={{color: 'white', fontWeight: 'bold', paddingRight: 5}}>
-                      save
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+        <View>
+        <View style={{position: 'absolute', top: 64, left: 0, right: 0, alignSelf: 'stretch', flex: 1, backgroundColor: colors.main, padding: 10, paddingRight: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+          <TouchableOpacity activeOpacity={0.3} onPress={() => this.setState({openModal: !this.state.openModal})}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                {this.props.projects.length > 0 && <Image source={borderlessImageMap.whiteprojects} style={{width: 20, height: 20, marginRight: 5}} />}
+                {this.props.projects.length > 0 && <Text style={{color: 'white', fontWeight: 'bold'}}>
+                  {this.state.project ? this.state.project.title.substr(0,20) : 'Select a project'}
+                  {(this.state.project && this.state.project.title.length > 20) ? '...' : ''}
+                </Text>}
+                {this.props.projects.length > 0 && <Text style={{color: 'white', fontWeight: 'bold', marginLeft: 3}}>{'\u25BE'}</Text>}
             </View>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={this.onButtonPress.bind(this)}>
+            <View style={{flexDirection: 'row', padding: 5, paddingLeft: 15, paddingRight: 10, backgroundColor: darkColorMap[this.props.entryType], borderRadius: 20, alignItems: 'center', justifyContent: 'center', shadowOffset: {width: 1, height: 1},
+shadowColor: '#555',
+shadowOpacity: 0.3}}>
+              <Image source={imageMap[this.props.entryType]} style={{width: 25, height: 25, marginRight: 8, marginLeft: -10}} />
+              <Text style={{color: 'white', fontWeight: 'bold', paddingRight: 5}}>
+                save
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={{alignSelf: 'stretch', padding: 20, position: 'absolute', top: 119, left: 0, right: 0, backgroundColor: hexToRGB(colors.main, 0.4), alignItems: 'flex-start', justifyContent: 'center'}}>
+          <TextInput
+            placeholder={`Enter title here`}
+            numberOfLines={3}
+            multiline
+            autoFocus={this.props.entryType !== 'progress'}
+            style={{alignSelf: 'stretch', fontSize: 25, color: colors.main, fontWeight: 'bold', textAlign: 'center'}}
+            onChangeText={value => this.setState({text: value})}
+          ><Text>{parts}</Text></TextInput>
+        </View>
+        <ScrollView style={{backgroundColor: 'white', marginTop: 204, paddingTop: 10}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
             {this.state.openModal &&
             <View style={{flex: 1, alignSelf: 'stretch', height: 300, paddingLeft: 10, borderBottomWidth: 5, borderColor: colors.main, paddingRight: 10, backgroundColor: '#eee'}}>
               <ListView enableEmptySections dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} contentContainerStyle={{backgroundColor: 'white'}} />
@@ -233,7 +249,7 @@ class EntryAdditionForm extends React.Component {
             {(this.props.entryType === 'progress' && 
             this.state.project && 
             this.state.project.hasProgress) && 
-            <View style={{alignItems: 'center', padding: 10, paddingBottom: 15, alignSelf: 'stretch', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.1)'}}>
+            <View style={{alignItems: 'center', padding: 10, paddingBottom: 15, alignSelf: 'stretch', justifyContent: 'center'}}>
               <TextInput
                 placeholder={`How many ${this.state.project.progressUnits}?`}
                 keyboardType='numeric'
@@ -248,17 +264,7 @@ class EntryAdditionForm extends React.Component {
                 <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>{this.state.project.progressUnits}</Text>
               </View>
             </View>}
-            <View style={{alignSelf: 'stretch', padding: 20, paddingBottom: 20}}>
-              <TextInput
-                placeholder={`Enter title here`}
-                numberOfLines={3}
-                multiline
-                autoFocus={this.props.entryType !== 'progress'}
-                style={{alignSelf: 'stretch', fontSize: 25, color: 'white', fontWeight: 'bold', textAlign: 'center'}}
-                onChangeText={value => this.setState({text: value})}
-              ><Text>{parts}</Text></TextInput>
-            </View>
-            <View style={{alignSelf: 'stretch', height: 150, backgroundColor: 'white', margin: 10, marginTop: 0}}>
+            <View style={{alignSelf: 'stretch', height: 150, backgroundColor: 'white'}}>
               {this.buildHeader('DETAILS')}
               <TextInput
                 placeholder={`Additional details (optional)`}
@@ -268,7 +274,7 @@ class EntryAdditionForm extends React.Component {
                 onChangeText={value => this.setState({description: value})}
               ><Text>{this.state.description}</Text></TextInput>
             </View>
-            <View style={{alignSelf: 'stretch', height: 150, backgroundColor: 'white', margin: 10, marginTop: 0}}>
+            <View style={{alignSelf: 'stretch', height: 150, backgroundColor: 'white'}}>
             {this.buildHeader('TAGS')}
             <View style={{height: 100, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', paddingLeft: 20}}>
               <TagInput
@@ -281,17 +287,17 @@ class EntryAdditionForm extends React.Component {
               />
             </View>
             </View>
-            <View style={{alignSelf: 'stretch', backgroundColor: 'white', margin: 10, marginTop: 0}}>
+            <View style={{alignSelf: 'stretch', backgroundColor: 'white'}}>
             {this.buildHeader('PHOTO')}
-            <View style={{alignItems: 'flex-start', alignSelf: 'stretch', justifyContent: 'space-between', marginLeft: 10}}>
-            {!this.state.photo && <TouchableOpacity activeOpacity={0.8} onPress={() => this.pickImage()} style={{paddingTop: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.lightAccent, padding: 10, paddingLeft: 15, paddingRight: 15, borderRadius: 10, marginBottom: 10}}>
+            <View style={{alignItems: 'flex-start', alignSelf: 'stretch', justifyContent: 'space-between', marginLeft: 15}}>
+            {!this.state.photo && <TouchableOpacity activeOpacity={0.8} onPress={() => this.pickImage()} style={{alignItems: 'center', justifyContent: 'center', backgroundColor: hexToRGB(colors.main, 0.2), paddingLeft: 10, paddingRight: 12, borderRadius: 10, marginBottom: 15, marginTop: -10}}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={imageMap.camera} style={{width: 50, height: 50}} />
-              <View style={{width: 30, height: 30, borderRadius: 15, borderColor: colors.lightAccent, marginLeft: -15, marginTop: 25}}>
-                <Image source={imageMap.addIcon} style={{width: 30, height: 30, borderRadius: 15, backgroundColor: 'white'}} />
+              <Image source={imageMap.camera} style={{width: 20, height: 20}} />
+              <View style={{width: 30, height: 30, borderRadius: 15, marginLeft: -10, marginTop: 25}}>
+                <Image source={imageMap.addIcon} style={{width: 16, height: 16, borderRadius: 10, backgroundColor: 'white'}} />
               </View>
+              <Text style={{paddingTop: 10, fontSize: 12, color: colors.main, fontWeight: 'bold', paddingBottom: 7, marginLeft: -10}}>Add a photo</Text>
               </View>
-              <Text style={{paddingTop: 10, color: colors.main, fontWeight: 'bold'}}>Add a photo</Text>
             </TouchableOpacity>}
             {this.state.photo &&
               <View style={{flexDirection: 'row', alignSelf: 'stretch', paddingLeft: 10, paddingRight: 10, justifyContent: 'space-between', marginBottom: 15}}>
@@ -304,6 +310,7 @@ class EntryAdditionForm extends React.Component {
           </View>
           <View style={{height: 100}} />
         </ScrollView>
+        </View>
       </TouchableWithoutFeedback>
     )
   }
@@ -328,13 +335,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 10,
     paddingBottom: 10,
+    paddingLeft: 5,
+    paddingRight: 5,
     marginBottom: 10,
-    backgroundColor: colors.lightAccent,
+    backgroundColor: 'white',
     alignSelf: 'stretch',
+    overflow: 'hidden'
   },
   headerDash: {
     borderTopWidth: 1,
-    borderColor: colors.main,
+    borderColor: hexToRGB(colors.main, 0.5),
     width: 100,
   },
   header: {
