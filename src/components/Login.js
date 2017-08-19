@@ -162,8 +162,9 @@ const styles = {
   },
   loginFormElement: {
     height: 50,
-    textAlign: 'center',
+    textAlign: 'left',
     backgroundColor: 'white',
+    paddingLeft: 10,
     borderColor: '#eee',
     borderWidth: 1, 
     color: colors.main,
