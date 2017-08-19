@@ -34,8 +34,21 @@ class EntryListItem extends React.Component {
         <TouchableOpacity activeOpacity={0.8} onPress={() => Actions.DayEntryDetail({entry: this.props.entry, title: this.props.entry.text, location: 'today'})}>
           <View style={styles.dayEntryList}>
             <View style={styles.dayEntryRow}>
-              <View style={styles.entryIconContainer}>
+              {!this.props.entry.photo && <View style={styles.entryIconContainer}>
                 <Image source={imageMap[this.props.entry.type]} style={styles.entryIcon} />
+              </View>}
+              <View>
+              {this.props.entry.photo && 
+                <View style={{flexDirection: 'row'}}>
+                <Image
+                  source={{ uri: `data:image/jpg;base64,${this.props.entry.photo}` }}
+                  style={{width: 50, height: 50, marginLeft: 5, borderRadius: 25,}} 
+                />
+                <View style={[styles.entryIconContainer, {marginLeft: -20 }]}>
+                  <Image source={imageMap[this.props.entry.type]} style={[styles.entryIcon]} />
+                </View>
+                </View>
+              }
               </View>
               <View style={styles.dayEntryTextContainer}>
                 <Text style={styles.entryText}>
@@ -63,7 +76,7 @@ class EntryListItem extends React.Component {
 const dateOrNav = (hasDate, entry) => (
   hasDate
   ? <View style={{alignItems: 'flex-end', flex: 1}}>
-      <Text style={{color: colors.main, textAlign: 'right'}}>{moment.unix(entry.date).format('MMM DD')}</Text>
+      <Text style={{color: colors.main, width: 100, textAlign: 'right'}}>{moment.unix(entry.date).format('MMM DD')}</Text>
     </View>
   : <View style={{flex: 1}}>{entry.tags 
       && Object.keys(entry.tags).length > 0
@@ -111,7 +124,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: 250
+    flex: 1,
   },
   entryText: {
     color: '#555',

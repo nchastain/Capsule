@@ -149,6 +149,7 @@ class EntryDetail extends React.Component {
               <TextInput editable style={[styles.entryText, {flex: 1}]} multiline value={this.state.text} placeholder={'Enter text here'} onChangeText={(val) => this.handleTextChange(val, 'text')} />
             </View>
             <TextInput editable style={styles.entryDescription} multiline value={this.state.description} placeholder={'Enter additional details here'} onChangeText={(val) => this.handleTextChange(val, 'description')} />
+            {this.props.entry.photo && <Image source={{ uri: `data:image/jpg;base64,${this.props.entry.photo}` }} style={{width: 150, height: 150, alignSelf: 'center', marginTop: 50, borderWidth: 2, borderColor: 'white'}} />}
           </View>
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', padding: 15, position: 'absolute', left: 0, right: 0, bottom: 50, alignSelf: 'stretch', justifyContent: 'space-between'}}>
             <View style={[styles.dateContainer, {flex: 1, alignItems: 'flex-start'}]}>

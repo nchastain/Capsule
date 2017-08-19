@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ScrollView, Text, Dimensions, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { colors, lightColorMap, imageMap, darkColorMap, hexToRGB } from '../utilities'
+import { colors, lightColorMap, imageMap, borderlessImageMap, darkColorMap, hexToRGB } from '../utilities'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
@@ -32,10 +32,12 @@ class AllGrid extends React.Component {
     return `${entryType[0].toUpperCase()}${entryType.substring(1)}${entryType !== 'progress' ? 's' : ''}`
   }
 
-  createCardRow (entryType, side) {
+  createCardRow (entryType) {
     return (
-      <View style={side === 'left' ? styles.cardLeft : {flex: 1}}>
+      <View style={styles.cardRow}>
+      <View style={{flex: 1}}>
         {this.createCardForEntryType(entryType)}
+      </View>
       </View>
     )
   }
@@ -44,10 +46,10 @@ class AllGrid extends React.Component {
     if (entryType === 'projects') {
       return (
         <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => Actions.projects()}>
-          <View style={styles.entryTypeContainer}>
+          <View style={[styles.cardContainer, {backgroundColor: hexToRGB('#555555', 0.5)}]}>
             <Image source={imageMap[entryType]} style={styles.entryImage} />
-            <View style={styles.projectsTextContainer}>
-              <Text style={styles.projectsText}>
+            <View style={styles.cardLabelContainer}>
+              <Text style={styles.cardLabel}>
                 Projects
               </Text>
             </View>
@@ -58,10 +60,10 @@ class AllGrid extends React.Component {
     if (entryType === 'account') {
       return (
         <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => Actions.Account()}>
-          <View style={[styles.entryTypeContainer, {backgroundColor: 'darkgrey'}]}>
+          <View style={[styles.cardContainer, {backgroundColor: hexToRGB('#eeeeee', 0.5)}]}>
             <Image source={imageMap.user} style={styles.entryImage} />
-            <View style={styles.projectsTextContainer}>
-              <Text style={styles.projectsText}>
+            <View style={styles.cardLabelContainer}>
+              <Text style={styles.cardLabel}>
                 Account
               </Text>
             </View>
@@ -71,10 +73,10 @@ class AllGrid extends React.Component {
     }
     return (
       <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => this.goToEntryType(entryType)}>
-        <View style={[styles.cardContainer, {backgroundColor: lightColorMap[entryType]}]}>
-          <Image source={imageMap[entryType]} style={styles.cardImage} />
+        <View style={[styles.cardContainer, {backgroundColor: hexToRGB(darkColorMap[entryType], 0.5)}]}>
+          <Image source={borderlessImageMap[entryType]} style={styles.cardImage} />
           <View style={styles.cardLabelContainer}>
-            <Text style={styles.cardLabel}>
+            <Text style={[styles.cardLabel, {color: hexToRGB('#FFFFFF', 0.8)}]}>
               {this.createCardLabel(entryType)}
             </Text>
           </View>
@@ -84,29 +86,18 @@ class AllGrid extends React.Component {
   }
 
   render () {
+    const sections = ['experience', 'habit', 'milestone', 'progress', 'note', 'view', 'journal', 'projects', 'account']
     return (
       <ScrollView style={{backgroundColor: colors.main}} contentContainerStyle={styles.cardOuterContainer}>
-        <View style={styles.cardRow}>
-          {this.createCardRow('experience', 'left')}
-          {this.createCardRow('habit', 'right')}
-        </View>
-        <View style={styles.cardRow}>
-          {this.createCardRow('milestone', 'left')}
-          {this.createCardRow('progress', 'right')}
-        </View>
-        <View style={styles.cardRow}>
-          {this.createCardRow('note', 'left')}
-          {this.createCardRow('view', 'right')}
-        </View>
-        <View style={styles.cardRow}>
-          {this.createCardRow('journal', 'left')}
-          {this.createCardRow('projects', 'right')}
-        </View>
-        <View style={styles.cardRow}>
-          <View style={{flex: 1}}>
-            {this.createCardForEntryType('account')}
-          </View>
-        </View>
+        {this.createCardRow('experience')}
+        {this.createCardRow('habit')}
+        {this.createCardRow('milestone')}
+        {this.createCardRow('progress')}
+        {this.createCardRow('note')}
+        {this.createCardRow('view')}
+        {this.createCardRow('journal')}
+        {this.createCardRow('projects')}
+        {this.createCardRow('account')}
       </ScrollView>
     )
   }
@@ -123,11 +114,12 @@ const styles = StyleSheet.create({
   cardLabelContainer: {
     flex: 1,
     alignSelf: 'stretch',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginLeft: 85,
     justifyContent: 'center'
   },
   entryTypeContainer: {
-    height: 100,
+    height: 80,
     borderRadius: 10,
     backgroundColor: '#555',
     alignSelf: 'stretch',
@@ -146,7 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.main
   },
   cardContainer: {
-    height: 100,
+    height: 80,
     borderRadius: 10,
     alignSelf: 'stretch',
     justifyContent: 'center',
@@ -157,10 +149,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   cardLabel: {
-    fontSize: 24,
+    fontSize: 20,
     color: 'white',
     fontWeight: 'bold',
     textShadowOffset: {width: 1, height: 1},
+    textShadowColor: hexToRGB('#555555', 0.5),
     backgroundColor: 'rgba(0,0,0,0)',
   },
   cardLeft: {
@@ -169,15 +162,17 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     position: 'absolute',
-    width: 170,
-    height: 170,
-    opacity: 0.4
+    width: 60,
+    height: 60,
+    left: 10,
+    opacity: 1
   },
   entryImage: {
     position: 'absolute',
-    width: 170,
-    height: 170,
-    opacity: 0.4
+    width: 60,
+    height: 60,
+    left: 10,
+    opacity: 1
   },
   cardRow: {
     flexDirection: 'row',
@@ -186,7 +181,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   },
   projectsText: {
-    fontSize: 24,
+    fontSize: 20,
     color: 'white',
     fontWeight: 'bold',
     textShadowColor: '#555',
@@ -194,8 +189,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0)'
   },
   projectsTextContainer: {
-    position: 'absolute',
-    padding: 2
+    padding: 2,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   }
 })
 

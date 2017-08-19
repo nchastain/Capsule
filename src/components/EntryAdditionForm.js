@@ -1,6 +1,7 @@
 import React from 'React'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import { ImagePicker } from 'expo'
 import uuid from 'react-native-uuid'
 import {
   View,
@@ -13,7 +14,8 @@ import {
   Switch,
   ScrollView,
   ListView,
-  TouchableOpacity
+  TouchableOpacity,
+  Button
 } from 'react-native'
 import {
   NoteAdd,
@@ -47,7 +49,8 @@ class EntryAdditionForm extends React.Component {
       newTags: false,
       project: null,
       openModal: false,
-      tags: []
+      tags: [],
+      photo: null
     }
   }
 
@@ -78,7 +81,8 @@ class EntryAdditionForm extends React.Component {
       description: this.state.description ? this.state.description.replace(/\r?\n|\r/, '') : '',
       date: this.props.day ? moment(this.props.day).unix() : moment().unix(),
       type: this.props.entryType,
-      tags: formatTags(this.state.tags)
+      tags: formatTags(this.state.tags),
+      photo: this.state.photo
     }
     let noteID = uuid.v4()
     noteObj.projectID = this.state.project ? this.state.project.uid : null
@@ -133,10 +137,31 @@ class EntryAdditionForm extends React.Component {
     )
   }
 
-  buildSelectedProjectStr () {
-
+  buildHeader (label) {
+    return (
+      <View style={styles.headerContainer}>
+        <View style={styles.headerDash} />
+        <View style={styles.innerHeaderContainer}>
+        <Text style={styles.header}>
+          {label}
+        </Text>
+        </View>
+        <View style={styles.headerDash} />
+      </View>
+    )
   }
 
+  async pickImage() {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      base64: true
+    })
+
+    if (!result.cancelled) {
+      this.setState({ photo: result.base64 });
+    }
+  }
 
   render () {
         //define delimiter
@@ -173,12 +198,12 @@ class EntryAdditionForm extends React.Component {
 
     const inputProps = {
       keyboardType: 'default',
-      placeholder: 'Enter tags separated by spaces',
+      placeholder: this.state.tags.length === 0 ? 'Enter tags separated by spaces' : '',
     }
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView style={{backgroundColor: colors.main}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
+        <ScrollView style={{backgroundColor: hexToRGB(colors.main, 0.8)}} contentContainerStyle={{justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'stretch'}}>
             <View style={{marginTop: 64, alignSelf: 'stretch', flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', padding: 10, paddingRight: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <TouchableOpacity activeOpacity={0.3} onPress={() => this.setState({openModal: !this.state.openModal})}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -223,27 +248,29 @@ class EntryAdditionForm extends React.Component {
                 <Text style={{color: colors.lightAccent, fontWeight: 'bold'}}>{this.state.project.progressUnits}</Text>
               </View>
             </View>}
-            <View style={{alignSelf: 'stretch', padding: 20, paddingBottom: 5}}>
+            <View style={{alignSelf: 'stretch', padding: 20, paddingBottom: 20}}>
               <TextInput
-                placeholder={`Label`}
+                placeholder={`Enter title here`}
                 numberOfLines={3}
                 multiline
                 autoFocus={this.props.entryType !== 'progress'}
-                style={{alignSelf: 'stretch', fontSize: 25, color: 'white', fontWeight: 'bold'}}
+                style={{alignSelf: 'stretch', fontSize: 25, color: 'white', fontWeight: 'bold', textAlign: 'center'}}
                 onChangeText={value => this.setState({text: value})}
               ><Text>{parts}</Text></TextInput>
             </View>
-            <View style={{alignSelf: 'stretch', padding: 20, paddingTop: 0, height: 150}}>
+            <View style={{alignSelf: 'stretch', height: 150, backgroundColor: 'white', margin: 10, marginTop: 0}}>
+              {this.buildHeader('DETAILS')}
               <TextInput
                 placeholder={`Additional details (optional)`}
                 numberOfLines={10}
                 multiline
-                style={{alignSelf: 'stretch', fontSize: 18, color: colors.lightAccent}}
+                style={{alignSelf: 'stretch', fontSize: 18, padding: 20, color: colors.main}}
                 onChangeText={value => this.setState({description: value})}
               ><Text>{this.state.description}</Text></TextInput>
             </View>
-            <View style={{height: 100, alignSelf: 'stretch', paddingLeft: 30, alignItems: 'center', justifyContent: 'center'}}>
-              <Text style={{fontWeight: 'bold', color: hexToRGB('#FFFFFF', 0.5)}}>Tags</Text>
+            <View style={{alignSelf: 'stretch', height: 150, backgroundColor: 'white', margin: 10, marginTop: 0}}>
+            {this.buildHeader('TAGS')}
+            <View style={{height: 100, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', paddingLeft: 20}}>
               <TagInput
                 value={this.state.tags}
                 onChange={this.onChangeTags.bind(this)}
@@ -252,7 +279,30 @@ class EntryAdditionForm extends React.Component {
                 inputProps={inputProps}
                 numberOfLines={2}
               />
+            </View>
+            </View>
+            <View style={{alignSelf: 'stretch', backgroundColor: 'white', margin: 10, marginTop: 0}}>
+            {this.buildHeader('PHOTO')}
+            <View style={{alignItems: 'flex-start', alignSelf: 'stretch', justifyContent: 'space-between', marginLeft: 10}}>
+            {!this.state.photo && <TouchableOpacity activeOpacity={0.8} onPress={() => this.pickImage()} style={{paddingTop: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.lightAccent, padding: 10, paddingLeft: 15, paddingRight: 15, borderRadius: 10, marginBottom: 10}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image source={imageMap.camera} style={{width: 50, height: 50}} />
+              <View style={{width: 30, height: 30, borderRadius: 15, borderColor: colors.lightAccent, marginLeft: -15, marginTop: 25}}>
+                <Image source={imageMap.addIcon} style={{width: 30, height: 30, borderRadius: 15, backgroundColor: 'white'}} />
+              </View>
+              </View>
+              <Text style={{paddingTop: 10, color: colors.main, fontWeight: 'bold'}}>Add a photo</Text>
+            </TouchableOpacity>}
+            {this.state.photo &&
+              <View style={{flexDirection: 'row', alignSelf: 'stretch', paddingLeft: 10, paddingRight: 10, justifyContent: 'space-between', marginBottom: 15}}>
+                <Image source={{ uri: `data:image/jpg;base64,${this.state.photo}` }} style={{ width: 250, height: 250 }} />
+                <TouchableOpacity activeOpacity={0.8} style={{alignItems: 'flex-start', alignSelf: 'stretch'}} onPress={() => this.setState({photo: null})}>
+                  <Image source={borderlessImageMap.trash3} style={{height: 40, width: 40, marginLeft: 10, borderColor: '#eee', borderWidth: 2, borderRadius: 20}} />
+                </TouchableOpacity>
+              </View>}
+            </View>
           </View>
+          <View style={{height: 100}} />
         </ScrollView>
       </TouchableWithoutFeedback>
     )
@@ -271,6 +321,30 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 2, height: 2},
     shadowColor: '#555',
     shadowOpacity: 0.3
+  },
+  headerContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginBottom: 10,
+    backgroundColor: colors.lightAccent,
+    alignSelf: 'stretch',
+  },
+  headerDash: {
+    borderTopWidth: 1,
+    borderColor: colors.main,
+    width: 100,
+  },
+  header: {
+    color: colors.main,
+    fontWeight: 'bold',
+    fontSize: 12
+  },
+  innerHeaderContainer: {
+    paddingLeft: 5,
+    paddingRight: 5
   },
   welcome: {
     fontSize: 20,

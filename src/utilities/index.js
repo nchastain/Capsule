@@ -116,6 +116,7 @@ export const imageMap = {
   down: require('.././assets/down.png'),
   addIcon: require('.././assets/addiconsolid.png'),
   user: require('.././assets/user.png'),
+  camera: require('.././assets/camera.png'),
 }
 
 export const borderlessImageMap = {

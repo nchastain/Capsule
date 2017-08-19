@@ -1,11 +1,17 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { logoutUser } from '../actions'
 import { connect } from 'react-redux'
 import { colors } from '../utilities'
 
 class Account extends React.Component {
+  constructor() {
+    super()
+    this.state = {image: null}
+  }
+
   render() {
+    let { image } = this.state
     return (
       <View style={styles.accountContainer}>
         <TouchableOpacity

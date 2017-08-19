@@ -22,6 +22,14 @@ class Login extends React.Component {
     })
   }
 
+  componentWillMount() {
+    if (this.props.auth.user) Actions.Today()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.user) Actions.Today()
+  }
+
   handleCreateAccount() {
     if (this.state.password !== this.state.password2) {
       this.setState({loginMessage: 'Passwords do not match'})
@@ -105,6 +113,10 @@ class Login extends React.Component {
     return this.state.loginMessage ? message : null
   }
 
+  goToToday() {
+    Actions.Today()
+  }
+
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -145,7 +157,7 @@ const styles = {
     flexDirection: 'row',
     alignSelf: 'stretch',
     position: 'absolute',
-    bottom: 10,
+    bottom: 0,
     left: 0,
     right: 0,
     justifyContent: 'space-between',
@@ -168,6 +180,7 @@ const styles = {
     borderColor: '#eee',
     borderWidth: 1, 
     color: colors.main,
+    fontWeight: 'bold',
   },
   loginButtonContainer: {
     backgroundColor: hexToRGB('#000000', 0.5),
@@ -210,4 +223,14 @@ const styles = {
   }
 }
 
-export default connect(null, {loginUser, authenticate})(Login)
+const mapStateToProps = state => {
+  const { auth } = state
+  return { auth }
+}
+
+export default connect(mapStateToProps, {loginUser, authenticate})(Login)
+
+
+
+
+

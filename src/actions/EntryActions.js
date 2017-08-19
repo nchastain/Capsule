@@ -25,8 +25,9 @@ export const EntryUpdate = (entry, location) => {
   }
 }
 
-export const AddEntry = ({ text, tags, description, date, type, projectID, addedProgress}, noteID) => {
+export const AddEntry = ({ text, tags, description, date, type, projectID, addedProgress, photo}, noteID) => {
   let actionObj = { type: ADD_ENTRY, payload: { text, tags, description, date, type } }
+  if (photo) actionObj.payload.photo = photo
   if (projectID) actionObj.payload.projectID = projectID
   if (addedProgress) actionObj.payload.addedProgress = addedProgress
   let entryObj = actionObj.payload
