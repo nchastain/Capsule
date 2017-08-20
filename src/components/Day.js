@@ -212,7 +212,7 @@ class Day extends React.Component {
                 </View>
                   <View style={styles.downIconContainer}>
                     <TouchableOpacity onPress={() => this.setState({showModal: !this.state.showModal})}>
-                      <Image source={imageMap.down} style={styles.downArrow} />
+                      <Image source={imageMap.closeIcon} style={styles.downArrow} />
                     </TouchableOpacity>
                   </View>
                 </View>

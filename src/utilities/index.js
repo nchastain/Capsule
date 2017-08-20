@@ -114,6 +114,7 @@ export const imageMap = {
   whitelogo: require('.././assets/whitelogo.png'),
   inbox: require('.././assets/inbox.png'),
   down: require('.././assets/down.png'),
+  closeIcon: require('.././assets/close-icon.png'),
   addIcon: require('.././assets/addiconsolid.png'),
   user: require('.././assets/user.png'),
   camera: require('.././assets/camera.png'),
